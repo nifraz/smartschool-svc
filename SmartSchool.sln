@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSchool.Api", "SmartSchool.Api\SmartSchool.Api.csproj", "{39B37E85-BB14-45AA-B9D5-1C3BED236703}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSchool.Schema", "SmartSchool.Schema\SmartSchool.Schema.csproj", "{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{39B37E85-BB14-45AA-B9D5-1C3BED236703}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B37E85-BB14-45AA-B9D5-1C3BED236703}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B37E85-BB14-45AA-B9D5-1C3BED236703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
