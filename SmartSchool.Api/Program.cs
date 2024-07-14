@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SmartSchool.Schema;
+using SmartSchool.Schema.Queries;
+using SmartSchool.Schema.Types;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,18 +11,43 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("MariaDbConnection");
-builder.Services.AddDbContext<SmartSchoolDbContext>(options =>
+
+builder.Services.AddPooledDbContextFactory<SmartSchoolDbContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(11, 4, 0)))
 );
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
+builder.Services
+    .AddGraphQLServer()
+    .RegisterDbContext<SmartSchoolDbContext>(DbContextKind.Pooled)
+    .AddQueryType<Query>()
+    .AddTypeExtension<StudentsQuery>()
+    .AddType<StudentType>()
+    .AddInMemorySubscriptions()
+    .AddProjections()
+    .AddFiltering()
+    .AddSorting();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+app.UseCors("AllowSpecificOrigin");
+
+app.MapGraphQL();
 
 app.UseHttpsRedirection();
 
