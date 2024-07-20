@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.Schema;
+using SmartSchool.Schema.Mutations;
 using SmartSchool.Schema.Queries;
 using SmartSchool.Schema.Types;
 
@@ -16,6 +18,8 @@ builder.Services.AddPooledDbContextFactory<SmartSchoolDbContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(11, 4, 0)))
 );
 
+builder.Services.AddAutoMapper(typeof(SmartSchoolDbContext));
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
@@ -31,6 +35,8 @@ builder.Services
     .AddQueryType<Query>()
     .AddTypeExtension<StudentsQuery>()
     .AddType<StudentType>()
+    .AddMutationType<Mutation>()
+    .AddTypeExtension<StudentMutation>()
     .AddInMemorySubscriptions()
     .AddProjections()
     .AddFiltering()

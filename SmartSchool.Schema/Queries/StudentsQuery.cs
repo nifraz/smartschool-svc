@@ -1,5 +1,7 @@
-﻿using HotChocolate;
+﻿using AutoMapper;
+using HotChocolate;
 using HotChocolate.Types;
+using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Filters;
 using SmartSchool.Schema.Sorters;
 using SmartSchool.Schema.Types;
@@ -14,6 +16,15 @@ namespace SmartSchool.Schema.Queries
     [ExtendObjectType(typeof(Query))]
     public class StudentsQuery
     {
+        private readonly IMapper mapper;
+
+        public StudentsQuery(
+            IMapper mapper
+        )
+        {
+            this.mapper = mapper;
+        }
+
         [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
         [UseProjection]
         [UseFiltering(typeof(StudentFilter))]
@@ -31,6 +42,19 @@ namespace SmartSchool.Schema.Queries
                     MobileNo = x.MobileNo,
                 }
             );
+        }
+
+        public async Task<StudentType?> GetStudentAsync(SmartSchoolDbContext dbContext, long id)
+        {
+            var existingRecord = await dbContext.Students
+                .FindAsync(id);
+
+            if (existingRecord == null)
+            {
+                return null;
+            }
+
+            return mapper.Map<StudentType>(existingRecord);
         }
 
         //[UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10)]
