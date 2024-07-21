@@ -55,7 +55,10 @@ app.UseCors("AllowSpecificOrigin");
 
 app.MapGraphQL();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 await app.RunAsync();
 
