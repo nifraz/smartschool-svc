@@ -12,8 +12,8 @@ using SmartSchool.Schema;
 namespace SmartSchool.Schema.Migrations
 {
     [DbContext(typeof(SmartSchoolDbContext))]
-    [Migration("20240709164944_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240729030105_CreateStudentsTable")]
+    partial class CreateStudentsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,14 +33,32 @@ namespace SmartSchool.Schema.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BcNo")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ContactNo")
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("date");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -49,24 +67,35 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<long?>("LastModifiedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("MobileNo")
+                    b.Property<string>("NicNo")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Nickname")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("NickName")
-                        .IsRequired()
+                    b.Property<string>("PassportNo")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("StudentId")
+                    b.Property<byte>("Sex")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<string>("ShortName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("NicNo")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });

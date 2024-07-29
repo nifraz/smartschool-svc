@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartSchool.Schema.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Types
 {
-    public class StudentInput
+    public class StudentInput : PersonInput
     {
-        public string? StudentId { get; set; }
-        public string? FullName { get; set; }
-        public string? NickName { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public string? MobileNo { get; set; }
+        //public string? StudentId { get; set; }
+        //public ICollection<Admission> Admissions { get; set; } = [];
+        //public ICollection<Leave> Leaves { get; set; } = [];
     }
 }

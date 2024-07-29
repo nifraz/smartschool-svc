@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotChocolate;
 using HotChocolate.Types;
+using Microsoft.EntityFrameworkCore;
 using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Filters;
 using SmartSchool.Schema.Sorters;
@@ -32,14 +33,39 @@ namespace SmartSchool.Schema.Queries
         public IQueryable<StudentType> GetStudents(SmartSchoolDbContext dbContext)
         {
             return dbContext.Students
+                //.Include(x => x.Person)
                 .Select(x => new StudentType
                 {
                     Id = x.Id,
-                    StudentId = x.StudentId,
+                    Guid = x.Guid,
+                    CreatedBy = x.CreatedBy,
+                    CreatedOn = x.CreatedOn,
+                    LastModifiedBy = x.LastModifiedBy,
+                    LastModifiedOn = x.LastModifiedOn,
+
                     FullName = x.FullName,
-                    NickName = x.NickName,
+                    ShortName = x.ShortName,
+                    Nickname = x.Nickname,
                     DateOfBirth = x.DateOfBirth,
-                    MobileNo = x.MobileNo,
+                    BcNo = x.BcNo,
+                    Sex = x.Sex,
+                    NicNo = x.NicNo,
+                    ContactNo = x.ContactNo,
+                    Email = x.Email,
+                    Address = x.Address,
+
+                    //Person = new PersonType
+                    //{
+                    //    Id = x.Person.Id,
+                    //    FullName = x.Person.FullName,
+                    //    Nickname = x.Person.Nickname,
+                    //    DateOfBirth = x.Person.DateOfBirth,
+                    //},
+                    //StudentId = x.StudentId,
+                    //FullName = x.FullName,
+                    //Nickname = x.Nickname,
+                    //DateOfBirth = x.DateOfBirth,
+                    //MobileNo = x.MobileNo,
                 }
             );
         }

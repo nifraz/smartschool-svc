@@ -1,20 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartSchool.Schema.Entities
+namespace SmartSchool.Schema.Types
 {
-    [Index(nameof(NicNo), IsUnique = true)]
-    [Index(nameof(Email), IsUnique = true)]
-    public class Person : Record
+    public class PersonType : RecordType
     {
-        [Required]
         public string FullName { get; set; }
         public string ShortName { get; set; }
         public string? Nickname { get; set; }
@@ -26,11 +21,6 @@ namespace SmartSchool.Schema.Entities
         public string? ContactNo { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
-
-        // foreign
-        //public Student? Student { get; set; }
-        //public Teacher? Teacher { get; set; }
-        //public Guardian? Guardian { get; set; }
 
         //public ICollection<Relationship> Relationships { get; set; } = [];
     }

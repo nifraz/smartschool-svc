@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.Schema;
+using SmartSchool.Schema.DataLoaders;
 using SmartSchool.Schema.Mutations;
 using SmartSchool.Schema.Queries;
 using SmartSchool.Schema.Types;
@@ -42,6 +43,7 @@ builder.Services
     .AddFiltering()
     .AddSorting();
 
+builder.Services.AddScoped<PersonBatchDataLoader>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
