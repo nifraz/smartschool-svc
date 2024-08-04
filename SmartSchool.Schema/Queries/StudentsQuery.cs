@@ -53,6 +53,7 @@ namespace SmartSchool.Schema.Queries
                     ContactNo = x.ContactNo,
                     Email = x.Email,
                     Address = x.Address,
+                    PassportNo = x.PassportNo,
 
                     //Person = new PersonType
                     //{

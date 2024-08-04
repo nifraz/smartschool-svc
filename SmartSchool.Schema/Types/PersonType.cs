@@ -10,12 +10,12 @@ namespace SmartSchool.Schema.Types
 {
     public class PersonType : RecordType
     {
-        public string FullName { get; set; }
-        public string ShortName { get; set; }
+        public string? FullName { get; set; }
+        public string? ShortName { get; set; }
         public string? Nickname { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public string? BcNo { get; set; }
-        public SexType Sex { get; set; }
+        public SexType? Sex { get; set; }
         public string? NicNo { get; set; }
         public string? PassportNo { get; set; }
         public string? ContactNo { get; set; }
