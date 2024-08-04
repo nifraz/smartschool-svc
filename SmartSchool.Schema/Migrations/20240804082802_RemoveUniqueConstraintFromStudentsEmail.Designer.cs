@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartSchool.Schema;
 
@@ -11,9 +12,11 @@ using SmartSchool.Schema;
 namespace SmartSchool.Schema.Migrations
 {
     [DbContext(typeof(SmartSchoolDbContext))]
-    partial class SmartSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240804082802_RemoveUniqueConstraintFromStudentsEmail")]
+    partial class RemoveUniqueConstraintFromStudentsEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +74,7 @@ namespace SmartSchool.Schema.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("NicNo")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Nickname")
                         .HasColumnType("longtext");
@@ -87,6 +90,9 @@ namespace SmartSchool.Schema.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NicNo")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });

@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Entities
 {
-    [Index(nameof(NicNo), IsUnique = true)]
-    [Index(nameof(Email), IsUnique = true)]
+    //[Index(nameof(NicNo), IsUnique = true)]
+    //[Index(nameof(Email), IsUnique = true)]
     public class Person : Record
     {
         [Required]
