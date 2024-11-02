@@ -12,9 +12,9 @@ namespace SmartSchool.Schema.Types
         [IsProjected(true)]
         public long? Id { get; set; }
         public Guid? Guid { get; set; }
-        public long? CreatedBy { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public long? LastModifiedBy { get; set; }
-        public DateTime? LastModifiedOn { get; set; }
+        public long? CreatedUserId { get; set; }
+        public DateTime? CreatedTime { get; set; }
+        public long? LastModifiedUserId { get; set; }
+        public DateTime? LastModifiedTime { get; set; }
     }
 }

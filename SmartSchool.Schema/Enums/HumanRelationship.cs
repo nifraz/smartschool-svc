@@ -9,7 +9,7 @@ namespace SmartSchool.Schema.Enums
     /// <summary>
     /// GEDCOM Human Relationship
     /// </summary>
-    public enum RelationshipType : byte
+    public enum HumanRelationship : byte
     {
         NotKnown = 0,
         Husband = 1,

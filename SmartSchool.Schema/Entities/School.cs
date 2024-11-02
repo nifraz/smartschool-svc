@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartSchool.Schema.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -8,17 +11,25 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Entities
 {
-    public class School : Record
+    [Index(nameof(CensusNo), IsUnique = true)]
+    public class School : AbstractRecord
     {
-        [Required]
         public string CensusNo { get; set; }
-        [Required]
         public string Name { get; set; }
-        public string? Province { get; set; }
-        public string? Type { get; set; }
-        public string? Zone { get; set; }
-        public string? EducationalDivision { get; set; }
-        public string? District { get; set; }
+        public string Address { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNo { get; set; }
+        public SchoolType Type { get; set; }
+
+        //one
+        [ForeignKey(nameof(Division))]
+        public int DivisionId { get; set; }
+        public Division Division { get; set; }
+
+        //many
+        [InverseProperty(nameof(SchoolStudentAdmission.School))]
+        public ICollection<SchoolStudentAdmission> StudentAdmissions { get; set; } = [];
+        [InverseProperty(nameof(Class.School))]
         public ICollection<Class> Classes { get; set; } = [];
     }
 }

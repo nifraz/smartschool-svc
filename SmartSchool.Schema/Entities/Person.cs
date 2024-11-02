@@ -3,6 +3,7 @@ using SmartSchool.Schema.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -12,7 +13,7 @@ namespace SmartSchool.Schema.Entities
 {
     //[Index(nameof(NicNo), IsUnique = true)]
     //[Index(nameof(Email), IsUnique = true)]
-    public class Person : Record
+    public class Person : AbstractRecord
     {
         [Required]
         public string FullName { get; set; }
@@ -20,18 +21,34 @@ namespace SmartSchool.Schema.Entities
         public string? Nickname { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public string? BcNo { get; set; }
-        public SexType Sex { get; set; }
+        public Sex Sex { get; set; }
         public string? NicNo { get; set; }
         public string? PassportNo { get; set; }
-        public string? ContactNo { get; set; }
+        public string? MobileNo { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
 
-        // foreign
-        //public Student? Student { get; set; }
-        //public Teacher? Teacher { get; set; }
-        //public Guardian? Guardian { get; set; }
+        //one
+        [InverseProperty(nameof(Student.Person))]
+        public Student? Student { get; set; }
 
-        //public ICollection<Relationship> Relationships { get; set; } = [];
+        [InverseProperty(nameof(Teacher.Person))]
+        public Teacher? Teacher { get; set; }
+
+        [InverseProperty(nameof(Principal.Person))]
+        public Principal? Principal { get; set; }
+
+        //many
+        [InverseProperty(nameof(SchoolStudentAdmissionRequest.Person))]
+        public ICollection<SchoolStudentAdmissionRequest> SchoolStudentAdmissionRequests { get; set; } = [];
+
+        [InverseProperty(nameof(SchoolTeacherEnrollmentRequest.Person))]
+        public ICollection<SchoolTeacherEnrollmentRequest> SchoolTeacherEnrollmentRequests { get; set; } = [];
+
+        [InverseProperty(nameof(PersonRelationship.ParentPerson))]
+        public ICollection<PersonRelationship> ParentRelationships { get; set; } = [];
+
+        [InverseProperty(nameof(PersonRelationship.ChildPerson))]
+        public ICollection<PersonRelationship> ChildRelationships { get; set; } = [];
     }
 }

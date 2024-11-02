@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartSchool.Schema.Configurations;
 using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Numerics;
 using System.Reflection.Metadata;
@@ -14,18 +17,37 @@ namespace SmartSchool.Schema
 {
     public class SmartSchoolDbContext : DbContext
     {
-        //public DbSet<School> Schools { get; set; }
-        //public DbSet<Class> Classes { get; set; }
-        //public DbSet<Person> Persons { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Zone> Zones { get; set; }
+        public DbSet<Division> Divisions { get; set; }
+        public DbSet<School> Schools { get; set; }
+
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Qualification> Qualifications { get; set; }
+
+        public DbSet<AcademicYear> AcademicYears { get; set; }
+        public DbSet<Class> Classes { get; set; }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<PersonRelationship> PersonRelationships { get; set; }
+
         public DbSet<Student> Students { get; set; }
-        //public DbSet<Teacher> Teachers { get; set; }
-        //public DbSet<Guardian> Guardians { get; set; }
-        //public DbSet<Qualification> Qualifications { get; set; }
-        //public DbSet<Admission> Admissions { get; set; }
-        //public DbSet<Leave> Leaves { get; set; }
-        //public DbSet<Teach> Teaches { get; set; }
-        //public DbSet<PersonQualification> PersonQualifications { get; set; } //review
-        //public DbSet<StudentGuardian> StudentGuardians { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Principal> Principals { get; set; }
+
+        public DbSet<SchoolStudentAdmissionRequest> SchoolStudentAdmissionRequests { get; set; }
+        public DbSet<SchoolStudentAdmission> SchoolStudentAdmissions { get; set; }
+        public DbSet<ClassStudentAssignment> ClassStudentAssignments { get; set; }
+
+        public DbSet<SchoolTeacherEnrollmentRequest> SchoolTeacherEnrollmentRequests { get; set; }
+        public DbSet<SchoolTeacherEnrollment> SchoolTeacherEnrollments { get; set; }
+        public DbSet<ClassTeacherAssignment> ClassTeacherAssignments { get; set; }
+
+        public DbSet<SchoolPrincipalEnrollment> SchoolPrincipalEnrollments { get; set; }
+
+        public DbSet<PersonQualification> PersonQualifications { get; set; }
 
         /// <summary>
         /// dotnet ef migrations add InitialCreate --project SmartSchool.Schema --startup-project SmartSchool.Api
@@ -41,7 +63,7 @@ namespace SmartSchool.Schema
         {
             foreach (var entityEntry in ChangeTracker.Entries()) // Iterate all made changes
             {
-                if (entityEntry.Entity is Record record)
+                if (entityEntry.Entity is AbstractRecord record)
                 {
                     switch (entityEntry.State)
                     {
@@ -50,15 +72,17 @@ namespace SmartSchool.Schema
                         case EntityState.Unchanged:
                             break;
                         case EntityState.Deleted:
+                            record.DeletedUserId = 1; // Set the user ID who deleted the record
+                            record.DeletedTime = DateTime.Now; // Set the deletion time
+                            entityEntry.State = EntityState.Modified; // Change state to Modified to perform a soft delete
                             break;
                         case EntityState.Modified:
-                            record.LastModifiedBy = 1; //change
-                            record.LastModifiedOn = DateTime.UtcNow;
+                            record.LastModifiedUserId = 1; // Set the user ID who modified the record
+                            record.LastModifiedTime = DateTime.Now; // Set the modification time
                             break;
                         case EntityState.Added:
-                            record.Guid = Guid.NewGuid();
-                            record.CreatedBy = 1; //change
-                            record.CreatedOn = DateTime.UtcNow;
+                            record.CreatedUserId = 1; // Set the user ID who created the record
+                            record.CreatedTime = DateTime.Now; // Set the creation time
                             break;
                         default:
                             break;
@@ -70,85 +94,31 @@ namespace SmartSchool.Schema
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Person>().UseTptMappingStrategy();
+            //modelBuilder.Entity<User>().UseTptMappingStrategy();
 
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
 
-            //base.OnModelCreating(modelBuilder);
+            // Apply global query filter for all entities that inherit from AbstractRecord
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(AbstractRecord).IsAssignableFrom(entityType.ClrType))
+                {
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasQueryFilter(CreateSoftDeleteFilter(entityType.ClrType));
+                }
+            }
 
-            // Relationships
-            //modelBuilder.Entity<Person>()
-            //    .HasOne(x => x.Student)
-            //    .WithOne(y => y.Person)
-            //    .HasForeignKey<Student>(x => x.PersonId)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Seed();
+        }
 
-            //modelBuilder.Entity<Admission>()
-            //    .HasOne(a => a.Student)
-            //    .WithMany(s => s.Admissions)
-            //    .HasForeignKey(a => a.StudentId);
+        private static LambdaExpression CreateSoftDeleteFilter(Type entityType)
+        {
+            var parameter = Expression.Parameter(entityType, "e");
+            var property = Expression.Property(parameter, nameof(AbstractRecord.DeletedTime));
+            var nullConstant = Expression.Constant(null, typeof(DateTime?));
+            var comparison = Expression.Equal(property, nullConstant);
 
-            //modelBuilder.Entity<Admission>()
-            //    .HasOne(a => a.School)
-            //    .WithMany(s => s.Admissions)
-            //    .HasForeignKey(a => a.SchoolId);
-
-            //modelBuilder.Entity<Admission>()
-            //    .HasOne(a => a.Class)
-            //    .WithMany(c => c.Admissions)
-            //    .HasForeignKey(a => a.ClassId);
-
-            //modelBuilder.Entity<Leave>()
-            //    .HasOne(l => l.Student)
-            //    .WithMany(s => s.Leaves)
-            //    .HasForeignKey(l => l.StudentId);
-
-            //modelBuilder.Entity<Leave>()
-            //    .HasOne(l => l.School)
-            //    .WithMany(s => s.Leaves)
-            //    .HasForeignKey(l => l.SchoolId);
-
-            //modelBuilder.Entity<Teach>()
-            //    .HasOne(t => t.Teacher)
-            //    .WithMany(t => t.Teaches)
-            //    .HasForeignKey(t => t.TeacherId);
-
-            //modelBuilder.Entity<Teach>()
-            //    .HasOne(t => t.Class)
-            //    .WithMany(c => c.Teaches)
-            //    .HasForeignKey(t => t.ClassId);
-
-            //modelBuilder.Entity<TeacherQualification>()
-            //    .HasOne(tq => tq.Teacher)
-            //    .WithMany(t => t.TeacherQualifications)
-            //    .HasForeignKey(tq => tq.TeacherId);
-
-            //modelBuilder.Entity<TeacherQualification>()
-            //    .HasOne(tq => tq.Qualification)
-            //    .WithMany(q => q.TeacherQualifications)
-            //    .HasForeignKey(tq => tq.QualificationId);
-
-            //modelBuilder.Entity<StudentGuardian>()
-            //    .HasOne(sg => sg.Student)
-            //    .WithMany(s => s.StudentGuardians)
-            //    .HasForeignKey(sg => sg.StudentId);
-
-            //modelBuilder.Entity<StudentGuardian>()
-            //    .HasOne(sg => sg.Guardian)
-            //    .WithMany(g => g.StudentGuardians)
-            //    .HasForeignKey(sg => sg.GuardianId);
-
-            //modelBuilder.Entity<Relationship>()
-            //.HasOne(r => r.ParentPerson)
-            //.WithMany(p => p.Relationships)
-            //.HasForeignKey(r => r.ParentPersonID)
-            //.OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Relationship>()
-            //    .HasOne(r => r.ChildPerson)
-            //    .WithMany()
-            //    .HasForeignKey(r => r.ChildPersonID)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            return Expression.Lambda(comparison, parameter);
         }
     }
 }

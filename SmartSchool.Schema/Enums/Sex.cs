@@ -9,7 +9,7 @@ namespace SmartSchool.Schema.Enums
     /// <summary>
     /// ISO/IEC 5218 Human Sex
     /// </summary>
-    public enum SexType : byte
+    public enum Sex : byte
     {
         NotKnown = 0,
         Male = 1,

@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSchool.Api", "SmartSchool.Api\SmartSchool.Api.csproj", "{39B37E85-BB14-45AA-B9D5-1C3BED236703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSchool.Api", "SmartSchool.Api\SmartSchool.Api.csproj", "{39B37E85-BB14-45AA-B9D5-1C3BED236703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSchool.Schema", "SmartSchool.Schema\SmartSchool.Schema.csproj", "{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSchool.Schema", "SmartSchool.Schema\SmartSchool.Schema.csproj", "{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSchool.Service", "SmartSchool.Service\SmartSchool.Service.csproj", "{A0F420E5-DDEE-407E-B00A-3866E1B37BD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSchool.Utility", "SmartSchool.Utility\SmartSchool.Utility.csproj", "{040BA439-E0FD-453A-A875-10EB3EC715AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F69F97E2-FC6D-447F-B7CA-3C1654CAEA3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F420E5-DDEE-407E-B00A-3866E1B37BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F420E5-DDEE-407E-B00A-3866E1B37BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F420E5-DDEE-407E-B00A-3866E1B37BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F420E5-DDEE-407E-B00A-3866E1B37BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{040BA439-E0FD-453A-A875-10EB3EC715AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{040BA439-E0FD-453A-A875-10EB3EC715AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{040BA439-E0FD-453A-A875-10EB3EC715AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{040BA439-E0FD-453A-A875-10EB3EC715AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

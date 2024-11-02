@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Entities
 {
-    public class Relationship : Record
+    public class PersonRelationship : AbstractRecord
     {
+        //one
         // Foreign key to the person who is the parent in the relationship
         public long ParentPersonId { get; set; }
         [ForeignKey("ParentPersonId")]
@@ -22,6 +23,6 @@ namespace SmartSchool.Schema.Entities
         public Person ChildPerson { get; set; }
 
         [Required]
-        public RelationshipType ParentToChildRelationshipType { get; set; }
+        public HumanRelationship ParentToChildRelationship { get; set; }
     }
 }

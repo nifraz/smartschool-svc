@@ -3,15 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartSchool.Schema.Entities
 {
-    public class Student : Person
+    public class Student : AbstractRecord
     {
-        //[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public int Id { get; set; }
+        //one
+        [ForeignKey(nameof(Person))]
+        public long PersonId { get; set; }
+        public Person Person { get; set; }
 
-        // foreign
-        //public long PersonId { get; set; }
-        //public Person Person { get; set; }
-        //public ICollection<Admission> SchoolAdmissions { get; set; } = [];
+        //many
+        [InverseProperty(nameof(SchoolStudentAdmission.Student))]
+        public ICollection<SchoolStudentAdmission> StudentAdmissions { get; set; } = [];
+
     }
 
 }

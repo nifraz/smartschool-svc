@@ -15,10 +15,10 @@ namespace SmartSchool.Schema.Types
         public string? Nickname { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public string? BcNo { get; set; }
-        public SexType? Sex { get; set; }
+        public Sex? Sex { get; set; }
         public string? NicNo { get; set; }
         public string? PassportNo { get; set; }
-        public string? ContactNo { get; set; }
+        public string? MobileNo { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
 

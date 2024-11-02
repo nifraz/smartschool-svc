@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+using MySqlConnector;
 using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
 using SmartSchool.Schema.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Mutations
 {
@@ -48,5 +44,66 @@ namespace SmartSchool.Schema.Mutations
 
             return mapper.Map<StudentType>(existingRecord);
         }
+
+        public async Task CreateSchoolAdmissionAsync(SmartSchoolDbContext dbContext, long schoolId, SchoolStudentAdmission newAdmission)
+        {
+            bool success = false;
+            const int maxRetries = 3;
+            int attempt = 0;
+
+            while (!success && attempt < maxRetries)
+            {
+                attempt++;
+
+                using var transaction = await dbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+                try
+                {
+                    // Get the latest AdmissionNo for the specified SchoolId within the transaction
+                    var latestSchoolAdmission = await dbContext.SchoolStudentAdmissions
+                        .Where(a => a.SchoolId == schoolId)
+                        .OrderByDescending(a => a.No)
+                        .FirstOrDefaultAsync();
+
+                    // Determine the new AdmissionCode
+                    int newAdmissionNo = latestSchoolAdmission != null ? latestSchoolAdmission.No + 1 : 1;
+
+                    // Assign the new AdmissionCode to the Admission entity
+                    newAdmission.No = newAdmissionNo/*.ToString("D5")*/; // E.g., "00001", "00002", etc.
+                    newAdmission.SchoolId = schoolId;
+                    newAdmission.Status = StudentAdmissionStatus.Active;
+
+                    // Add and save the new admission asynchronously
+                    await dbContext.SchoolStudentAdmissions.AddAsync(newAdmission);
+                    await dbContext.SaveChangesAsync();
+
+                    // Commit the transaction asynchronously
+                    await transaction.CommitAsync();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    // Rollback the transaction in case of an error
+                    await transaction.RollbackAsync();
+
+                    // Check if the exception is a concurrency-related issue
+                    if (ex is DbUpdateConcurrencyException || ex is MySqlException)
+                    {
+                        // Log the attempt and retry if necessary
+                        Console.WriteLine($"Attempt {attempt} failed. Retrying...");
+                    }
+                    else
+                    {
+                        // If it's a different kind of exception, rethrow it
+                        throw;
+                    }
+                }
+            }
+
+            if (!success)
+            {
+                throw new Exception($"Unable to create shool admission after {maxRetries} attempts.");
+            }
+        }
+
     }
 }

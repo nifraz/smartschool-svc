@@ -33,40 +33,26 @@ namespace SmartSchool.Schema.Queries
         public IQueryable<StudentType> GetStudents(SmartSchoolDbContext dbContext)
         {
             return dbContext.Students
-                //.Include(x => x.Person)
+                .Include(x => x.Person)
                 .Select(x => new StudentType
                 {
                     Id = x.Id,
-                    Guid = x.Guid,
-                    CreatedBy = x.CreatedBy,
-                    CreatedOn = x.CreatedOn,
-                    LastModifiedBy = x.LastModifiedBy,
-                    LastModifiedOn = x.LastModifiedOn,
+                    CreatedUserId = x.CreatedUserId,
+                    CreatedTime = x.CreatedTime,
+                    LastModifiedUserId = x.LastModifiedUserId,
+                    LastModifiedTime = x.LastModifiedTime,
 
-                    FullName = x.FullName,
-                    ShortName = x.ShortName,
-                    Nickname = x.Nickname,
-                    DateOfBirth = x.DateOfBirth,
-                    BcNo = x.BcNo,
-                    Sex = x.Sex,
-                    NicNo = x.NicNo,
-                    ContactNo = x.ContactNo,
-                    Email = x.Email,
-                    Address = x.Address,
-                    PassportNo = x.PassportNo,
-
-                    //Person = new PersonType
-                    //{
-                    //    Id = x.Person.Id,
-                    //    FullName = x.Person.FullName,
-                    //    Nickname = x.Person.Nickname,
-                    //    DateOfBirth = x.Person.DateOfBirth,
-                    //},
-                    //StudentId = x.StudentId,
-                    //FullName = x.FullName,
-                    //Nickname = x.Nickname,
-                    //DateOfBirth = x.DateOfBirth,
-                    //MobileNo = x.MobileNo,
+                    FullName = x.Person.FullName,
+                    ShortName = x.Person.ShortName,
+                    Nickname = x.Person.Nickname,
+                    DateOfBirth = x.Person.DateOfBirth,
+                    BcNo = x.Person.BcNo,
+                    Sex = x.Person.Sex,
+                    NicNo = x.Person.NicNo,
+                    MobileNo = x.Person.MobileNo,
+                    Email = x.Person.Email,
+                    Address = x.Person.Address,
+                    PassportNo = x.Person.PassportNo,
                 }
             );
         }
