@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Models;
 using SmartSchool.Schema.Types;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ namespace SmartSchool.Schema
 
             CreateMap<Student, StudentType>();
             CreateMap<StudentInput, Student>();
+
+            CreateMap<UserRegisterRequest, Person>();
+            CreateMap<UserRegisterRequest, User>();
         }
     }
 }

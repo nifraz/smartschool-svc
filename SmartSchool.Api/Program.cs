@@ -4,32 +4,28 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SmartSchool.Schema;
 using SmartSchool.Schema.DataLoaders;
+using SmartSchool.Schema.Models.Settings;
 using SmartSchool.Schema.Mutations;
 using SmartSchool.Schema.Queries;
 using SmartSchool.Schema.Types;
+using SmartSchool.Service;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection(nameof(AuthSettings)));
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(nameof(SmtpSettings)));
+builder.Services.Configure<SmsSettings>(builder.Configuration.GetSection(nameof(SmsSettings)));
+
 // Add services to the container.
+builder.Services.AddAutoMapper(typeof(SmartSchoolDbContext));
+builder.Services.AddScoped<IAuthService, AuthService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddAuthorization();
 
@@ -39,11 +35,10 @@ builder.Services.AddPooledDbContextFactory<SmartSchoolDbContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(11, 4, 0)))
 );
 
-builder.Services.AddAutoMapper(typeof(SmartSchoolDbContext));
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
+    options.AddPolicy("AllowLocalhost",
         builder => builder
             .WithOrigins("http://localhost:4200")
             .AllowAnyHeader()
@@ -73,14 +68,20 @@ var app = builder.Build();
 //    app.UseSwaggerUI();
 //}
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowLocalhost");
 
-app.MapGraphQL();
-
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseHttpsRedirection();
 }
+
+app.UseRouting();
+app.MapControllers();
+app.MapGraphQL();
 
 await app.RunAsync();
 
