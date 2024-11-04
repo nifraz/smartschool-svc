@@ -10,7 +10,7 @@ namespace SmartSchool.Service
     public interface IAuthService
     {
         Task<AuthenticateResponse?> RegisterAsync(UserRegisterRequest model);
-        Task<AuthenticateResponse?> LoginAsync(LoginRequest model);
+        Task<AuthenticateResponse?> LoginAsync(UserLoginRequest model);
 
         Task<bool> IsEmailRegistered(string email);
         Task<bool> IsEmailRegistered(int id, string email);

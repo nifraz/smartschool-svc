@@ -53,7 +53,7 @@ namespace SmartSchool.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest model)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -62,6 +62,7 @@ namespace SmartSchool.Api.Controllers
 
             if (string.IsNullOrWhiteSpace(model.Email) && string.IsNullOrWhiteSpace(model.MobileNo))
             {
+                ModelState.AddModelError(string.Empty, "Email or Mobile No is required");
                 return BadRequest();
             }
 

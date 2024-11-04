@@ -69,7 +69,7 @@ namespace SmartSchool.Service
             }
         }
 
-        public async Task<AuthenticateResponse?> LoginAsync(LoginRequest model)
+        public async Task<AuthenticateResponse?> LoginAsync(UserLoginRequest model)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
 
