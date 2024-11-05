@@ -95,10 +95,30 @@ namespace SmartSchool.Service
         public async Task<UserResponse?> GetUserAsync(long id)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
-            return await dbContext.Users
+            var user = await dbContext.Users
+                .AsNoTracking()
                 .Include(x => x.Person)
-                .ProjectTo<UserResponse>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => id.Equals(x.Id));
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var person = await dbContext.Persons
+                .AsNoTracking()
+                .Include(x => x.Student)
+                .Include(x => x.Teacher)
+                .Include(x => x.Principal)
+                .FirstOrDefaultAsync(x => x.Id == user.PersonId);
+
+            if (person == null)
+            {
+                return null;
+            }
+
+            user.Person = person;
+            return mapper.Map<UserResponse>(user);
         }
 
         public async Task<bool> IsEmailRegistered(string email)

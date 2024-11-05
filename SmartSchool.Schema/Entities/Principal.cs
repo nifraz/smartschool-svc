@@ -10,10 +10,6 @@ namespace SmartSchool.Schema.Entities
 {
     public class Principal : AbstractRecord
     {
-        public string RegistrationNo { get; set; }
-        public DateTime? PensionDate { get; set; }
-        public string? ServiceGrade { get; set; }
-
         //one
         [ForeignKey(nameof(Person))]
         public long PersonId { get; set; }

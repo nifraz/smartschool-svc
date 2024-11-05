@@ -36,6 +36,12 @@ namespace SmartSchool.Schema
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Person.Email))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Person.Address))
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Person.Image))
+
+                .ForMember(dest => dest.IsStudent, opt => opt.MapFrom(src => src.Person.Student != null))
+                //.ForMember(dest => dest.IsGuardian, opt => opt.MapFrom(src => src.Person.Guardian != null))
+                //.ForMember(dest => dest.IsStaff, opt => opt.MapFrom(src => src.Person.Staff != null))
+                .ForMember(dest => dest.IsTeacher, opt => opt.MapFrom(src => src.Person.Teacher != null))
+                .ForMember(dest => dest.IsPrincipal, opt => opt.MapFrom(src => src.Person.Principal != null))
                 ;
         }
     }

@@ -16,6 +16,9 @@ namespace SmartSchool.Schema
         {
             SeedPersons(modelBuilder);
             SeedUsers(modelBuilder);
+            SeedStudents(modelBuilder);
+            SeedTeachers(modelBuilder);
+            SeedPrincipals(modelBuilder);
 
             modelBuilder.Entity<Province>().HasData(
                 new() { Id = 1, Name = "Western", SinhalaName = "බස්නාහිර", TamilName = "மேற்கு" },
@@ -248,7 +251,7 @@ namespace SmartSchool.Schema
                     Nickname = "Admin",
                     DateOfBirth = new DateOnly(2000, 01, 01),
                     BcNo = "111",
-                    Sex = Sex.Male,
+                    Sex = Sex.NotApplicable,
                     NicNo = "1111111111",
                     PassportNo = null,
                     MobileNo = "0000000000",
@@ -269,7 +272,53 @@ namespace SmartSchool.Schema
                     MobileNo = "0712319319",
                     Email = "nifraz@live.com",
                     Address = "61/3, Napana, Gunnepana",
+                },
+                new Person
+                {
+                    Id = 3,
+                    FullName = "Ayesha Rauf",
+                    ShortName = "Ayesha",
+                    Nickname = "Ayesha",
+                    DateOfBirth = new DateOnly(1962, 03, 19),
+                    BcNo = "123",
+                    Sex = Sex.Female,
+                    NicNo = null,
+                    PassportNo = null,
+                    MobileNo = "0776791138",
+                    Email = "ayesha@live.com",
+                    Address = "61/3, Napana, Gunnepana",
+                },
+                new Person
+                {
+                    Id = 4,
+                    FullName = "Mohamad Navahz",
+                    ShortName = "Navahz",
+                    Nickname = "Navahz",
+                    DateOfBirth = new DateOnly(1952, 03, 19),
+                    BcNo = "123",
+                    Sex = Sex.Male,
+                    NicNo = null,
+                    PassportNo = null,
+                    MobileNo = "0756825831",
+                    Email = "navahz@gmail.com",
+                    Address = "61/3, Napana, Gunnepana",
+                },
+                new Person
+                {
+                    Id = 5,
+                    FullName = "Nisry Ahamed",
+                    ShortName = "Nisry",
+                    Nickname = "Nisry",
+                    DateOfBirth = new DateOnly(1980, 03, 19),
+                    BcNo = "123",
+                    Sex = Sex.Male,
+                    NicNo = null,
+                    PassportNo = null,
+                    MobileNo = "0770808306",
+                    Email = "nisry@gmail.com",
+                    Address = "123, Madawala Bazaar",
                 }
+
             );
         }
 
@@ -287,6 +336,67 @@ namespace SmartSchool.Schema
                     Id = 2,
                     PersonId = 2,
                     Password = PasswordHasher.HashPassword("2222"),
+                },
+                new User
+                {
+                    Id = 3,
+                    PersonId = 3,
+                    Password = PasswordHasher.HashPassword("3333"),
+                },
+                new User
+                {
+                    Id = 4,
+                    PersonId = 4,
+                    Password = PasswordHasher.HashPassword("4444"),
+                },
+                new User
+                {
+                    Id = 5,
+                    PersonId = 5,
+                    Password = PasswordHasher.HashPassword("5555"),
+                }
+            );
+        }
+
+        private static void SeedStudents(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Student>().HasData(
+                new Student
+                {
+                    Id = 1,
+                    PersonId = 2,
+                }
+            );
+        }
+
+        private static void SeedTeachers(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Teacher>().HasData(
+                new Teacher
+                {
+                    Id = 1,
+                    PersonId = 3,
+                },
+                new Teacher
+                {
+                    Id = 2,
+                    PersonId = 4,
+                },
+                new Teacher
+                {
+                    Id = 3,
+                    PersonId = 5,
+                }
+            );
+        }
+
+        private static void SeedPrincipals(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Principal>().HasData(
+                new Principal
+                {
+                    Id = 1,
+                    PersonId = 5,
                 }
             );
         }

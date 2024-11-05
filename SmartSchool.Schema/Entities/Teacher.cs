@@ -10,8 +10,7 @@ namespace SmartSchool.Schema.Entities
 {
     public class Teacher : AbstractRecord
     {
-        public string RegistrationNo { get; set; }
-        public DateTime? PensionDate { get; set; }
+        public string? RegistrationNo { get; set; }
         public string? ServiceGrade { get; set; }
 
         //one

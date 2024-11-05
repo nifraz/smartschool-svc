@@ -50,7 +50,7 @@ namespace SmartSchool.Schema
         public DbSet<PersonQualification> PersonQualifications { get; set; }
 
         /// <summary>
-        /// dotnet ef migrations add InitialCreate --project SmartSchool.Schema --startup-project SmartSchool.Api
+        /// dotnet ef migrations add CreateInitialSchema --project SmartSchool.Schema --startup-project SmartSchool.Api
         /// dotnet ef database update --project SmartSchool.Schema --startup-project SmartSchool.Api
         /// </summary>
         /// <param name="options"></param>
