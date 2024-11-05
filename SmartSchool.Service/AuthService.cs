@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -34,7 +35,7 @@ namespace SmartSchool.Service
             this.mapper = mapper;
             this.authSettings = authSettings.Value;
         }
-        public async Task<AuthenticateResponse?> RegisterAsync(UserRegisterRequest model)
+        public async Task<UserResponse?> RegisterAsync(UserRegisterRequest model)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
 
@@ -49,18 +50,15 @@ namespace SmartSchool.Service
 
                 var user = mapper.Map<User>(model);
                 user.Password = PasswordHasher.HashPassword(model.Password);
-                user.PersonId = person.Id;
+                user.Person = person;
                 await dbContext.Users.AddAsync(user);
                 await dbContext.SaveChangesAsync();
 
                 //_ = Task.Run(() => notificationService.SendRegistrationCompletedEmailAsync(model));
 
                 //await notificationService.SendRegistrationCompletedSmsAsync(model);
-
-                var token = await GenerateJwtToken(user);
-
                 await dbContext.Database.CommitTransactionAsync();
-                return new AuthenticateResponse(user, token);
+                return mapper.Map<UserResponse>(user);
             }
             catch (Exception)
             {
@@ -90,8 +88,17 @@ namespace SmartSchool.Service
             }
 
             // authentication successful so generate jwt token
-            var token = await GenerateJwtToken(user);
-            return new AuthenticateResponse(user, token);
+            var jwtData = await GenerateJwtToken(user);
+            return new AuthenticateResponse(user, jwtData);
+        }
+
+        public async Task<UserResponse?> GetUserAsync(long id)
+        {
+            using var dbContext = dbContextFactory.CreateDbContext();
+            return await dbContext.Users
+                .Include(x => x.Person)
+                .ProjectTo<UserResponse>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(x => id.Equals(x.Id));
         }
 
         public async Task<bool> IsEmailRegistered(string email)
@@ -131,10 +138,11 @@ namespace SmartSchool.Service
                 .AnyAsync(x => x.Id != id && x.Person.MobileNo == mobileNo);
         }
 
-        private async Task<string> GenerateJwtToken(User user)
+        private async Task<JwtData> GenerateJwtToken(User user)
         {
             //Generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
+            var expires = DateTime.UtcNow.AddDays(1);
             var token = await Task.Run(() =>
             {
 
@@ -142,13 +150,13 @@ namespace SmartSchool.Service
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-                    Expires = DateTime.UtcNow.AddDays(1),
+                    Expires = expires,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 return tokenHandler.CreateToken(tokenDescriptor);
             });
 
-            return tokenHandler.WriteToken(token);
+            return new JwtData(tokenHandler.WriteToken(token), expires);
         }
     }
 }

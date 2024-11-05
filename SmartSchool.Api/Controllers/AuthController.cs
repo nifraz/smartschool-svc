@@ -82,5 +82,30 @@ namespace SmartSchool.Api.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> User([FromRoute] long id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var response = await authService.GetUserAsync(id);
+
+                if (response == null)
+                {
+                    return NotFound(new ErrorResponse { Message = "User not found" });
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
