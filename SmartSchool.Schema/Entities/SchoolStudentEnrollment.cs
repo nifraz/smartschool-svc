@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Entities
 {
-    public class SchoolStudentAdmission : AbstractRecord
+    public class SchoolStudentEnrollment : AbstractRecord
     {
         public int No { get; set; }
-        public StudentAdmissionStatus Status { get; set; }
+        public DateTime? Time { get; set; }
+        public EnrollmentStatus Status { get; set; }
 
         //one
         [ForeignKey(nameof(School))]
@@ -23,12 +24,12 @@ namespace SmartSchool.Schema.Entities
         public long StudentId { get; set; }
         public Student Student { get; set; }
 
-        [ForeignKey(nameof(StudentAdmissionRequest))]
-        public long? StudentAdmissionRequestId { get; set; }
-        public SchoolStudentAdmissionRequest? StudentAdmissionRequest { get; set; }
+        [ForeignKey(nameof(SchoolStudentEnrollmentRequest))]
+        public long? SchoolStudentEnrollmentRequestId { get; set; }
+        public SchoolStudentEnrollmentRequest? SchoolStudentEnrollmentRequest { get; set; }
 
         //many
-        [InverseProperty(nameof(ClassStudentAssignment.StudentAdmission))]
-        public ICollection<ClassStudentAssignment> StudentClassAssignments { get; set; } = [];
+        [InverseProperty(nameof(ClassStudentEnrollment.SchoolStudentEnrollment))]
+        public ICollection<ClassStudentEnrollment> ClassStudentEnrollments { get; set; } = [];
     }
 }

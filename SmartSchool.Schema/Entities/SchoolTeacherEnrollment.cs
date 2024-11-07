@@ -11,6 +11,8 @@ namespace SmartSchool.Schema.Entities
     public class SchoolTeacherEnrollment : AbstractRecord
     {
         public int No { get; set; }
+        public DateTime? Time { get; set; }
+        public DateTime? RemovedTime { get; set; }
         public EnrollmentStatus Status { get; set; }
 
         //one
@@ -23,7 +25,7 @@ namespace SmartSchool.Schema.Entities
         public Teacher Teacher { get; set; }
 
         //many
-        [InverseProperty(nameof(ClassTeacherAssignment.TeacherEnrollment))]
-        public ICollection<ClassTeacherAssignment> TeacherClassAssignments { get; set; } = [];
+        [InverseProperty(nameof(ClassTeacherEnrollment.SchoolTeacherEnrollment))]
+        public ICollection<ClassTeacherEnrollment> TeacherClassEnrollments { get; set; } = [];
     }
 }

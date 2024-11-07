@@ -11,6 +11,8 @@ namespace SmartSchool.Schema.Entities
     public class SchoolPrincipalEnrollment : AbstractRecord
     {
         public int No { get; set; }
+        public DateTime? Time { get; set; }
+        public DateTime? RemovedTime { get; set; }
         public EnrollmentStatus Status { get; set; }
 
         //one

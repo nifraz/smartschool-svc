@@ -24,63 +24,46 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.AcademicYear", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Year")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("CreatedUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("DeletedUserId")
-                        .HasColumnType("bigint");
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Year"));
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime?>("LastModifiedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("LastModifiedUserId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedUserId");
-
-                    b.HasIndex("DeletedUserId");
-
-                    b.HasIndex("LastModifiedUserId");
+                    b.HasKey("Year");
 
                     b.ToTable("AcademicYears");
 
                     b.HasData(
                         new
                         {
-                            Id = 1L,
-                            EndDate = new DateOnly(2024, 12, 31),
-                            StartDate = new DateOnly(2024, 1, 1),
-                            Year = 2024
+                            Year = 1998,
+                            EndDate = new DateOnly(1998, 12, 31),
+                            StartDate = new DateOnly(1998, 1, 1)
                         },
                         new
                         {
-                            Id = 2L,
+                            Year = 1999,
+                            EndDate = new DateOnly(1999, 12, 31),
+                            StartDate = new DateOnly(1999, 1, 1)
+                        },
+                        new
+                        {
+                            Year = 2024,
+                            EndDate = new DateOnly(2024, 12, 31),
+                            StartDate = new DateOnly(2024, 1, 1)
+                        },
+                        new
+                        {
+                            Year = 2025,
                             EndDate = new DateOnly(2025, 12, 31),
-                            StartDate = new DateOnly(2025, 1, 1),
-                            Year = 2025
+                            StartDate = new DateOnly(2025, 1, 1)
                         });
                 });
 
@@ -216,7 +199,7 @@ namespace SmartSchool.Schema.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassStudentAssignment", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassStudentEnrollment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,11 +207,8 @@ namespace SmartSchool.Schema.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("AcademicYearId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("AssignedDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("AcademicYearYear")
+                        .HasColumnType("int");
 
                     b.Property<long>("ClassId")
                         .HasColumnType("bigint");
@@ -245,9 +225,6 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("DeletedUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("IsRepeating")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime?>("LastModifiedTime")
                         .HasColumnType("datetime(6)");
 
@@ -257,15 +234,24 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<string>("RemoveReason")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("RemovedDate")
+                    b.Property<DateTime?>("RemovedTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("StudentAdmissionId")
+                    b.Property<int?>("RollNo")
+                        .HasColumnType("int");
+
+                    b.Property<long>("SchoolStudentEnrollmentId")
                         .HasColumnType("bigint");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AcademicYearId");
+                    b.HasIndex("AcademicYearYear");
 
                     b.HasIndex("ClassId");
 
@@ -275,12 +261,22 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("LastModifiedUserId");
 
-                    b.HasIndex("StudentAdmissionId");
+                    b.HasIndex("SchoolStudentEnrollmentId");
 
-                    b.ToTable("ClassStudentAssignments");
+                    b.ToTable("ClassStudentEnrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AcademicYearYear = 1999,
+                            ClassId = 1L,
+                            SchoolStudentEnrollmentId = 1L,
+                            Status = (byte)4
+                        });
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassTeacherAssignment", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassTeacherEnrollment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -288,11 +284,8 @@ namespace SmartSchool.Schema.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("AcademicYearId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("AssignedDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("AcademicYearYear")
+                        .HasColumnType("int");
 
                     b.Property<long>("ClassId")
                         .HasColumnType("bigint");
@@ -315,18 +308,24 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("RemoveReason")
+                    b.Property<string>("RemovedReason")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("RemovedDate")
+                    b.Property<DateTime?>("RemovedTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("TeacherEnrollmentId")
+                    b.Property<long>("SchoolTeacherEnrollmentId")
                         .HasColumnType("bigint");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AcademicYearId");
+                    b.HasIndex("AcademicYearYear");
 
                     b.HasIndex("ClassId");
 
@@ -336,9 +335,19 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("LastModifiedUserId");
 
-                    b.HasIndex("TeacherEnrollmentId");
+                    b.HasIndex("SchoolTeacherEnrollmentId");
 
-                    b.ToTable("ClassTeacherAssignments");
+                    b.ToTable("ClassTeacherEnrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AcademicYearYear = 1998,
+                            ClassId = 6L,
+                            SchoolTeacherEnrollmentId = 1L,
+                            Status = (byte)5
+                        });
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.District", b =>
@@ -1794,11 +1803,17 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long>("PrincipalId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime?>("RemovedTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
 
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint unsigned");
+
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1813,9 +1828,19 @@ namespace SmartSchool.Schema.Migrations
                     b.HasIndex("SchoolId");
 
                     b.ToTable("SchoolPrincipalEnrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            No = 123,
+                            PrincipalId = 1L,
+                            SchoolId = 1L,
+                            Status = (byte)1
+                        });
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentAdmission", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1847,14 +1872,17 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("SchoolStudentEnrollmentRequestId")
+                        .HasColumnType("bigint");
+
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint unsigned");
 
-                    b.Property<long?>("StudentAdmissionRequestId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("StudentId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1866,14 +1894,32 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.HasIndex("StudentAdmissionRequestId");
+                    b.HasIndex("SchoolStudentEnrollmentRequestId");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("SchoolStudentAdmissions");
+                    b.ToTable("SchoolStudentEnrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            No = 622,
+                            SchoolId = 1L,
+                            Status = (byte)2,
+                            StudentId = 1L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            No = 13336,
+                            SchoolId = 2L,
+                            Status = (byte)4,
+                            StudentId = 1L
+                        });
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentAdmissionRequest", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollmentRequest", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1923,7 +1969,7 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("SchoolStudentAdmissionRequests");
+                    b.ToTable("SchoolStudentEnrollmentRequests");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolTeacherEnrollment", b =>
@@ -1955,6 +2001,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<int>("No")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("RemovedTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
 
@@ -1963,6 +2012,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<long>("TeacherId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1977,6 +2029,16 @@ namespace SmartSchool.Schema.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("SchoolTeacherEnrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            No = 123,
+                            SchoolId = 1L,
+                            Status = (byte)5,
+                            TeacherId = 1L
+                        });
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolTeacherEnrollmentRequest", b =>
@@ -2079,6 +2141,11 @@ namespace SmartSchool.Schema.Migrations
                         {
                             Id = 1L,
                             PersonId = 2L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            PersonId = 3L
                         });
                 });
 
@@ -2211,7 +2278,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 1L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$cdehqfYCPbQHX63fQxqfLg$oawuxtLX+cMbF3UO12iHKGkA58NMxqVW99+CzXgqeg8",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$2q5UnDXJh62x/rj98PLrIA$9DjYxMXi4G5FT9ewHlCiH857NUnA60g3WzJXokggArQ",
                             PersonId = 1L
                         },
                         new
@@ -2219,7 +2286,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 2L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$FvkIIOHXUonmhWzs1gRQUA$l2g+RU5jJLF9yUvwd2zGrINaLkfAW7M/dVdFUuD1Syk",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$oM/Tph9/Lv4qOz5bvKAUFA$7Rzx6nEspW/T19subNPsW/osZ9o9kWaBHCPlF7GoIEk",
                             PersonId = 2L
                         },
                         new
@@ -2227,7 +2294,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 3L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$rsaOyWHslAmxr7NmdxzqMA$QkUFzXL4FX8RnREKQctq3oSt9hzCh+pY3QcUJEIIzCE",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$BEN6SV25o06wuWboqL/5fw$PPg20llYCpdaoJhcKh3L9vX69sZoQRVUHMshfNo3eT0",
                             PersonId = 3L
                         },
                         new
@@ -2235,7 +2302,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 4L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$Ryzh2cFeHEmCRk401lLMyw$szcKUI2q4KwcydevKttOKynzlBmCrDOfDJQx2ePycYs",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$nCkeEDPJE9D73/bg0WN7fw$ok8sf2l5B6eeUEKRv3IYrkSWlB+IH/D0+ecIZIzxQbg",
                             PersonId = 4L
                         },
                         new
@@ -2243,7 +2310,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 5L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$gLJqm1WvwX42yjs/SvjJbw$NrCgkpAvMIN3qq0C6grvOpvrUbahm2JUaljc+gIhiP8",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$D9rHWGXwaz4iZ8RkYWR/TQ$wjHGS5RKGDBZtelCJ0B6tD72E/pJ4+I6T1zxcx7pl2o",
                             PersonId = 5L
                         });
                 });
@@ -2488,27 +2555,6 @@ namespace SmartSchool.Schema.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.AcademicYear", b =>
-                {
-                    b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
-                        .WithMany("CreatedAcademicYears")
-                        .HasForeignKey("CreatedUserId");
-
-                    b.HasOne("SmartSchool.Schema.Entities.User", "DeletedUser")
-                        .WithMany("DeletedAcademicYears")
-                        .HasForeignKey("DeletedUserId");
-
-                    b.HasOne("SmartSchool.Schema.Entities.User", "LastModifiedUser")
-                        .WithMany("LastModifiedAcademicYears")
-                        .HasForeignKey("LastModifiedUserId");
-
-                    b.Navigation("CreatedUser");
-
-                    b.Navigation("DeletedUser");
-
-                    b.Navigation("LastModifiedUser");
-                });
-
             modelBuilder.Entity("SmartSchool.Schema.Entities.Class", b =>
                 {
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
@@ -2546,35 +2592,35 @@ namespace SmartSchool.Schema.Migrations
                     b.Navigation("School");
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassStudentAssignment", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassStudentEnrollment", b =>
                 {
                     b.HasOne("SmartSchool.Schema.Entities.AcademicYear", "AcademicYear")
-                        .WithMany("StudentClassAssignments")
-                        .HasForeignKey("AcademicYearId")
+                        .WithMany("ClassStudentEnrollments")
+                        .HasForeignKey("AcademicYearYear")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.Class", "Class")
-                        .WithMany("StudentClassAssignments")
+                        .WithMany("ClassStudentEnrollments")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
-                        .WithMany("CreatedClassStudentClassAssignments")
+                        .WithMany("CreatedClassStudentEnrollments")
                         .HasForeignKey("CreatedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "DeletedUser")
-                        .WithMany("DeletedClassStudentClassAssignments")
+                        .WithMany("DeletedClassStudentEnrollments")
                         .HasForeignKey("DeletedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "LastModifiedUser")
-                        .WithMany("LastModifiedClassStudentClassAssignments")
+                        .WithMany("LastModifiedClassStudentEnrollments")
                         .HasForeignKey("LastModifiedUserId");
 
-                    b.HasOne("SmartSchool.Schema.Entities.SchoolStudentAdmission", "StudentAdmission")
-                        .WithMany("StudentClassAssignments")
-                        .HasForeignKey("StudentAdmissionId")
+                    b.HasOne("SmartSchool.Schema.Entities.SchoolStudentEnrollment", "SchoolStudentEnrollment")
+                        .WithMany("ClassStudentEnrollments")
+                        .HasForeignKey("SchoolStudentEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2588,38 +2634,38 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("LastModifiedUser");
 
-                    b.Navigation("StudentAdmission");
+                    b.Navigation("SchoolStudentEnrollment");
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassTeacherAssignment", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.ClassTeacherEnrollment", b =>
                 {
                     b.HasOne("SmartSchool.Schema.Entities.AcademicYear", "AcademicYear")
-                        .WithMany("TeacherClassAssignments")
-                        .HasForeignKey("AcademicYearId")
+                        .WithMany("ClassTeacherEnrollments")
+                        .HasForeignKey("AcademicYearYear")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.Class", "Class")
-                        .WithMany("TeacherClassAssignments")
+                        .WithMany("ClassTeacherEnrollments")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
-                        .WithMany("CreatedClassTeacherClassAssignments")
+                        .WithMany("CreatedClassTeacherClassEnrollments")
                         .HasForeignKey("CreatedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "DeletedUser")
-                        .WithMany("DeletedClassTeacherClassAssignments")
+                        .WithMany("DeletedClassTeacherClassEnrollments")
                         .HasForeignKey("DeletedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "LastModifiedUser")
-                        .WithMany("LastModifiedClassTeacherClassAssignments")
+                        .WithMany("LastModifiedClassTeacherClassEnrollments")
                         .HasForeignKey("LastModifiedUserId");
 
-                    b.HasOne("SmartSchool.Schema.Entities.SchoolTeacherEnrollment", "TeacherEnrollment")
-                        .WithMany("TeacherClassAssignments")
-                        .HasForeignKey("TeacherEnrollmentId")
+                    b.HasOne("SmartSchool.Schema.Entities.SchoolTeacherEnrollment", "SchoolTeacherEnrollment")
+                        .WithMany("TeacherClassEnrollments")
+                        .HasForeignKey("SchoolTeacherEnrollmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2633,7 +2679,7 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("LastModifiedUser");
 
-                    b.Navigation("TeacherEnrollment");
+                    b.Navigation("SchoolTeacherEnrollment");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.District", b =>
@@ -2832,7 +2878,7 @@ namespace SmartSchool.Schema.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.School", "School")
-                        .WithMany()
+                        .WithMany("SchoolPrincipalEnrollments")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2848,29 +2894,29 @@ namespace SmartSchool.Schema.Migrations
                     b.Navigation("School");
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentAdmission", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollment", b =>
                 {
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
-                        .WithMany("CreatedSchoolStudentAdmissions")
+                        .WithMany("CreatedSchoolStudentEnrollments")
                         .HasForeignKey("CreatedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "DeletedUser")
-                        .WithMany("DeletedSchoolStudentAdmissions")
+                        .WithMany("DeletedSchoolStudentEnrollments")
                         .HasForeignKey("DeletedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "LastModifiedUser")
-                        .WithMany("LastModifiedSchoolStudentAdmissions")
+                        .WithMany("LastModifiedSchoolStudentEnrollments")
                         .HasForeignKey("LastModifiedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.School", "School")
-                        .WithMany("StudentAdmissions")
+                        .WithMany("SchoolStudentEnrollments")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartSchool.Schema.Entities.SchoolStudentAdmissionRequest", "StudentAdmissionRequest")
+                    b.HasOne("SmartSchool.Schema.Entities.SchoolStudentEnrollmentRequest", "SchoolStudentEnrollmentRequest")
                         .WithMany()
-                        .HasForeignKey("StudentAdmissionRequestId");
+                        .HasForeignKey("SchoolStudentEnrollmentRequestId");
 
                     b.HasOne("SmartSchool.Schema.Entities.Student", "Student")
                         .WithMany("StudentAdmissions")
@@ -2886,33 +2932,33 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("School");
 
-                    b.Navigation("Student");
+                    b.Navigation("SchoolStudentEnrollmentRequest");
 
-                    b.Navigation("StudentAdmissionRequest");
+                    b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentAdmissionRequest", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollmentRequest", b =>
                 {
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
-                        .WithMany("CreatedSchoolStudentAdmissionRequests")
+                        .WithMany("CreatedSchoolStudentEnrollmentRequests")
                         .HasForeignKey("CreatedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "DeletedUser")
-                        .WithMany("DeletedSchoolStudentAdmissionRequests")
+                        .WithMany("DeletedSchoolStudentEnrollmentRequests")
                         .HasForeignKey("DeletedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.User", "LastModifiedUser")
-                        .WithMany("LastModifiedSchoolStudentAdmissionRequests")
+                        .WithMany("LastModifiedSchoolStudentEnrollmentRequests")
                         .HasForeignKey("LastModifiedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.Person", "Person")
-                        .WithMany("SchoolStudentAdmissionRequests")
+                        .WithMany("SchoolStudentEnrollmentRequests")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.School", "School")
-                        .WithMany()
+                        .WithMany("SchoolStudentEnrollmentRequests")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2943,7 +2989,7 @@ namespace SmartSchool.Schema.Migrations
                         .HasForeignKey("LastModifiedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.School", "School")
-                        .WithMany()
+                        .WithMany("SchoolTeacherEnrollments")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2986,7 +3032,7 @@ namespace SmartSchool.Schema.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.School", "School")
-                        .WithMany()
+                        .WithMany("SchoolTeacherEnrollmentRequests")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3102,16 +3148,16 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.AcademicYear", b =>
                 {
-                    b.Navigation("StudentClassAssignments");
+                    b.Navigation("ClassStudentEnrollments");
 
-                    b.Navigation("TeacherClassAssignments");
+                    b.Navigation("ClassTeacherEnrollments");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Class", b =>
                 {
-                    b.Navigation("StudentClassAssignments");
+                    b.Navigation("ClassStudentEnrollments");
 
-                    b.Navigation("TeacherClassAssignments");
+                    b.Navigation("ClassTeacherEnrollments");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.District", b =>
@@ -3137,7 +3183,7 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("Principal");
 
-                    b.Navigation("SchoolStudentAdmissionRequests");
+                    b.Navigation("SchoolStudentEnrollmentRequests");
 
                     b.Navigation("SchoolTeacherEnrollmentRequests");
 
@@ -3165,17 +3211,25 @@ namespace SmartSchool.Schema.Migrations
                 {
                     b.Navigation("Classes");
 
-                    b.Navigation("StudentAdmissions");
+                    b.Navigation("SchoolPrincipalEnrollments");
+
+                    b.Navigation("SchoolStudentEnrollmentRequests");
+
+                    b.Navigation("SchoolStudentEnrollments");
+
+                    b.Navigation("SchoolTeacherEnrollmentRequests");
+
+                    b.Navigation("SchoolTeacherEnrollments");
                 });
 
-            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentAdmission", b =>
+            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollment", b =>
                 {
-                    b.Navigation("StudentClassAssignments");
+                    b.Navigation("ClassStudentEnrollments");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolTeacherEnrollment", b =>
                 {
-                    b.Navigation("TeacherClassAssignments");
+                    b.Navigation("TeacherClassEnrollments");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Student", b =>
@@ -3190,11 +3244,9 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.User", b =>
                 {
-                    b.Navigation("CreatedAcademicYears");
+                    b.Navigation("CreatedClassStudentEnrollments");
 
-                    b.Navigation("CreatedClassStudentClassAssignments");
-
-                    b.Navigation("CreatedClassTeacherClassAssignments");
+                    b.Navigation("CreatedClassTeacherClassEnrollments");
 
                     b.Navigation("CreatedClasses");
 
@@ -3208,9 +3260,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("CreatedSchoolPrincipalEnrollments");
 
-                    b.Navigation("CreatedSchoolStudentAdmissionRequests");
+                    b.Navigation("CreatedSchoolStudentEnrollmentRequests");
 
-                    b.Navigation("CreatedSchoolStudentAdmissions");
+                    b.Navigation("CreatedSchoolStudentEnrollments");
 
                     b.Navigation("CreatedSchoolTeacherEnrollmentRequests");
 
@@ -3224,11 +3276,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("CreatedUsers");
 
-                    b.Navigation("DeletedAcademicYears");
+                    b.Navigation("DeletedClassStudentEnrollments");
 
-                    b.Navigation("DeletedClassStudentClassAssignments");
-
-                    b.Navigation("DeletedClassTeacherClassAssignments");
+                    b.Navigation("DeletedClassTeacherClassEnrollments");
 
                     b.Navigation("DeletedClasses");
 
@@ -3242,9 +3292,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("DeletedSchoolPrincipalEnrollments");
 
-                    b.Navigation("DeletedSchoolStudentAdmissionRequests");
+                    b.Navigation("DeletedSchoolStudentEnrollmentRequests");
 
-                    b.Navigation("DeletedSchoolStudentAdmissions");
+                    b.Navigation("DeletedSchoolStudentEnrollments");
 
                     b.Navigation("DeletedSchoolTeacherEnrollmentRequests");
 
@@ -3258,11 +3308,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("DeletedUsers");
 
-                    b.Navigation("LastModifiedAcademicYears");
+                    b.Navigation("LastModifiedClassStudentEnrollments");
 
-                    b.Navigation("LastModifiedClassStudentClassAssignments");
-
-                    b.Navigation("LastModifiedClassTeacherClassAssignments");
+                    b.Navigation("LastModifiedClassTeacherClassEnrollments");
 
                     b.Navigation("LastModifiedClasses");
 
@@ -3276,9 +3324,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("LastModifiedSchoolPrincipalEnrollments");
 
-                    b.Navigation("LastModifiedSchoolStudentAdmissionRequests");
+                    b.Navigation("LastModifiedSchoolStudentEnrollmentRequests");
 
-                    b.Navigation("LastModifiedSchoolStudentAdmissions");
+                    b.Navigation("LastModifiedSchoolStudentEnrollments");
 
                     b.Navigation("LastModifiedSchoolTeacherEnrollmentRequests");
 

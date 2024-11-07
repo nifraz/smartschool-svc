@@ -118,7 +118,41 @@ namespace SmartSchool.Service
             }
 
             user.Person = person;
-            return mapper.Map<UserResponse>(user);
+            var authenticateResponse = mapper.Map<UserResponse>(user);
+
+            var latestSchoolStudentAdmissions = await dbContext.SchoolStudentEnrollments
+                .AsNoTracking()
+                .Where(x => person.Student != null && person.Student.Id > 0)
+                .OrderByDescending(x => x.CreatedTime)
+                .Select(x => new { x.SchoolId, x.CreatedTime })
+                .Take(1)
+                .ToListAsync();
+
+            var latestSchoolTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .AsNoTracking()
+                .Where(x => person.Teacher != null && person.Teacher.Id > 0)
+                .OrderByDescending(x => x.CreatedTime)
+                .Select(x => new { x.SchoolId, x.CreatedTime })
+                .Take(1)
+                .ToListAsync();
+
+            var latestSchoolPrincipalEnrollments = await dbContext.SchoolPrincipalEnrollments
+                .AsNoTracking()
+                .Where(x => person.Principal != null && person.Principal.Id > 0)
+                .OrderByDescending(x => x.CreatedTime)
+                .Select(x => new { x.SchoolId, x.CreatedTime })
+                .Take(1)
+                .ToListAsync();
+
+            var latestSchool = latestSchoolStudentAdmissions
+                .Concat(latestSchoolTeacherEnrollments)
+                .Concat(latestSchoolPrincipalEnrollments)
+                .OrderByDescending(x => x.CreatedTime)
+                .FirstOrDefault();
+
+            authenticateResponse.SchoolId = latestSchool?.SchoolId;
+
+            return authenticateResponse;
         }
 
         public async Task<bool> IsEmailRegistered(string email)

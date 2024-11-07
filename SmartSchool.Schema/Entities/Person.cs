@@ -39,8 +39,8 @@ namespace SmartSchool.Schema.Entities
         public Principal? Principal { get; set; }
 
         //many
-        [InverseProperty(nameof(SchoolStudentAdmissionRequest.Person))]
-        public ICollection<SchoolStudentAdmissionRequest> SchoolStudentAdmissionRequests { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollmentRequest.Person))]
+        public ICollection<SchoolStudentEnrollmentRequest> SchoolStudentEnrollmentRequests { get; set; } = [];
 
         [InverseProperty(nameof(SchoolTeacherEnrollmentRequest.Person))]
         public ICollection<SchoolTeacherEnrollmentRequest> SchoolTeacherEnrollmentRequests { get; set; } = [];

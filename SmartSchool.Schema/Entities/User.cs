@@ -31,12 +31,12 @@ namespace SmartSchool.Schema.Entities
         [InverseProperty(nameof(User.DeletedUser))]
         public ICollection<User> DeletedUsers { get; set; } = [];
 
-        [InverseProperty(nameof(AcademicYear.CreatedUser))]
-        public ICollection<AcademicYear> CreatedAcademicYears { get; set; } = [];
-        [InverseProperty(nameof(AcademicYear.LastModifiedUser))]
-        public ICollection<AcademicYear> LastModifiedAcademicYears { get; set; } = [];
-        [InverseProperty(nameof(AcademicYear.DeletedUser))]
-        public ICollection<AcademicYear> DeletedAcademicYears { get; set; } = [];
+        //[InverseProperty(nameof(AcademicYear.CreatedUser))]
+        //public ICollection<AcademicYear> CreatedAcademicYears { get; set; } = [];
+        //[InverseProperty(nameof(AcademicYear.LastModifiedUser))]
+        //public ICollection<AcademicYear> LastModifiedAcademicYears { get; set; } = [];
+        //[InverseProperty(nameof(AcademicYear.DeletedUser))]
+        //public ICollection<AcademicYear> DeletedAcademicYears { get; set; } = [];
 
         [InverseProperty(nameof(Class.CreatedUser))]
         public ICollection<Class> CreatedClasses { get; set; } = [];
@@ -94,26 +94,26 @@ namespace SmartSchool.Schema.Entities
         [InverseProperty(nameof(Student.DeletedUser))]
         public ICollection<Student> DeletedStudents { get; set; } = [];
 
-        [InverseProperty(nameof(SchoolStudentAdmission.CreatedUser))]
-        public ICollection<SchoolStudentAdmission> CreatedSchoolStudentAdmissions { get; set; } = [];
-        [InverseProperty(nameof(SchoolStudentAdmission.LastModifiedUser))]
-        public ICollection<SchoolStudentAdmission> LastModifiedSchoolStudentAdmissions { get; set; } = [];
-        [InverseProperty(nameof(SchoolStudentAdmission.DeletedUser))]
-        public ICollection<SchoolStudentAdmission> DeletedSchoolStudentAdmissions { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollment.CreatedUser))]
+        public ICollection<SchoolStudentEnrollment> CreatedSchoolStudentEnrollments { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollment.LastModifiedUser))]
+        public ICollection<SchoolStudentEnrollment> LastModifiedSchoolStudentEnrollments { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollment.DeletedUser))]
+        public ICollection<SchoolStudentEnrollment> DeletedSchoolStudentEnrollments { get; set; } = [];
 
-        [InverseProperty(nameof(SchoolStudentAdmissionRequest.CreatedUser))]
-        public ICollection<SchoolStudentAdmissionRequest> CreatedSchoolStudentAdmissionRequests { get; set; } = [];
-        [InverseProperty(nameof(SchoolStudentAdmissionRequest.LastModifiedUser))]
-        public ICollection<SchoolStudentAdmissionRequest> LastModifiedSchoolStudentAdmissionRequests { get; set; } = [];
-        [InverseProperty(nameof(SchoolStudentAdmissionRequest.DeletedUser))]
-        public ICollection<SchoolStudentAdmissionRequest> DeletedSchoolStudentAdmissionRequests { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollmentRequest.CreatedUser))]
+        public ICollection<SchoolStudentEnrollmentRequest> CreatedSchoolStudentEnrollmentRequests { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollmentRequest.LastModifiedUser))]
+        public ICollection<SchoolStudentEnrollmentRequest> LastModifiedSchoolStudentEnrollmentRequests { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollmentRequest.DeletedUser))]
+        public ICollection<SchoolStudentEnrollmentRequest> DeletedSchoolStudentEnrollmentRequests { get; set; } = [];
 
-        [InverseProperty(nameof(ClassStudentAssignment.CreatedUser))]
-        public ICollection<ClassStudentAssignment> CreatedClassStudentClassAssignments { get; set; } = [];
-        [InverseProperty(nameof(ClassStudentAssignment.LastModifiedUser))]
-        public ICollection<ClassStudentAssignment> LastModifiedClassStudentClassAssignments { get; set; } = [];
-        [InverseProperty(nameof(ClassStudentAssignment.DeletedUser))]
-        public ICollection<ClassStudentAssignment> DeletedClassStudentClassAssignments { get; set; } = [];
+        [InverseProperty(nameof(ClassStudentEnrollment.CreatedUser))]
+        public ICollection<ClassStudentEnrollment> CreatedClassStudentEnrollments { get; set; } = [];
+        [InverseProperty(nameof(ClassStudentEnrollment.LastModifiedUser))]
+        public ICollection<ClassStudentEnrollment> LastModifiedClassStudentEnrollments { get; set; } = [];
+        [InverseProperty(nameof(ClassStudentEnrollment.DeletedUser))]
+        public ICollection<ClassStudentEnrollment> DeletedClassStudentEnrollments { get; set; } = [];
 
         [InverseProperty(nameof(Teacher.CreatedUser))]
         public ICollection<Teacher> CreatedTeachers { get; set; } = [];
@@ -122,12 +122,12 @@ namespace SmartSchool.Schema.Entities
         [InverseProperty(nameof(Teacher.DeletedUser))]
         public ICollection<Teacher> DeletedTeachers { get; set; } = [];
 
-        [InverseProperty(nameof(ClassTeacherAssignment.CreatedUser))]
-        public ICollection<ClassTeacherAssignment> CreatedClassTeacherClassAssignments { get; set; } = [];
-        [InverseProperty(nameof(ClassTeacherAssignment.LastModifiedUser))]
-        public ICollection<ClassTeacherAssignment> LastModifiedClassTeacherClassAssignments { get; set; } = [];
-        [InverseProperty(nameof(ClassTeacherAssignment.DeletedUser))]
-        public ICollection<ClassTeacherAssignment> DeletedClassTeacherClassAssignments { get; set; } = [];
+        [InverseProperty(nameof(ClassTeacherEnrollment.CreatedUser))]
+        public ICollection<ClassTeacherEnrollment> CreatedClassTeacherClassEnrollments { get; set; } = [];
+        [InverseProperty(nameof(ClassTeacherEnrollment.LastModifiedUser))]
+        public ICollection<ClassTeacherEnrollment> LastModifiedClassTeacherClassEnrollments { get; set; } = [];
+        [InverseProperty(nameof(ClassTeacherEnrollment.DeletedUser))]
+        public ICollection<ClassTeacherEnrollment> DeletedClassTeacherClassEnrollments { get; set; } = [];
 
         [InverseProperty(nameof(SchoolTeacherEnrollment.CreatedUser))]
         public ICollection<SchoolTeacherEnrollment> CreatedSchoolTeacherEnrollments { get; set; } = [];

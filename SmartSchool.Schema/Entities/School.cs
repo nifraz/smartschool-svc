@@ -27,8 +27,21 @@ namespace SmartSchool.Schema.Entities
         public Division Division { get; set; }
 
         //many
-        [InverseProperty(nameof(SchoolStudentAdmission.School))]
-        public ICollection<SchoolStudentAdmission> StudentAdmissions { get; set; } = [];
+        [InverseProperty(nameof(SchoolStudentEnrollmentRequest.School))]
+        public ICollection<SchoolStudentEnrollmentRequest> SchoolStudentEnrollmentRequests { get; set; } = [];
+
+        [InverseProperty(nameof(SchoolStudentEnrollment.School))]
+        public ICollection<SchoolStudentEnrollment> SchoolStudentEnrollments { get; set; } = [];
+
+        [InverseProperty(nameof(SchoolTeacherEnrollmentRequest.School))]
+        public ICollection<SchoolTeacherEnrollmentRequest> SchoolTeacherEnrollmentRequests { get; set; } = [];
+
+        [InverseProperty(nameof(SchoolTeacherEnrollment.School))]
+        public ICollection<SchoolTeacherEnrollment> SchoolTeacherEnrollments { get; set; } = [];
+
+        [InverseProperty(nameof(SchoolPrincipalEnrollment.School))]
+        public ICollection<SchoolPrincipalEnrollment> SchoolPrincipalEnrollments { get; set; } = [];
+
         [InverseProperty(nameof(Class.School))]
         public ICollection<Class> Classes { get; set; } = [];
     }

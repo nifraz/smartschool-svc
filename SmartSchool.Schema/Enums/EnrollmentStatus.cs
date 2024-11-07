@@ -9,11 +9,12 @@ namespace SmartSchool.Schema.Enums
     public enum EnrollmentStatus : byte
     {
         Unknown = 0,
-        Active = 1,     // When the student is currently enrolled
-        Left = 2,       // When the student has left the school
-        Rejoined = 3,    // When the student has rejoined after leaving
-        Retired = 4,    // When the student has completed the studies
-        Cancelled = 5,
-        Resigned = 6,
+        Active = 1,         // Currently enrolled
+        Left = 2,           // Has left the institution
+        Rejoined = 3,       // Rejoined after leaving
+        Completed = 4,      // Completed studies (applies to students)
+        Retired = 5,        // Retired (alternative completion, e.g., teachers/principals)
+        Cancelled = 6,      // Enrollment canceled
+        Resigned = 7        // Specifically resigned from the position
     }
 }

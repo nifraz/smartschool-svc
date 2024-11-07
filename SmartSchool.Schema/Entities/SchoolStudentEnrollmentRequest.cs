@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Entities
 {
-    public class SchoolStudentAdmissionRequest : AbstractRecord
+    public class SchoolStudentEnrollmentRequest : AbstractRecord
     {
         public RequestStatus Status { get; set; }
         public Grade Grade { get; set; }

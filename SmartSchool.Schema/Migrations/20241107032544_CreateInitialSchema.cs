@@ -18,6 +18,21 @@ namespace SmartSchool.Schema.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AcademicYears",
+                columns: table => new
+                {
+                    Year = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AcademicYears", x => x.Year);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Languages",
                 columns: table => new
                 {
@@ -148,28 +163,6 @@ namespace SmartSchool.Schema.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AcademicYears",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Year = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CreatedUserId = table.Column<long>(type: "bigint", nullable: true),
-                    LastModifiedUserId = table.Column<long>(type: "bigint", nullable: true),
-                    DeletedUserId = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AcademicYears", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Classes",
                 columns: table => new
                 {
@@ -203,19 +196,20 @@ namespace SmartSchool.Schema.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ClassStudentAssignments",
+                name: "ClassStudentEnrollments",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AssignedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsRepeating = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    RemovedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RollNo = table.Column<int>(type: "int", nullable: true),
+                    Time = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RemovedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RemoveReason = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     ClassId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentAdmissionId = table.Column<long>(type: "bigint", nullable: false),
-                    AcademicYearId = table.Column<long>(type: "bigint", nullable: false),
+                    SchoolStudentEnrollmentId = table.Column<long>(type: "bigint", nullable: false),
+                    AcademicYearYear = table.Column<int>(type: "int", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -225,15 +219,15 @@ namespace SmartSchool.Schema.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClassStudentAssignments", x => x.Id);
+                    table.PrimaryKey("PK_ClassStudentEnrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClassStudentAssignments_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
+                        name: "FK_ClassStudentEnrollments_AcademicYears_AcademicYearYear",
+                        column: x => x.AcademicYearYear,
                         principalTable: "AcademicYears",
-                        principalColumn: "Id",
+                        principalColumn: "Year",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClassStudentAssignments_Classes_ClassId",
+                        name: "FK_ClassStudentEnrollments_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
@@ -242,17 +236,18 @@ namespace SmartSchool.Schema.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ClassTeacherAssignments",
+                name: "ClassTeacherEnrollments",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AssignedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    RemovedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RemoveReason = table.Column<string>(type: "longtext", nullable: true)
+                    Time = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RemovedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RemovedReason = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TeacherEnrollmentId = table.Column<long>(type: "bigint", nullable: false),
-                    AcademicYearId = table.Column<long>(type: "bigint", nullable: false),
+                    Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    SchoolTeacherEnrollmentId = table.Column<long>(type: "bigint", nullable: false),
+                    AcademicYearYear = table.Column<int>(type: "int", nullable: false),
                     ClassId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -263,15 +258,15 @@ namespace SmartSchool.Schema.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClassTeacherAssignments", x => x.Id);
+                    table.PrimaryKey("PK_ClassTeacherEnrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClassTeacherAssignments_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
+                        name: "FK_ClassTeacherEnrollments_AcademicYears_AcademicYearYear",
+                        column: x => x.AcademicYearYear,
                         principalTable: "AcademicYears",
-                        principalColumn: "Id",
+                        principalColumn: "Year",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClassTeacherAssignments_Classes_ClassId",
+                        name: "FK_ClassTeacherEnrollments_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
@@ -355,6 +350,8 @@ namespace SmartSchool.Schema.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Address = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Image = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -422,11 +419,6 @@ namespace SmartSchool.Schema.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RegistrationNo = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PensionDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ServiceGrade = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     PersonId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -561,9 +553,8 @@ namespace SmartSchool.Schema.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RegistrationNo = table.Column<string>(type: "longtext", nullable: false)
+                    RegistrationNo = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PensionDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ServiceGrade = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PersonId = table.Column<long>(type: "bigint", nullable: false),
@@ -608,6 +599,8 @@ namespace SmartSchool.Schema.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     No = table.Column<int>(type: "int", nullable: false),
+                    Time = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RemovedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     SchoolId = table.Column<long>(type: "bigint", nullable: false),
                     PrincipalId = table.Column<long>(type: "bigint", nullable: false),
@@ -652,7 +645,7 @@ namespace SmartSchool.Schema.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "SchoolStudentAdmissionRequests",
+                name: "SchoolStudentEnrollmentRequests",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -670,31 +663,31 @@ namespace SmartSchool.Schema.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SchoolStudentAdmissionRequests", x => x.Id);
+                    table.PrimaryKey("PK_SchoolStudentEnrollmentRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissionRequests_Persons_PersonId",
+                        name: "FK_SchoolStudentEnrollmentRequests_Persons_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissionRequests_Schools_SchoolId",
+                        name: "FK_SchoolStudentEnrollmentRequests_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissionRequests_Users_CreatedUserId",
+                        name: "FK_SchoolStudentEnrollmentRequests_Users_CreatedUserId",
                         column: x => x.CreatedUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissionRequests_Users_DeletedUserId",
+                        name: "FK_SchoolStudentEnrollmentRequests_Users_DeletedUserId",
                         column: x => x.DeletedUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissionRequests_Users_LastModifiedUserId",
+                        name: "FK_SchoolStudentEnrollmentRequests_Users_LastModifiedUserId",
                         column: x => x.LastModifiedUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -758,6 +751,8 @@ namespace SmartSchool.Schema.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     No = table.Column<int>(type: "int", nullable: false),
+                    Time = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RemovedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     SchoolId = table.Column<long>(type: "bigint", nullable: false),
                     TeacherId = table.Column<long>(type: "bigint", nullable: false),
@@ -802,16 +797,17 @@ namespace SmartSchool.Schema.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "SchoolStudentAdmissions",
+                name: "SchoolStudentEnrollments",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     No = table.Column<int>(type: "int", nullable: false),
+                    Time = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     SchoolId = table.Column<long>(type: "bigint", nullable: false),
                     StudentId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentAdmissionRequestId = table.Column<long>(type: "bigint", nullable: true),
+                    SchoolStudentEnrollmentRequestId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -821,36 +817,36 @@ namespace SmartSchool.Schema.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SchoolStudentAdmissions", x => x.Id);
+                    table.PrimaryKey("PK_SchoolStudentEnrollments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissions_SchoolStudentAdmissionRequests_Stude~",
-                        column: x => x.StudentAdmissionRequestId,
-                        principalTable: "SchoolStudentAdmissionRequests",
+                        name: "FK_SchoolStudentEnrollments_SchoolStudentEnrollmentRequests_Sch~",
+                        column: x => x.SchoolStudentEnrollmentRequestId,
+                        principalTable: "SchoolStudentEnrollmentRequests",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissions_Schools_SchoolId",
+                        name: "FK_SchoolStudentEnrollments_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissions_Students_StudentId",
+                        name: "FK_SchoolStudentEnrollments_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissions_Users_CreatedUserId",
+                        name: "FK_SchoolStudentEnrollments_Users_CreatedUserId",
                         column: x => x.CreatedUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissions_Users_DeletedUserId",
+                        name: "FK_SchoolStudentEnrollments_Users_DeletedUserId",
                         column: x => x.DeletedUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_SchoolStudentAdmissions_Users_LastModifiedUserId",
+                        name: "FK_SchoolStudentEnrollments_Users_LastModifiedUserId",
                         column: x => x.LastModifiedUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -859,11 +855,13 @@ namespace SmartSchool.Schema.Migrations
 
             migrationBuilder.InsertData(
                 table: "AcademicYears",
-                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "EndDate", "LastModifiedTime", "LastModifiedUserId", "StartDate", "Year" },
+                columns: new[] { "Year", "EndDate", "StartDate" },
                 values: new object[,]
                 {
-                    { 1L, null, null, null, null, new DateOnly(2024, 12, 31), null, null, new DateOnly(2024, 1, 1), 2024 },
-                    { 2L, null, null, null, null, new DateOnly(2025, 12, 31), null, null, new DateOnly(2025, 1, 1), 2025 }
+                    { 1998, new DateOnly(1998, 12, 31), new DateOnly(1998, 1, 1) },
+                    { 1999, new DateOnly(1999, 12, 31), new DateOnly(1999, 1, 1) },
+                    { 2024, new DateOnly(2024, 12, 31), new DateOnly(2024, 1, 1) },
+                    { 2025, new DateOnly(2025, 12, 31), new DateOnly(2025, 1, 1) }
                 });
 
             migrationBuilder.InsertData(
@@ -879,11 +877,14 @@ namespace SmartSchool.Schema.Migrations
 
             migrationBuilder.InsertData(
                 table: "Persons",
-                columns: new[] { "Id", "Address", "BcNo", "CreatedTime", "CreatedUserId", "DateOfBirth", "DeletedTime", "DeletedUserId", "Email", "FullName", "LastModifiedTime", "LastModifiedUserId", "MobileNo", "NicNo", "Nickname", "PassportNo", "Sex", "ShortName" },
+                columns: new[] { "Id", "Address", "BcNo", "CreatedTime", "CreatedUserId", "DateOfBirth", "DeletedTime", "DeletedUserId", "Email", "FullName", "Image", "LastModifiedTime", "LastModifiedUserId", "MobileNo", "NicNo", "Nickname", "PassportNo", "Sex", "ShortName" },
                 values: new object[,]
                 {
-                    { 1L, "123, Kandy", "111", null, null, new DateOnly(2000, 1, 1), null, null, "admin@system.com", "System Admin", null, null, "0000000000", "1111111111", "Admin", null, (byte)1, "System" },
-                    { 2L, "61/3, Napana, Gunnepana", "123", null, null, new DateOnly(1993, 3, 19), null, null, "nifraz@live.com", "Nifraz Navahz", null, null, "0712319319", "930793922V", "Nifraz", null, (byte)1, "Nifraz" }
+                    { 1L, "123, Kandy", "111", null, null, new DateOnly(2000, 1, 1), null, null, "admin@system.com", "System Admin", null, null, null, "0000000000", "1111111111", "Admin", null, (byte)9, "System" },
+                    { 2L, "61/3, Napana, Gunnepana", "123", null, null, new DateOnly(1993, 3, 19), null, null, "nifraz@live.com", "Nifraz Navahz", null, null, null, "0712319319", "930793922V", "Nifraz", null, (byte)1, "Nifraz" },
+                    { 3L, "61/3, Napana, Gunnepana", "123", null, null, new DateOnly(1962, 3, 19), null, null, "ayesha@live.com", "Ayesha Rauf", null, null, null, "0776791138", null, "Ayesha", null, (byte)2, "Ayesha" },
+                    { 4L, "61/3, Napana, Gunnepana", "123", null, null, new DateOnly(1952, 3, 19), null, null, "navahz@gmail.com", "Mohamad Navahz", null, null, null, "0756825831", null, "Navahz", null, (byte)1, "Navahz" },
+                    { 5L, "123, Madawala Bazaar", "123", null, null, new DateOnly(1980, 3, 19), null, null, "nisry@gmail.com", "Nisry Ahamed", null, null, null, "0770808306", null, "Nisry", null, (byte)1, "Nisry" }
                 });
 
             migrationBuilder.InsertData(
@@ -935,12 +936,39 @@ namespace SmartSchool.Schema.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Principals",
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "PersonId" },
+                values: new object[] { 1L, null, null, null, null, null, null, 5L });
+
+            migrationBuilder.InsertData(
+                table: "Students",
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "PersonId" },
+                values: new object[,]
+                {
+                    { 1L, null, null, null, null, null, null, 2L },
+                    { 2L, null, null, null, null, null, null, 3L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Teachers",
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "PersonId", "RegistrationNo", "ServiceGrade" },
+                values: new object[,]
+                {
+                    { 1L, null, null, null, null, null, null, 3L, null, null },
+                    { 2L, null, null, null, null, null, null, 4L, null, null },
+                    { 3L, null, null, null, null, null, null, 5L, null, null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "IsEmailVerified", "IsMobileNoVerified", "LastModifiedTime", "LastModifiedUserId", "Password", "PersonId", "TokenExpiration", "VerificationToken" },
                 values: new object[,]
                 {
-                    { 1L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$KBM0pAozr1Q/cASpXz51qA$5jV2ObiXrl2U1CkOOyS01hauTz14pvEBo+9cqv4xxkk", 1L, null, null },
-                    { 2L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$aanJKrXoq2i0xIgDnSIpzw$BbxxBeXdDDPTKcJkmEPwdW4La9Qx8/my0Nnq0DwuMe4", 2L, null, null }
+                    { 1L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$2q5UnDXJh62x/rj98PLrIA$9DjYxMXi4G5FT9ewHlCiH857NUnA60g3WzJXokggArQ", 1L, null, null },
+                    { 2L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$oM/Tph9/Lv4qOz5bvKAUFA$7Rzx6nEspW/T19subNPsW/osZ9o9kWaBHCPlF7GoIEk", 2L, null, null },
+                    { 3L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$BEN6SV25o06wuWboqL/5fw$PPg20llYCpdaoJhcKh3L9vX69sZoQRVUHMshfNo3eT0", 3L, null, null },
+                    { 4L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$nCkeEDPJE9D73/bg0WN7fw$ok8sf2l5B6eeUEKRv3IYrkSWlB+IH/D0+ecIZIzxQbg", 4L, null, null },
+                    { 5L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$D9rHWGXwaz4iZ8RkYWR/TQ$wjHGS5RKGDBZtelCJ0B6tD72E/pJ4+I6T1zxcx7pl2o", 5L, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1086,20 +1114,34 @@ namespace SmartSchool.Schema.Migrations
                     { 9L, null, null, null, null, (byte)9, "ta", null, null, null, 1L, "A" }
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AcademicYears_CreatedUserId",
-                table: "AcademicYears",
-                column: "CreatedUserId");
+            migrationBuilder.InsertData(
+                table: "SchoolPrincipalEnrollments",
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "No", "PrincipalId", "RemovedTime", "SchoolId", "Status", "Time" },
+                values: new object[] { 1L, null, null, null, null, null, null, 123, 1L, null, 1L, (byte)1, null });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AcademicYears_DeletedUserId",
-                table: "AcademicYears",
-                column: "DeletedUserId");
+            migrationBuilder.InsertData(
+                table: "SchoolStudentEnrollments",
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "No", "SchoolId", "SchoolStudentEnrollmentRequestId", "Status", "StudentId", "Time" },
+                values: new object[,]
+                {
+                    { 1L, null, null, null, null, null, null, 622, 1L, null, (byte)2, 1L, null },
+                    { 2L, null, null, null, null, null, null, 13336, 2L, null, (byte)4, 1L, null }
+                });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AcademicYears_LastModifiedUserId",
-                table: "AcademicYears",
-                column: "LastModifiedUserId");
+            migrationBuilder.InsertData(
+                table: "SchoolTeacherEnrollments",
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "No", "RemovedTime", "SchoolId", "Status", "TeacherId", "Time" },
+                values: new object[] { 1L, null, null, null, null, null, null, 123, null, 1L, (byte)5, 1L, null });
+
+            migrationBuilder.InsertData(
+                table: "ClassStudentEnrollments",
+                columns: new[] { "Id", "AcademicYearYear", "ClassId", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "RemoveReason", "RemovedTime", "RollNo", "SchoolStudentEnrollmentId", "Status", "Time" },
+                values: new object[] { 1L, 1999, 1L, null, null, null, null, null, null, null, null, null, 1L, (byte)4, null });
+
+            migrationBuilder.InsertData(
+                table: "ClassTeacherEnrollments",
+                columns: new[] { "Id", "AcademicYearYear", "ClassId", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "LastModifiedTime", "LastModifiedUserId", "RemovedReason", "RemovedTime", "SchoolTeacherEnrollmentId", "Status", "Time" },
+                values: new object[] { 1L, 1998, 6L, null, null, null, null, null, null, null, null, 1L, (byte)5, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Classes_CreatedUserId",
@@ -1127,64 +1169,64 @@ namespace SmartSchool.Schema.Migrations
                 column: "SchoolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudentAssignments_AcademicYearId",
-                table: "ClassStudentAssignments",
-                column: "AcademicYearId");
+                name: "IX_ClassStudentEnrollments_AcademicYearYear",
+                table: "ClassStudentEnrollments",
+                column: "AcademicYearYear");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudentAssignments_ClassId",
-                table: "ClassStudentAssignments",
+                name: "IX_ClassStudentEnrollments_ClassId",
+                table: "ClassStudentEnrollments",
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudentAssignments_CreatedUserId",
-                table: "ClassStudentAssignments",
+                name: "IX_ClassStudentEnrollments_CreatedUserId",
+                table: "ClassStudentEnrollments",
                 column: "CreatedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudentAssignments_DeletedUserId",
-                table: "ClassStudentAssignments",
+                name: "IX_ClassStudentEnrollments_DeletedUserId",
+                table: "ClassStudentEnrollments",
                 column: "DeletedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudentAssignments_LastModifiedUserId",
-                table: "ClassStudentAssignments",
+                name: "IX_ClassStudentEnrollments_LastModifiedUserId",
+                table: "ClassStudentEnrollments",
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudentAssignments_StudentAdmissionId",
-                table: "ClassStudentAssignments",
-                column: "StudentAdmissionId");
+                name: "IX_ClassStudentEnrollments_SchoolStudentEnrollmentId",
+                table: "ClassStudentEnrollments",
+                column: "SchoolStudentEnrollmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassTeacherAssignments_AcademicYearId",
-                table: "ClassTeacherAssignments",
-                column: "AcademicYearId");
+                name: "IX_ClassTeacherEnrollments_AcademicYearYear",
+                table: "ClassTeacherEnrollments",
+                column: "AcademicYearYear");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassTeacherAssignments_ClassId",
-                table: "ClassTeacherAssignments",
+                name: "IX_ClassTeacherEnrollments_ClassId",
+                table: "ClassTeacherEnrollments",
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassTeacherAssignments_CreatedUserId",
-                table: "ClassTeacherAssignments",
+                name: "IX_ClassTeacherEnrollments_CreatedUserId",
+                table: "ClassTeacherEnrollments",
                 column: "CreatedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassTeacherAssignments_DeletedUserId",
-                table: "ClassTeacherAssignments",
+                name: "IX_ClassTeacherEnrollments_DeletedUserId",
+                table: "ClassTeacherEnrollments",
                 column: "DeletedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassTeacherAssignments_LastModifiedUserId",
-                table: "ClassTeacherAssignments",
+                name: "IX_ClassTeacherEnrollments_LastModifiedUserId",
+                table: "ClassTeacherEnrollments",
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassTeacherAssignments_TeacherEnrollmentId",
-                table: "ClassTeacherAssignments",
-                column: "TeacherEnrollmentId");
+                name: "IX_ClassTeacherEnrollments_SchoolTeacherEnrollmentId",
+                table: "ClassTeacherEnrollments",
+                column: "SchoolTeacherEnrollmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Districts_ProvinceId",
@@ -1334,58 +1376,58 @@ namespace SmartSchool.Schema.Migrations
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissionRequests_CreatedUserId",
-                table: "SchoolStudentAdmissionRequests",
+                name: "IX_SchoolStudentEnrollmentRequests_CreatedUserId",
+                table: "SchoolStudentEnrollmentRequests",
                 column: "CreatedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissionRequests_DeletedUserId",
-                table: "SchoolStudentAdmissionRequests",
+                name: "IX_SchoolStudentEnrollmentRequests_DeletedUserId",
+                table: "SchoolStudentEnrollmentRequests",
                 column: "DeletedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissionRequests_LastModifiedUserId",
-                table: "SchoolStudentAdmissionRequests",
+                name: "IX_SchoolStudentEnrollmentRequests_LastModifiedUserId",
+                table: "SchoolStudentEnrollmentRequests",
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissionRequests_PersonId",
-                table: "SchoolStudentAdmissionRequests",
+                name: "IX_SchoolStudentEnrollmentRequests_PersonId",
+                table: "SchoolStudentEnrollmentRequests",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissionRequests_SchoolId",
-                table: "SchoolStudentAdmissionRequests",
+                name: "IX_SchoolStudentEnrollmentRequests_SchoolId",
+                table: "SchoolStudentEnrollmentRequests",
                 column: "SchoolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissions_CreatedUserId",
-                table: "SchoolStudentAdmissions",
+                name: "IX_SchoolStudentEnrollments_CreatedUserId",
+                table: "SchoolStudentEnrollments",
                 column: "CreatedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissions_DeletedUserId",
-                table: "SchoolStudentAdmissions",
+                name: "IX_SchoolStudentEnrollments_DeletedUserId",
+                table: "SchoolStudentEnrollments",
                 column: "DeletedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissions_LastModifiedUserId",
-                table: "SchoolStudentAdmissions",
+                name: "IX_SchoolStudentEnrollments_LastModifiedUserId",
+                table: "SchoolStudentEnrollments",
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissions_SchoolId",
-                table: "SchoolStudentAdmissions",
+                name: "IX_SchoolStudentEnrollments_SchoolId",
+                table: "SchoolStudentEnrollments",
                 column: "SchoolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissions_StudentAdmissionRequestId",
-                table: "SchoolStudentAdmissions",
-                column: "StudentAdmissionRequestId");
+                name: "IX_SchoolStudentEnrollments_SchoolStudentEnrollmentRequestId",
+                table: "SchoolStudentEnrollments",
+                column: "SchoolStudentEnrollmentRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolStudentAdmissions_StudentId",
-                table: "SchoolStudentAdmissions",
+                name: "IX_SchoolStudentEnrollments_StudentId",
+                table: "SchoolStudentEnrollments",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
@@ -1506,27 +1548,6 @@ namespace SmartSchool.Schema.Migrations
                 column: "DistrictId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AcademicYears_Users_CreatedUserId",
-                table: "AcademicYears",
-                column: "CreatedUserId",
-                principalTable: "Users",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AcademicYears_Users_DeletedUserId",
-                table: "AcademicYears",
-                column: "DeletedUserId",
-                principalTable: "Users",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AcademicYears_Users_LastModifiedUserId",
-                table: "AcademicYears",
-                column: "LastModifiedUserId",
-                principalTable: "Users",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_Classes_Schools_SchoolId",
                 table: "Classes",
                 column: "SchoolId",
@@ -1556,59 +1577,59 @@ namespace SmartSchool.Schema.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassStudentAssignments_SchoolStudentAdmissions_StudentAdmis~",
-                table: "ClassStudentAssignments",
-                column: "StudentAdmissionId",
-                principalTable: "SchoolStudentAdmissions",
+                name: "FK_ClassStudentEnrollments_SchoolStudentEnrollments_SchoolStude~",
+                table: "ClassStudentEnrollments",
+                column: "SchoolStudentEnrollmentId",
+                principalTable: "SchoolStudentEnrollments",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassStudentAssignments_Users_CreatedUserId",
-                table: "ClassStudentAssignments",
+                name: "FK_ClassStudentEnrollments_Users_CreatedUserId",
+                table: "ClassStudentEnrollments",
                 column: "CreatedUserId",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassStudentAssignments_Users_DeletedUserId",
-                table: "ClassStudentAssignments",
+                name: "FK_ClassStudentEnrollments_Users_DeletedUserId",
+                table: "ClassStudentEnrollments",
                 column: "DeletedUserId",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassStudentAssignments_Users_LastModifiedUserId",
-                table: "ClassStudentAssignments",
+                name: "FK_ClassStudentEnrollments_Users_LastModifiedUserId",
+                table: "ClassStudentEnrollments",
                 column: "LastModifiedUserId",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassTeacherAssignments_SchoolTeacherEnrollments_TeacherEnro~",
-                table: "ClassTeacherAssignments",
-                column: "TeacherEnrollmentId",
+                name: "FK_ClassTeacherEnrollments_SchoolTeacherEnrollments_SchoolTeach~",
+                table: "ClassTeacherEnrollments",
+                column: "SchoolTeacherEnrollmentId",
                 principalTable: "SchoolTeacherEnrollments",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassTeacherAssignments_Users_CreatedUserId",
-                table: "ClassTeacherAssignments",
+                name: "FK_ClassTeacherEnrollments_Users_CreatedUserId",
+                table: "ClassTeacherEnrollments",
                 column: "CreatedUserId",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassTeacherAssignments_Users_DeletedUserId",
-                table: "ClassTeacherAssignments",
+                name: "FK_ClassTeacherEnrollments_Users_DeletedUserId",
+                table: "ClassTeacherEnrollments",
                 column: "DeletedUserId",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ClassTeacherAssignments_Users_LastModifiedUserId",
-                table: "ClassTeacherAssignments",
+                name: "FK_ClassTeacherEnrollments_Users_LastModifiedUserId",
+                table: "ClassTeacherEnrollments",
                 column: "LastModifiedUserId",
                 principalTable: "Users",
                 principalColumn: "Id");
@@ -1717,10 +1738,10 @@ namespace SmartSchool.Schema.Migrations
                 table: "Persons");
 
             migrationBuilder.DropTable(
-                name: "ClassStudentAssignments");
+                name: "ClassStudentEnrollments");
 
             migrationBuilder.DropTable(
-                name: "ClassTeacherAssignments");
+                name: "ClassTeacherEnrollments");
 
             migrationBuilder.DropTable(
                 name: "PersonQualifications");
@@ -1735,7 +1756,7 @@ namespace SmartSchool.Schema.Migrations
                 name: "SchoolTeacherEnrollmentRequests");
 
             migrationBuilder.DropTable(
-                name: "SchoolStudentAdmissions");
+                name: "SchoolStudentEnrollments");
 
             migrationBuilder.DropTable(
                 name: "AcademicYears");
@@ -1753,7 +1774,7 @@ namespace SmartSchool.Schema.Migrations
                 name: "Principals");
 
             migrationBuilder.DropTable(
-                name: "SchoolStudentAdmissionRequests");
+                name: "SchoolStudentEnrollmentRequests");
 
             migrationBuilder.DropTable(
                 name: "Students");

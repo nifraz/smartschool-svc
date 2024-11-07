@@ -22,6 +22,7 @@ namespace SmartSchool.Schema.Models
         public string? Email { get; set; }
         public string? Address { get; set; }
         public string? Image { get; set; }
+        public long? SchoolId { get; set; }
 
         public bool IsGuardian { get; set; }
         public bool IsStudent { get; set; }

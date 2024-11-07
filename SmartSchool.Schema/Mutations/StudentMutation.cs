@@ -45,7 +45,7 @@ namespace SmartSchool.Schema.Mutations
             return mapper.Map<StudentType>(existingRecord);
         }
 
-        public async Task CreateSchoolAdmissionAsync(SmartSchoolDbContext dbContext, long schoolId, SchoolStudentAdmission newAdmission)
+        public async Task CreateSchoolAdmissionAsync(SmartSchoolDbContext dbContext, long schoolId, SchoolStudentEnrollment newAdmission)
         {
             bool success = false;
             const int maxRetries = 3;
@@ -59,7 +59,7 @@ namespace SmartSchool.Schema.Mutations
                 try
                 {
                     // Get the latest AdmissionNo for the specified SchoolId within the transaction
-                    var latestSchoolAdmission = await dbContext.SchoolStudentAdmissions
+                    var latestSchoolAdmission = await dbContext.SchoolStudentEnrollments
                         .Where(a => a.SchoolId == schoolId)
                         .OrderByDescending(a => a.No)
                         .FirstOrDefaultAsync();
@@ -70,10 +70,10 @@ namespace SmartSchool.Schema.Mutations
                     // Assign the new AdmissionCode to the Admission entity
                     newAdmission.No = newAdmissionNo/*.ToString("D5")*/; // E.g., "00001", "00002", etc.
                     newAdmission.SchoolId = schoolId;
-                    newAdmission.Status = StudentAdmissionStatus.Active;
+                    newAdmission.Status = EnrollmentStatus.Active;
 
                     // Add and save the new admission asynchronously
-                    await dbContext.SchoolStudentAdmissions.AddAsync(newAdmission);
+                    await dbContext.SchoolStudentEnrollments.AddAsync(newAdmission);
                     await dbContext.SaveChangesAsync();
 
                     // Commit the transaction asynchronously

@@ -26,10 +26,10 @@ namespace SmartSchool.Schema.Entities
         public Language Language { get; set; }
 
         //many
-        [InverseProperty(nameof(ClassStudentAssignment.Class))]
-        public ICollection<ClassStudentAssignment> StudentClassAssignments { get; set; } = [];
+        [InverseProperty(nameof(ClassStudentEnrollment.Class))]
+        public ICollection<ClassStudentEnrollment> ClassStudentEnrollments { get; set; } = [];
 
-        [InverseProperty(nameof(ClassTeacherAssignment.Class))]
-        public ICollection<ClassTeacherAssignment> TeacherClassAssignments { get; set; } = [];
+        [InverseProperty(nameof(ClassTeacherEnrollment.Class))]
+        public ICollection<ClassTeacherEnrollment> ClassTeacherEnrollments { get; set; } = [];
     }
 }

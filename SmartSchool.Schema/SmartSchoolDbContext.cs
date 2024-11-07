@@ -37,13 +37,13 @@ namespace SmartSchool.Schema
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Principal> Principals { get; set; }
 
-        public DbSet<SchoolStudentAdmissionRequest> SchoolStudentAdmissionRequests { get; set; }
-        public DbSet<SchoolStudentAdmission> SchoolStudentAdmissions { get; set; }
-        public DbSet<ClassStudentAssignment> ClassStudentAssignments { get; set; }
+        public DbSet<SchoolStudentEnrollmentRequest> SchoolStudentEnrollmentRequests { get; set; }
+        public DbSet<SchoolStudentEnrollment> SchoolStudentEnrollments { get; set; }
+        public DbSet<ClassStudentEnrollment> ClassStudentEnrollments { get; set; }
 
         public DbSet<SchoolTeacherEnrollmentRequest> SchoolTeacherEnrollmentRequests { get; set; }
         public DbSet<SchoolTeacherEnrollment> SchoolTeacherEnrollments { get; set; }
-        public DbSet<ClassTeacherAssignment> ClassTeacherAssignments { get; set; }
+        public DbSet<ClassTeacherEnrollment> ClassTeacherEnrollments { get; set; }
 
         public DbSet<SchoolPrincipalEnrollment> SchoolPrincipalEnrollments { get; set; }
 

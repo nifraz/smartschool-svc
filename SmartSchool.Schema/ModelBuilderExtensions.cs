@@ -14,12 +14,17 @@ namespace SmartSchool.Schema
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
+            SeedMasterData(modelBuilder);
             SeedPersons(modelBuilder);
             SeedUsers(modelBuilder);
             SeedStudents(modelBuilder);
             SeedTeachers(modelBuilder);
             SeedPrincipals(modelBuilder);
+            SeedOtherData(modelBuilder);
+        }
 
+        private static void SeedMasterData(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Province>().HasData(
                 new() { Id = 1, Name = "Western", SinhalaName = "බස්නාහිර", TamilName = "மேற்கு" },
                 new() { Id = 2, Name = "Central", SinhalaName = "මධ්‍යම", TamilName = "மத்திய" },
@@ -223,20 +228,22 @@ namespace SmartSchool.Schema
             );
 
             modelBuilder.Entity<Class>().HasData(
-                new() { SchoolId = 1, Id = 1, Section = "A", Grade = Grade.Grade1, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 2, Section = "A", Grade = Grade.Grade2, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 3, Section = "A", Grade = Grade.Grade3, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 4, Section = "A", Grade = Grade.Grade4, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 5, Section = "A", Grade = Grade.Grade5, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 6, Section = "A", Grade = Grade.Grade6, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 7, Section = "A", Grade = Grade.Grade7, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 8, Section = "A", Grade = Grade.Grade8, LanguageCode = "ta" }, 
-                new() { SchoolId = 1, Id = 9, Section = "A", Grade = Grade.Grade9, LanguageCode = "ta" }
+                new() { Id = 1, SchoolId = 1, Section = "A", Grade = Grade.Grade1, LanguageCode = "ta" },
+                new() { Id = 2, SchoolId = 1, Section = "A", Grade = Grade.Grade2, LanguageCode = "ta" },
+                new() { Id = 3, SchoolId = 1, Section = "A", Grade = Grade.Grade3, LanguageCode = "ta" },
+                new() { Id = 4, SchoolId = 1, Section = "A", Grade = Grade.Grade4, LanguageCode = "ta" },
+                new() { Id = 5, SchoolId = 1, Section = "A", Grade = Grade.Grade5, LanguageCode = "ta" },
+                new() { Id = 6, SchoolId = 1, Section = "A", Grade = Grade.Grade6, LanguageCode = "ta" },
+                new() { Id = 7, SchoolId = 1, Section = "A", Grade = Grade.Grade7, LanguageCode = "ta" },
+                new() { Id = 8, SchoolId = 1, Section = "A", Grade = Grade.Grade8, LanguageCode = "ta" },
+                new() { Id = 9, SchoolId = 1, Section = "A", Grade = Grade.Grade9, LanguageCode = "ta" }
             );
 
             modelBuilder.Entity<AcademicYear>().HasData(
-                new() { Id = 1, Year = 2024, StartDate = new DateOnly(2024, 1, 1), EndDate = new DateOnly(2024, 12, 31) },
-                new() { Id = 2, Year = 2025, StartDate = new DateOnly(2025, 1, 1), EndDate = new DateOnly(2025, 12, 31) }
+                new() { Year = 1998, StartDate = new DateOnly(1998, 1, 1), EndDate = new DateOnly(1998, 12, 31) },
+                new() { Year = 1999, StartDate = new DateOnly(1999, 1, 1), EndDate = new DateOnly(1999, 12, 31) },
+                new() { Year = 2024, StartDate = new DateOnly(2024, 1, 1), EndDate = new DateOnly(2024, 12, 31) },
+                new() { Year = 2025, StartDate = new DateOnly(2025, 1, 1), EndDate = new DateOnly(2025, 12, 31) }
             );
         }
 
@@ -365,6 +372,11 @@ namespace SmartSchool.Schema
                 {
                     Id = 1,
                     PersonId = 2,
+                },
+                new Student
+                {
+                    Id = 2,
+                    PersonId = 3,
                 }
             );
         }
@@ -397,6 +409,72 @@ namespace SmartSchool.Schema
                 {
                     Id = 1,
                     PersonId = 5,
+                }
+            );
+        }
+
+        private static void SeedOtherData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SchoolStudentEnrollment>().HasData(
+                new SchoolStudentEnrollment
+                {
+                    Id = 1,
+                    SchoolId = 1,
+                    No = 622,
+                    StudentId = 1,
+                    Status = EnrollmentStatus.Left,
+                },
+                new SchoolStudentEnrollment
+                {
+                    Id = 2,
+                    SchoolId = 2,
+                    No = 13336,
+                    StudentId = 1,
+                    Status = EnrollmentStatus.Completed,
+                }
+            );
+
+            modelBuilder.Entity<ClassStudentEnrollment>().HasData(
+                new ClassStudentEnrollment
+                {
+                    Id = 1,
+                    ClassId = 1,
+                    SchoolStudentEnrollmentId = 1,
+                    AcademicYearYear = 1999,
+                    Status = EnrollmentStatus.Completed,
+                }
+            );
+
+            modelBuilder.Entity<SchoolTeacherEnrollment>().HasData(
+                new SchoolTeacherEnrollment
+                {
+                    Id = 1,
+                    SchoolId = 1,
+                    No = 123,
+                    TeacherId = 1,
+                    Status = EnrollmentStatus.Retired,
+                }
+            );
+
+            modelBuilder.Entity<ClassTeacherEnrollment>().HasData(
+                new ClassTeacherEnrollment
+                {
+                    Id = 1,
+                    SchoolTeacherEnrollmentId = 1,
+                    AcademicYearYear = 1998,
+                    ClassId = 6,
+                    Status = EnrollmentStatus.Retired,
+                }
+            );
+
+            modelBuilder.Entity<SchoolPrincipalEnrollment>().HasData(
+                new SchoolPrincipalEnrollment
+                {
+                    Id = 1,
+                    SchoolId = 1,
+                    No = 123,
+                    PrincipalId = 1,
+                    Status = EnrollmentStatus.Active,
                 }
             );
         }
