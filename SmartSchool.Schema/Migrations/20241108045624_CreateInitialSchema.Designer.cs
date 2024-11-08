@@ -11,7 +11,7 @@ using SmartSchool.Schema;
 
 namespace SmartSchool.Schema.Migrations
 {
-    [DbContext(typeof(SmartSchoolDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20241108045624_CreateInitialSchema")]
     partial class CreateInitialSchema
     {

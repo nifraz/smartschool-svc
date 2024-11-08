@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using SmartSchool.Schema.Configurations;
 using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Enums;
@@ -15,8 +16,10 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema
 {
-    public class SmartSchoolDbContext : DbContext
+    public class AppDbContext : DbContext
     {
+        private readonly IHttpContextAccessor httpContextAccessor;
+
         public DbSet<Province> Provinces { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Zone> Zones { get; set; }
@@ -54,13 +57,22 @@ namespace SmartSchool.Schema
         /// dotnet ef database update --project SmartSchool.Schema --startup-project SmartSchool.Api
         /// </summary>
         /// <param name="options"></param>
-        public SmartSchoolDbContext(DbContextOptions<SmartSchoolDbContext> options) : base(options)
+        public AppDbContext(
+            DbContextOptions<AppDbContext> options,
+            IHttpContextAccessor httpContextAccessor
+            ) : base(options)
         {
-            
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            var headers = httpContextAccessor.HttpContext?.Request.Headers;
+            if (headers?.TryGetValue("User-Id", out var userIdValue) == false || !long.TryParse(userIdValue, out var userId)) 
+            {
+                userId = 1L;
+            }
+
             foreach (var entityEntry in ChangeTracker.Entries()) // Iterate all made changes
             {
                 if (entityEntry.Entity is AbstractRecord record)
@@ -72,16 +84,16 @@ namespace SmartSchool.Schema
                         case EntityState.Unchanged:
                             break;
                         case EntityState.Deleted:
-                            record.DeletedUserId = 1; // Set the user ID who deleted the record
+                            record.DeletedUserId = userId; // Set the user ID who deleted the record
                             record.DeletedTime = DateTime.Now; // Set the deletion time
                             entityEntry.State = EntityState.Modified; // Change state to Modified to perform a soft delete
                             break;
                         case EntityState.Modified:
-                            record.LastModifiedUserId = 1; // Set the user ID who modified the record
+                            record.LastModifiedUserId = userId; // Set the user ID who modified the record
                             record.LastModifiedTime = DateTime.Now; // Set the modification time
                             break;
                         case EntityState.Added:
-                            record.CreatedUserId = 1; // Set the user ID who created the record
+                            record.CreatedUserId = userId; // Set the user ID who created the record
                             record.CreatedTime = DateTime.Now; // Set the creation time
                             break;
                         default:

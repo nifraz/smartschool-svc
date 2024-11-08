@@ -10,7 +10,7 @@ using SmartSchool.Schema;
 
 namespace SmartSchool.Schema.Migrations
 {
-    [DbContext(typeof(SmartSchoolDbContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class SmartSchoolDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

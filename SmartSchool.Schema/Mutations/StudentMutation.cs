@@ -24,7 +24,7 @@ namespace SmartSchool.Schema.Mutations
             this.mapper = mapper;
         }
 
-        public async Task<StudentModel> CreateStudentAsync(SmartSchoolDbContext dbContext, StudentInput input)
+        public async Task<StudentModel> CreateStudentAsync(AppDbContext dbContext, StudentInput input)
         {
             //using var dbContext = await dbContextFactory.CreateDbContextAsync();
             var newRecord = mapper.Map<Student>(input);
@@ -36,7 +36,7 @@ namespace SmartSchool.Schema.Mutations
             return mapper.Map<StudentModel>(newRecord);
         }
 
-        public async Task<StudentModel> UpdateStudentAsync(SmartSchoolDbContext dbContext, long id, StudentInput input)
+        public async Task<StudentModel> UpdateStudentAsync(AppDbContext dbContext, long id, StudentInput input)
         {
             var existingRecord = await dbContext.Students.FindAsync(id) ?? throw new KeyNotFoundException($"No matching record found (id={id})");
             mapper.Map(input, existingRecord);
@@ -46,7 +46,7 @@ namespace SmartSchool.Schema.Mutations
             return mapper.Map<StudentModel>(existingRecord);
         }
 
-        public async Task CreateSchoolAdmissionAsync(SmartSchoolDbContext dbContext, long schoolId, SchoolStudentEnrollment newAdmission)
+        public async Task CreateSchoolAdmissionAsync(AppDbContext dbContext, long schoolId, SchoolStudentEnrollment newAdmission)
         {
             bool success = false;
             const int maxRetries = 3;

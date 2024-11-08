@@ -11,13 +11,15 @@ namespace SmartSchool.Schema.Types
 {
     public class SchoolStudentEnrollmentRequestModel : RecordModel
     {
-        public RequestStatus? Status { get; set; }
         public Grade? Grade { get; set; }
+        public RequestStatus? Status { get; set; }
 
         public long? SchoolId { get; set; }
+        public SchoolModel? School { get; set; }
+        public string? SchoolName { get; set; }
 
         public long? PersonId { get; set; }
-        //public string? PersonFullName { get; set; }
-        //public DateOnly? PersonDateOfBirth { get; set; }
+        public PersonModel? Person { get; set; }
+        public string? PersonFullName { get; set; }
     }
 }

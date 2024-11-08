@@ -21,12 +21,12 @@ namespace SmartSchool.Service
 {
     public class AuthService : IAuthService
     {
-        private readonly IDbContextFactory<SmartSchoolDbContext> dbContextFactory;
+        private readonly IDbContextFactory<AppDbContext> dbContextFactory;
         private readonly IMapper mapper;
         private readonly AuthSettings authSettings;
 
         public AuthService(
-            IDbContextFactory<SmartSchoolDbContext> dbContextFactory,
+            IDbContextFactory<AppDbContext> dbContextFactory,
             IMapper mapper,
             IOptions<AuthSettings> authSettings
             )

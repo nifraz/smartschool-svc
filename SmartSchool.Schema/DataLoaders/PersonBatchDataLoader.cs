@@ -14,10 +14,10 @@ namespace SmartSchool.Schema.DataLoaders
     // data loaders further down the page.
     public class PersonBatchDataLoader : BatchDataLoader<long, Person>
     {
-        private readonly IDbContextFactory<SmartSchoolDbContext> _dbContextFactory;
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
         public PersonBatchDataLoader(
-            IDbContextFactory<SmartSchoolDbContext> dbContextFactory,
+            IDbContextFactory<AppDbContext> dbContextFactory,
             IBatchScheduler batchScheduler,
             DataLoaderOptions? options = null)
             : base(batchScheduler, options)
@@ -28,7 +28,7 @@ namespace SmartSchool.Schema.DataLoaders
         protected override async Task<IReadOnlyDictionary<long, Person>>
         LoadBatchAsync(IReadOnlyList<long> keys, CancellationToken cancellationToken)
         {
-            await using SmartSchoolDbContext dbContext =
+            await using AppDbContext dbContext =
                 _dbContextFactory.CreateDbContext();
 
             //return await dbContext.Persons

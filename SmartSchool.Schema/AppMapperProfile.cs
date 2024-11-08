@@ -11,21 +11,36 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema
 {
-    public class SmartSchoolProfile : Profile
+    public class AppMapperProfile : Profile
     {
-        public SmartSchoolProfile()
+        public AppMapperProfile()
         {
             //entity to type
+            CreateMap<User, UserModel>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Person.FullName))
+                .ForMember(dest => dest.ShortName, opt => opt.MapFrom(src => src.Person.ShortName))
+                .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Person.Nickname))
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.Person.DateOfBirth))
+                .ForMember(dest => dest.BcNo, opt => opt.MapFrom(src => src.Person.BcNo))
+                .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Person.Sex))
+                .ForMember(dest => dest.NicNo, opt => opt.MapFrom(src => src.Person.NicNo))
+                .ForMember(dest => dest.PassportNo, opt => opt.MapFrom(src => src.Person.PassportNo))
+                .ForMember(dest => dest.MobileNo, opt => opt.MapFrom(src => src.Person.MobileNo))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Person.Email))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Person.Address))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Person.Image))
+                ;
             CreateMap<Person, PersonModel>()
                 ;
             CreateMap<School, SchoolModel>()
                 ;
             CreateMap<SchoolStudentEnrollment, SchoolStudentEnrollmentModel>()
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
+                .ForMember(dest => dest.StudentFullName, opt => opt.MapFrom(src => src.Student.Person.FullName))
                 ;
             CreateMap<SchoolStudentEnrollmentRequest, SchoolStudentEnrollmentRequestModel>()
-                //.ForMember(dest => dest.PersonFullName, opt => opt.MapFrom(src => src.Person.FullName))
-                //.ForMember(dest => dest.PersonDateOfBirth, opt => opt.MapFrom(src => src.Person.DateOfBirth))
+                .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
+                .ForMember(dest => dest.PersonFullName, opt => opt.MapFrom(src => src.Person.FullName))
                 ;
             CreateMap<SchoolTeacherEnrollment, SchoolTeacherEnrollmentModel>()
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
@@ -40,6 +55,8 @@ namespace SmartSchool.Schema
                ;
             CreateMap<ClassStudentEnrollment, ClassStudentEnrollmentModel>()
                .ForMember(dest => dest.AcademicYear, opt => opt.MapFrom(src => src.AcademicYear.Year))
+               .ForMember(dest => dest.StudentId, opt => opt.MapFrom(src => src.SchoolStudentEnrollment.StudentId))
+               .ForMember(dest => dest.StudentFullName, opt => opt.MapFrom(src => src.SchoolStudentEnrollment.Student.Person.FullName))
                ;
             CreateMap<ClassTeacherEnrollment, ClassTeacherEnrollmentModel>()
                .ForMember(dest => dest.AcademicYear, opt => opt.MapFrom(src => src.AcademicYear.Year))

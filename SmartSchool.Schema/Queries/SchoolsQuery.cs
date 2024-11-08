@@ -5,6 +5,7 @@ using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
 using SmartSchool.Schema.Filters;
 using SmartSchool.Schema.Sorters;
 using SmartSchool.Schema.Types;
@@ -32,7 +33,7 @@ namespace SmartSchool.Schema.Queries
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<SchoolModel> GetSchools(SmartSchoolDbContext dbContext)
+        public IQueryable<SchoolModel> GetSchools(AppDbContext dbContext)
         {
             return dbContext.Schools
                 .Include(x => x.SchoolStudentEnrollmentRequests)
@@ -46,7 +47,7 @@ namespace SmartSchool.Schema.Queries
                 ;
         }
 
-        public async Task<SchoolModel?> GetSchoolAsync(SmartSchoolDbContext dbContext, long id)
+        public async Task<SchoolModel?> GetSchoolAsync(AppDbContext dbContext, long id)
         {
             var existingRecord = await dbContext.Schools
                 .Include(x => x.SchoolStudentEnrollmentRequests)
@@ -75,5 +76,122 @@ namespace SmartSchool.Schema.Queries
             return response;
         }
 
+        [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
+        [UseProjection]
+        [UseFiltering]
+        [UseSorting]
+        public IQueryable<SchoolStudentEnrollmentRequestModel> GetSchoolStudentEnrollmentRequests(AppDbContext dbContext)
+        {
+            return dbContext.SchoolStudentEnrollmentRequests
+                .Include(x => x.School)
+                .Include(x => x.Person)
+                .ProjectTo<SchoolStudentEnrollmentRequestModel>(mapper.ConfigurationProvider)
+                ;
+        }
+
+        public async Task<SchoolStudentEnrollmentRequestModel?> GetSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, long id)
+        {
+            var existingRecord = await dbContext.SchoolStudentEnrollmentRequests
+                .Include(x => x.School)
+                .Include(x => x.Person)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingRecord == null)
+            {
+                return null;
+            }
+
+            var response = mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
+
+            return response;
+        }
+
+        [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
+        [UseProjection]
+        [UseFiltering]
+        [UseSorting]
+        public IQueryable<SchoolStudentEnrollmentModel> GetSchoolStudentEnrollments(AppDbContext dbContext)
+        {
+            return dbContext.SchoolStudentEnrollments
+                .Include(x => x.School)
+                .Include(x => x.Student)
+                .ProjectTo<SchoolStudentEnrollmentModel>(mapper.ConfigurationProvider)
+                ;
+        }
+
+        public async Task<SchoolStudentEnrollmentModel?> GetSchoolStudentEnrollmentAsync(AppDbContext dbContext, long id)
+        {
+            var existingRecord = await dbContext.SchoolStudentEnrollments
+                .Include(x => x.School)
+                .Include(x => x.Student.Person)
+                .Include(x => x.ClassStudentEnrollments)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingRecord == null)
+            {
+                return null;
+            }
+
+            var response = mapper.Map<SchoolStudentEnrollmentModel>(existingRecord);
+
+            response.ClassStudentEnrollments = mapper.Map<IEnumerable<ClassStudentEnrollmentModel>>(existingRecord.ClassStudentEnrollments);
+
+            return response;
+        }
+
+        [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
+        [UseProjection]
+        [UseFiltering]
+        [UseSorting]
+        public IQueryable<ClassModel> GetClasses(AppDbContext dbContext)
+        {
+            return dbContext.Classes
+                .Include(x => x.School)
+                .Include(x => x.Language)
+                .ProjectTo<ClassModel>(mapper.ConfigurationProvider)
+                ;
+        }
+
+        //public async Task<ClassModel?> GetClassAsync(AppDbContext dbContext, long id)
+        //{
+        //    var existingRecord = await dbContext.Classes
+        //        .Include(x => x.School)
+        //        .Include(x => x.Language)
+        //        .Include(x => x.ClassStudentEnrollments)
+        //            .ThenInclude(x => x.SchoolStudentEnrollment.Student.Person)
+        //        .FirstOrDefaultAsync(x => x.Id == id);
+
+        //    if (existingRecord == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    var response = mapper.Map<ClassModel>(existingRecord);
+
+        //    response.ClassStudentEnrollments = mapper.Map<IEnumerable<ClassStudentEnrollmentModel>>(existingRecord.ClassStudentEnrollments);
+
+        //    return response;
+        //}
+
+        public async Task<ClassModel?> GetClassAsync(AppDbContext dbContext, long schoolId, Grade grade, string section)
+        {
+            var existingRecord = await dbContext.Classes
+                .Include(x => x.School)
+                .Include(x => x.Language)
+                .Include(x => x.ClassStudentEnrollments)
+                    .ThenInclude(x => x.SchoolStudentEnrollment.Student.Person)
+                .FirstOrDefaultAsync(x => x.SchoolId == schoolId && x.Grade == grade && x.Section == section);
+
+            if (existingRecord == null)
+            {
+                return null;
+            }
+
+            var response = mapper.Map<ClassModel>(existingRecord);
+
+            response.ClassStudentEnrollments = mapper.Map<IEnumerable<ClassStudentEnrollmentModel>>(existingRecord.ClassStudentEnrollments);
+
+            return response;
+        }
     }
 }

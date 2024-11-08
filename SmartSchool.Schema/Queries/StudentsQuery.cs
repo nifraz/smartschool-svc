@@ -32,7 +32,7 @@ namespace SmartSchool.Schema.Queries
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<StudentModel> GetStudents(SmartSchoolDbContext dbContext)
+        public IQueryable<StudentModel> GetStudents(AppDbContext dbContext)
         {
             return dbContext.Students
                 .Include(x => x.Person)
@@ -40,7 +40,7 @@ namespace SmartSchool.Schema.Queries
                 ;
         }
 
-        public async Task<StudentModel?> GetStudentAsync(SmartSchoolDbContext dbContext, long id)
+        public async Task<StudentModel?> GetStudentAsync(AppDbContext dbContext, long id)
         {
             var existingRecord = await dbContext.Students
                 .Include(x => x.Person)

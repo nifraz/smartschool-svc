@@ -20,6 +20,8 @@ namespace SmartSchool.Schema.Types
         public long? ClassId { get; set; }
 
         public long? SchoolStudentEnrollmentId { get; set; }
+        public long? StudentId { get; set; }
+        public string? StudentFullName { get; set; }
 
         public int? AcademicYear { get; set; }
     }

@@ -9,6 +9,7 @@ using SmartSchool.Schema.Mutations;
 using SmartSchool.Schema.Queries;
 using SmartSchool.Schema.Types;
 using SmartSchool.Service;
+using SmartUser.Schema.Queries;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,7 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(nameof
 builder.Services.Configure<SmsSettings>(builder.Configuration.GetSection(nameof(SmsSettings)));
 
 // Add services to the container.
-builder.Services.AddAutoMapper(typeof(SmartSchoolDbContext));
+builder.Services.AddAutoMapper(typeof(AppDbContext));
 builder.Services.AddScoped<IAuthService, AuthService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -31,7 +32,7 @@ builder.Services.AddAuthorization();
 
 var connectionString = builder.Configuration.GetConnectionString("MariaDbConnection");
 
-builder.Services.AddPooledDbContextFactory<SmartSchoolDbContext>(options =>
+builder.Services.AddPooledDbContextFactory<AppDbContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(11, 4, 0)))
 );
 
@@ -47,8 +48,9 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddGraphQLServer()
-    .RegisterDbContext<SmartSchoolDbContext>(DbContextKind.Pooled)
+    .RegisterDbContext<AppDbContext>(DbContextKind.Pooled)
     .AddQueryType<Query>()
+    .AddTypeExtension<UsersQuery>()
     .AddTypeExtension<StudentsQuery>()
     .AddTypeExtension<TeachersQuery>()
     .AddTypeExtension<SchoolsQuery>()
@@ -61,6 +63,7 @@ builder.Services
     .AddSorting();
 
 builder.Services.AddScoped<PersonBatchDataLoader>();
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
