@@ -29,5 +29,11 @@ namespace SmartSchool.Schema.Models
         public bool IsStaff { get; set; }
         public bool IsTeacher { get; set; }
         public bool IsPrincipal { get; set; }
+
+        public long? GuardianId { get; set; }
+        public long? StudentId { get; set; }
+        public long? StaffId { get; set; }
+        public long? TeacherId { get; set; }
+        public long? PrincipalId { get; set; }
     }
 }

@@ -5,8 +5,9 @@ using SmartSchool.Schema.Entities;
 
 namespace SmartSchool.Schema.Types
 {
-    public class StudentType : PersonType
+    public class StudentModel : PersonModel
     {
+        public IEnumerable<SchoolStudentEnrollmentModel> SchoolStudentEnrollments { get; set; } = [];
         //[IsProjected(true)]
         //public int Id { get; set; }
         //[IsProjected(true)]

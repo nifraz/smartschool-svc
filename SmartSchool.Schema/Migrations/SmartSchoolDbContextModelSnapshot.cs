@@ -2061,9 +2061,6 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("DeletedUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<byte>("Grade")
-                        .HasColumnType("tinyint unsigned");
-
                     b.Property<DateTime?>("LastModifiedTime")
                         .HasColumnType("datetime(6)");
 
@@ -2278,7 +2275,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 1L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$2q5UnDXJh62x/rj98PLrIA$9DjYxMXi4G5FT9ewHlCiH857NUnA60g3WzJXokggArQ",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$9izDOnmFoBHinP8TY/JJHw$4lEFsTEkKiX6KQTVIs4Opppzved6DvTtNOhZask10Ec",
                             PersonId = 1L
                         },
                         new
@@ -2286,7 +2283,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 2L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$oM/Tph9/Lv4qOz5bvKAUFA$7Rzx6nEspW/T19subNPsW/osZ9o9kWaBHCPlF7GoIEk",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$zc2p5d4CwXqY/xZhs0ydPQ$fx1cTldt5mE9Pl/0YMX4+kSQACZF6ouGbrJHhXhIvA4",
                             PersonId = 2L
                         },
                         new
@@ -2294,7 +2291,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 3L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$BEN6SV25o06wuWboqL/5fw$PPg20llYCpdaoJhcKh3L9vX69sZoQRVUHMshfNo3eT0",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$+r7+beDqr7cdQ+Pofa+VQQ$DtD3KRWbewBe/hk2cqAUODrRfyLkDX00TQAAWX2XF68",
                             PersonId = 3L
                         },
                         new
@@ -2302,7 +2299,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 4L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$nCkeEDPJE9D73/bg0WN7fw$ok8sf2l5B6eeUEKRv3IYrkSWlB+IH/D0+ecIZIzxQbg",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$H2rrHubHkFvge91HeRUP5g$5Qez+VVcDTxB6eFB47G73DyMSkZDaGbkzbAAs8bXNeU",
                             PersonId = 4L
                         },
                         new
@@ -2310,7 +2307,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 5L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$D9rHWGXwaz4iZ8RkYWR/TQ$wjHGS5RKGDBZtelCJ0B6tD72E/pJ4+I6T1zxcx7pl2o",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$Bwezjp45HKK3ijL4OEPyHg$Bz7SgRp7A1kmfxisOyMbeYFh/39cEfjMTF/CHmp2NU4",
                             PersonId = 5L
                         });
                 });
@@ -2919,7 +2916,7 @@ namespace SmartSchool.Schema.Migrations
                         .HasForeignKey("SchoolStudentEnrollmentRequestId");
 
                     b.HasOne("SmartSchool.Schema.Entities.Student", "Student")
-                        .WithMany("StudentAdmissions")
+                        .WithMany("SchoolStudentEnrollments")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2995,7 +2992,7 @@ namespace SmartSchool.Schema.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.Teacher", "Teacher")
-                        .WithMany("TeacherEnrollments")
+                        .WithMany("SchoolTeacherEnrollments")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3234,12 +3231,12 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Student", b =>
                 {
-                    b.Navigation("StudentAdmissions");
+                    b.Navigation("SchoolStudentEnrollments");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Teacher", b =>
                 {
-                    b.Navigation("TeacherEnrollments");
+                    b.Navigation("SchoolTeacherEnrollments");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.User", b =>

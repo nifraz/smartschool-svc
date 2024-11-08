@@ -120,34 +120,39 @@ namespace SmartSchool.Service
             user.Person = person;
             var authenticateResponse = mapper.Map<UserResponse>(user);
 
+            authenticateResponse.StudentId = person.Student?.Id;
+            authenticateResponse.TeacherId = person.Teacher?.Id;
+            authenticateResponse.PrincipalId = person.Principal?.Id;
+
             var latestSchoolStudentAdmissions = await dbContext.SchoolStudentEnrollments
                 .AsNoTracking()
                 .Where(x => person.Student != null && person.Student.Id > 0)
-                .OrderByDescending(x => x.CreatedTime)
-                .Select(x => new { x.SchoolId, x.CreatedTime })
+                .OrderByDescending(x => x.Time)
+                .Select(x => new { x.SchoolId, x.Time, x.Status })
                 .Take(1)
                 .ToListAsync();
 
             var latestSchoolTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
                 .AsNoTracking()
                 .Where(x => person.Teacher != null && person.Teacher.Id > 0)
-                .OrderByDescending(x => x.CreatedTime)
-                .Select(x => new { x.SchoolId, x.CreatedTime })
+                .OrderByDescending(x => x.Time)
+                .Select(x => new { x.SchoolId, x.Time, x.Status })
                 .Take(1)
                 .ToListAsync();
 
             var latestSchoolPrincipalEnrollments = await dbContext.SchoolPrincipalEnrollments
                 .AsNoTracking()
                 .Where(x => person.Principal != null && person.Principal.Id > 0)
-                .OrderByDescending(x => x.CreatedTime)
-                .Select(x => new { x.SchoolId, x.CreatedTime })
+                .OrderByDescending(x => x.Time)
+                .Select(x => new { x.SchoolId, x.Time, x.Status })
                 .Take(1)
                 .ToListAsync();
 
             var latestSchool = latestSchoolStudentAdmissions
                 .Concat(latestSchoolTeacherEnrollments)
                 .Concat(latestSchoolPrincipalEnrollments)
-                .OrderByDescending(x => x.CreatedTime)
+                .Where(x => x.Status == EnrollmentStatus.Active)
+                .OrderByDescending(x => x.Time)
                 .FirstOrDefault();
 
             authenticateResponse.SchoolId = latestSchool?.SchoolId;
@@ -196,7 +201,7 @@ namespace SmartSchool.Service
         {
             //Generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var expires = DateTime.UtcNow.AddDays(1);
+            var expires = DateTime.UtcNow.AddDays(7);
             var token = await Task.Run(() =>
             {
 

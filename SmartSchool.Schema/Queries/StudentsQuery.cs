@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using HotChocolate;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Filters;
 using SmartSchool.Schema.Sorters;
@@ -28,46 +30,34 @@ namespace SmartSchool.Schema.Queries
 
         [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
         [UseProjection]
-        [UseFiltering(typeof(StudentFilter))]
-        [UseSorting(typeof(StudentSort))]
-        public IQueryable<StudentType> GetStudents(SmartSchoolDbContext dbContext)
+        [UseFiltering]
+        [UseSorting]
+        public IQueryable<StudentModel> GetStudents(SmartSchoolDbContext dbContext)
         {
             return dbContext.Students
                 .Include(x => x.Person)
-                .Select(x => new StudentType
-                {
-                    Id = x.Id,
-                    CreatedUserId = x.CreatedUserId,
-                    CreatedTime = x.CreatedTime,
-                    LastModifiedUserId = x.LastModifiedUserId,
-                    LastModifiedTime = x.LastModifiedTime,
-
-                    FullName = x.Person.FullName,
-                    ShortName = x.Person.ShortName,
-                    Nickname = x.Person.Nickname,
-                    DateOfBirth = x.Person.DateOfBirth,
-                    BcNo = x.Person.BcNo,
-                    Sex = x.Person.Sex,
-                    NicNo = x.Person.NicNo,
-                    MobileNo = x.Person.MobileNo,
-                    Email = x.Person.Email,
-                    Address = x.Person.Address,
-                    PassportNo = x.Person.PassportNo,
-                }
-            );
+                .ProjectTo<StudentModel>(mapper.ConfigurationProvider)
+                ;
         }
 
-        public async Task<StudentType?> GetStudentAsync(SmartSchoolDbContext dbContext, long id)
+        public async Task<StudentModel?> GetStudentAsync(SmartSchoolDbContext dbContext, long id)
         {
             var existingRecord = await dbContext.Students
-                .FindAsync(id);
+                .Include(x => x.Person)
+                .Include(x => x.SchoolStudentEnrollments)
+                .ThenInclude(x => x.School)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingRecord == null)
             {
                 return null;
             }
 
-            return mapper.Map<StudentType>(existingRecord);
+            var response = mapper.Map<StudentModel>(existingRecord);
+
+            response.SchoolStudentEnrollments = mapper.Map<IEnumerable<SchoolStudentEnrollmentModel>>(existingRecord.SchoolStudentEnrollments);
+
+            return response;
         }
 
         //[UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10)]

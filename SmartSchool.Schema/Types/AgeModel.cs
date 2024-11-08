@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Types
 {
-    public class ResponseType
+    public class AgeModel
     {
-        public bool Success { get; set; }
-        public string Message { get; set; }
+        public int Years { get; set; }
+        public int Months { get; set; }
+        public int Days { get; set; }
     }
 }

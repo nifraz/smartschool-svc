@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Enums;
+using SmartSchool.Schema.Inputs;
 using SmartSchool.Schema.Types;
 
 namespace SmartSchool.Schema.Mutations
@@ -23,7 +24,7 @@ namespace SmartSchool.Schema.Mutations
             this.mapper = mapper;
         }
 
-        public async Task<StudentType> CreateStudentAsync(SmartSchoolDbContext dbContext, StudentInput input)
+        public async Task<StudentModel> CreateStudentAsync(SmartSchoolDbContext dbContext, StudentInput input)
         {
             //using var dbContext = await dbContextFactory.CreateDbContextAsync();
             var newRecord = mapper.Map<Student>(input);
@@ -32,17 +33,17 @@ namespace SmartSchool.Schema.Mutations
             dbContext.Students.Add(newRecord);
             await dbContext.SaveChangesAsync();
 
-            return mapper.Map<StudentType>(newRecord);
+            return mapper.Map<StudentModel>(newRecord);
         }
 
-        public async Task<StudentType> UpdateStudentAsync(SmartSchoolDbContext dbContext, long id, StudentInput input)
+        public async Task<StudentModel> UpdateStudentAsync(SmartSchoolDbContext dbContext, long id, StudentInput input)
         {
             var existingRecord = await dbContext.Students.FindAsync(id) ?? throw new KeyNotFoundException($"No matching record found (id={id})");
             mapper.Map(input, existingRecord);
 
             await dbContext.SaveChangesAsync();
 
-            return mapper.Map<StudentType>(existingRecord);
+            return mapper.Map<StudentModel>(existingRecord);
         }
 
         public async Task CreateSchoolAdmissionAsync(SmartSchoolDbContext dbContext, long schoolId, SchoolStudentEnrollment newAdmission)

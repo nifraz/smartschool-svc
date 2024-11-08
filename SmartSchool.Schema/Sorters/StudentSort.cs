@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Sorters
 {
-    public class StudentSort : SortInputType<StudentType>
+    public class StudentSort : SortInputType<StudentModel>
     {
-        protected override void Configure(ISortInputTypeDescriptor<StudentType> descriptor)
+        protected override void Configure(ISortInputTypeDescriptor<StudentModel> descriptor)
         {
             //descriptor.Ignore(x => x.Id);
             //descriptor.Field(x => x.Name).Name("CourseName");

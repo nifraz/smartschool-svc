@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Filters
 {
-    public class StudentFilter : FilterInputType<StudentType>
+    public class StudentFilter : FilterInputType<StudentModel>
     {
-        protected override void Configure(IFilterInputTypeDescriptor<StudentType> descriptor)
+        protected override void Configure(IFilterInputTypeDescriptor<StudentModel> descriptor)
         {
             //descriptor.Ignore(x => x.Students);
             base.Configure(descriptor);

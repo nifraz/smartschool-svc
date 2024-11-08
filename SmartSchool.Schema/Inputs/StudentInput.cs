@@ -1,11 +1,10 @@
-﻿using SmartSchool.Schema.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartSchool.Schema.Types
+namespace SmartSchool.Schema.Inputs
 {
     public class StudentInput : PersonInput
     {

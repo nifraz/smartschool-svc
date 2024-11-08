@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Types
 {
-    public class RecordType
+    public class RecordModel
     {
         [IsProjected(true)]
         public long? Id { get; set; }

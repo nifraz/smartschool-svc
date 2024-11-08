@@ -16,6 +16,10 @@ namespace SmartSchool.Schema.Entities
         public EnrollmentStatus Status { get; set; }
 
         //one
+        [ForeignKey(nameof(Class))]
+        public long ClassId { get; set; }
+        public Class Class { get; set; }
+
         [ForeignKey(nameof(SchoolTeacherEnrollment))]
         public long SchoolTeacherEnrollmentId { get; set; }
         public SchoolTeacherEnrollment SchoolTeacherEnrollment { get; set; }
@@ -23,9 +27,5 @@ namespace SmartSchool.Schema.Entities
         [ForeignKey(nameof(AcademicYear))]
         public int AcademicYearYear { get; set; }
         public AcademicYear AcademicYear { get; set; }
-
-        [ForeignKey(nameof(Class))]
-        public long ClassId { get; set; }
-        public Class Class { get; set; }
     }
 }

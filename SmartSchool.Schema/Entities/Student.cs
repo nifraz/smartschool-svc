@@ -12,7 +12,7 @@ namespace SmartSchool.Schema.Entities
 
         //many
         [InverseProperty(nameof(SchoolStudentEnrollment.Student))]
-        public ICollection<SchoolStudentEnrollment> StudentAdmissions { get; set; } = [];
+        public ICollection<SchoolStudentEnrollment> SchoolStudentEnrollments { get; set; } = [];
 
     }
 

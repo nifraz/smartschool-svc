@@ -11,7 +11,6 @@ namespace SmartSchool.Schema.Entities
     public class SchoolTeacherEnrollmentRequest : AbstractRecord
     {
         public RequestStatus Status { get; set; }
-        public Grade Grade { get; set; }
 
         //one
         [ForeignKey(nameof(School))]

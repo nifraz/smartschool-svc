@@ -246,9 +246,9 @@ namespace SmartSchool.Schema.Migrations
                     RemovedReason = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    ClassId = table.Column<long>(type: "bigint", nullable: false),
                     SchoolTeacherEnrollmentId = table.Column<long>(type: "bigint", nullable: false),
                     AcademicYearYear = table.Column<int>(type: "int", nullable: false),
-                    ClassId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -701,7 +701,6 @@ namespace SmartSchool.Schema.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    Grade = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     SchoolId = table.Column<long>(type: "bigint", nullable: false),
                     PersonId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -964,11 +963,11 @@ namespace SmartSchool.Schema.Migrations
                 columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "IsEmailVerified", "IsMobileNoVerified", "LastModifiedTime", "LastModifiedUserId", "Password", "PersonId", "TokenExpiration", "VerificationToken" },
                 values: new object[,]
                 {
-                    { 1L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$2q5UnDXJh62x/rj98PLrIA$9DjYxMXi4G5FT9ewHlCiH857NUnA60g3WzJXokggArQ", 1L, null, null },
-                    { 2L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$oM/Tph9/Lv4qOz5bvKAUFA$7Rzx6nEspW/T19subNPsW/osZ9o9kWaBHCPlF7GoIEk", 2L, null, null },
-                    { 3L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$BEN6SV25o06wuWboqL/5fw$PPg20llYCpdaoJhcKh3L9vX69sZoQRVUHMshfNo3eT0", 3L, null, null },
-                    { 4L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$nCkeEDPJE9D73/bg0WN7fw$ok8sf2l5B6eeUEKRv3IYrkSWlB+IH/D0+ecIZIzxQbg", 4L, null, null },
-                    { 5L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$D9rHWGXwaz4iZ8RkYWR/TQ$wjHGS5RKGDBZtelCJ0B6tD72E/pJ4+I6T1zxcx7pl2o", 5L, null, null }
+                    { 1L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$9izDOnmFoBHinP8TY/JJHw$4lEFsTEkKiX6KQTVIs4Opppzved6DvTtNOhZask10Ec", 1L, null, null },
+                    { 2L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$zc2p5d4CwXqY/xZhs0ydPQ$fx1cTldt5mE9Pl/0YMX4+kSQACZF6ouGbrJHhXhIvA4", 2L, null, null },
+                    { 3L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$+r7+beDqr7cdQ+Pofa+VQQ$DtD3KRWbewBe/hk2cqAUODrRfyLkDX00TQAAWX2XF68", 3L, null, null },
+                    { 4L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$H2rrHubHkFvge91HeRUP5g$5Qez+VVcDTxB6eFB47G73DyMSkZDaGbkzbAAs8bXNeU", 4L, null, null },
+                    { 5L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$Bwezjp45HKK3ijL4OEPyHg$Bz7SgRp7A1kmfxisOyMbeYFh/39cEfjMTF/CHmp2NU4", 5L, null, null }
                 });
 
             migrationBuilder.InsertData(
