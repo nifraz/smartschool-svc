@@ -7,6 +7,7 @@ using SmartSchool.Schema.DataLoaders;
 using SmartSchool.Schema.Models.Settings;
 using SmartSchool.Schema.Mutations;
 using SmartSchool.Schema.Queries;
+using SmartSchool.Schema.Subscriptions;
 using SmartSchool.Schema.Types;
 using SmartSchool.Service;
 using SmartUser.Schema.Queries;
@@ -59,6 +60,7 @@ builder.Services
     .AddTypeExtension<StudentMutation>()
     .AddTypeExtension<SchoolMutation>()
     .AddInMemorySubscriptions()
+    .AddSubscriptionType<SchoolSubscription>()
     .AddProjections()
     .AddFiltering()
     .AddSorting();
@@ -86,6 +88,7 @@ else
 }
 
 app.UseRouting();
+app.UseWebSockets();
 app.MapControllers();
 app.MapGraphQL();
 

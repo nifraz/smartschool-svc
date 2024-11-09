@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using HotChocolate.Subscriptions;
+using HotChocolate;
 using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,8 @@ using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Enums;
 using SmartSchool.Schema.Inputs;
 using SmartSchool.Schema.Types;
+using HotChocolate.Execution.Processing;
+using SmartSchool.Schema.Subscriptions;
 
 namespace SmartSchool.Schema.Mutations
 {
@@ -62,7 +66,7 @@ namespace SmartSchool.Schema.Mutations
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
         }
 
-        public async Task<SchoolStudentEnrollmentModel> CreateSchoolStudentEnrollmentAsync(AppDbContext dbContext, SchoolStudentEnrollmentInput input)
+        public async Task<SchoolStudentEnrollmentModel> CreateSchoolStudentEnrollmentAsync(AppDbContext dbContext, [Service] ITopicEventSender sender, SchoolStudentEnrollmentInput input)
         {
             var schoolStudentEnrollmentRequest = null as SchoolStudentEnrollmentRequest;
 
@@ -150,6 +154,9 @@ namespace SmartSchool.Schema.Mutations
                     // Commit the transaction asynchronously
                     await transaction.CommitAsync();
                     success = true;
+
+                    await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentCreated), mapper.Map<SchoolStudentEnrollmentModel>(newSchoolStudentEnrollment));
+
                 }
                 catch (Exception ex)
                 {
