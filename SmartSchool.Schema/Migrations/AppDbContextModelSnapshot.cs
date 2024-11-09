@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartSchool.Schema;
 
@@ -12,11 +11,9 @@ using SmartSchool.Schema;
 namespace SmartSchool.Schema.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241108045624_CreateInitialSchema")]
-    partial class CreateInitialSchema
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1930,6 +1927,9 @@ namespace SmartSchool.Schema.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<int>("AcademicYearYear")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime(6)");
 
@@ -1961,6 +1961,8 @@ namespace SmartSchool.Schema.Migrations
                         .HasColumnType("tinyint unsigned");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearYear");
 
                     b.HasIndex("CreatedUserId");
 
@@ -2278,7 +2280,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 1L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$9izDOnmFoBHinP8TY/JJHw$4lEFsTEkKiX6KQTVIs4Opppzved6DvTtNOhZask10Ec",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$lHv+DlfpllvYbs+8GWuNsA$+WTNNrQanqHp8E6S+GIrCszW6uLC3Mfg2E4Ms46F6UA",
                             PersonId = 1L
                         },
                         new
@@ -2286,7 +2288,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 2L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$zc2p5d4CwXqY/xZhs0ydPQ$fx1cTldt5mE9Pl/0YMX4+kSQACZF6ouGbrJHhXhIvA4",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$s9Jpw9YuIHifyU3xe2cr+w$F0d46kxMb4JzagVLUEafFrnp9Mn4lfiRQmJ2hue3WZQ",
                             PersonId = 2L
                         },
                         new
@@ -2294,7 +2296,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 3L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$+r7+beDqr7cdQ+Pofa+VQQ$DtD3KRWbewBe/hk2cqAUODrRfyLkDX00TQAAWX2XF68",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$T5pFTxioBddRwnwsyvrZaA$rc90zpKMZ/asixe7QEUsI4GWwUAunDJNZmvlIuFP1D4",
                             PersonId = 3L
                         },
                         new
@@ -2302,7 +2304,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 4L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$H2rrHubHkFvge91HeRUP5g$5Qez+VVcDTxB6eFB47G73DyMSkZDaGbkzbAAs8bXNeU",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$AIMGxr8Y/MPsI3H7knXFcQ$Pqaz7xjzp8WQtS7BgGcLXkWSwnuVQ58TQd6B7JuDmKo",
                             PersonId = 4L
                         },
                         new
@@ -2310,7 +2312,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 5L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$Bwezjp45HKK3ijL4OEPyHg$Bz7SgRp7A1kmfxisOyMbeYFh/39cEfjMTF/CHmp2NU4",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$+pdX6kgi7ppWc0ZiAQZR1g$ayXNZw8T/w3NlkGFzmQgXQ3kr4O8IFo0S6fUom3BVo8",
                             PersonId = 5L
                         });
                 });
@@ -2939,6 +2941,12 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollmentRequest", b =>
                 {
+                    b.HasOne("SmartSchool.Schema.Entities.AcademicYear", "AcademicYear")
+                        .WithMany()
+                        .HasForeignKey("AcademicYearYear")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
                         .WithMany("CreatedSchoolStudentEnrollmentRequests")
                         .HasForeignKey("CreatedUserId");
@@ -2962,6 +2970,8 @@ namespace SmartSchool.Schema.Migrations
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AcademicYear");
 
                     b.Navigation("CreatedUser");
 

@@ -21,5 +21,8 @@ namespace SmartSchool.Schema.Types
         public long? PersonId { get; set; }
         public PersonModel? Person { get; set; }
         public string? PersonFullName { get; set; }
+
+        public int? AcademicYearYear { get; set; }
+        public AcademicYearModel? AcademicYear { get; set; }
     }
 }

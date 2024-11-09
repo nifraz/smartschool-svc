@@ -10,7 +10,7 @@ namespace SmartSchool.Schema.Inputs
     {
         public int No { get; set; }
         public long SchoolId { get; set; }
-        public long StudentId { get; set; }
+        public long PersonId { get; set; }
         public long ClassId { get; set; }
         public int AcademicYear { get; set; }
 

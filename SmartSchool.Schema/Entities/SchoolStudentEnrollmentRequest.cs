@@ -21,5 +21,9 @@ namespace SmartSchool.Schema.Entities
         [ForeignKey(nameof(Person))]
         public long PersonId { get; set; }
         public Person Person { get; set; }
+
+        [ForeignKey(nameof(AcademicYear))]
+        public int AcademicYearYear { get; set; }
+        public AcademicYear AcademicYear { get; set; }
     }
 }

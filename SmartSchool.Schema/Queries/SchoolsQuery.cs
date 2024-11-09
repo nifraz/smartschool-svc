@@ -29,6 +29,13 @@ namespace SmartSchool.Schema.Queries
             this.mapper = mapper;
         }
 
+        public IQueryable<AcademicYearModel> GetAcademicYears(AppDbContext dbContext)
+        {
+            return dbContext.AcademicYears
+                .ProjectTo<AcademicYearModel>(mapper.ConfigurationProvider)
+                ;
+        }
+
         [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
         [UseProjection]
         [UseFiltering]
@@ -51,6 +58,7 @@ namespace SmartSchool.Schema.Queries
         {
             var existingRecord = await dbContext.Schools
                 .Include(x => x.SchoolStudentEnrollmentRequests)
+                    .ThenInclude(x => x.Person)
                 .Include(x => x.SchoolStudentEnrollments)
                 .Include(x => x.SchoolTeacherEnrollmentRequests)
                 .Include(x => x.SchoolTeacherEnrollments)

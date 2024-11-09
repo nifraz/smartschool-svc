@@ -650,10 +650,11 @@ namespace SmartSchool.Schema.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     Grade = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    Status = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     SchoolId = table.Column<long>(type: "bigint", nullable: false),
                     PersonId = table.Column<long>(type: "bigint", nullable: false),
+                    AcademicYearYear = table.Column<int>(type: "int", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     LastModifiedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -664,6 +665,12 @@ namespace SmartSchool.Schema.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SchoolStudentEnrollmentRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SchoolStudentEnrollmentRequests_AcademicYears_AcademicYearYe~",
+                        column: x => x.AcademicYearYear,
+                        principalTable: "AcademicYears",
+                        principalColumn: "Year",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SchoolStudentEnrollmentRequests_Persons_PersonId",
                         column: x => x.PersonId,
@@ -963,11 +970,11 @@ namespace SmartSchool.Schema.Migrations
                 columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "IsEmailVerified", "IsMobileNoVerified", "LastModifiedTime", "LastModifiedUserId", "Password", "PersonId", "TokenExpiration", "VerificationToken" },
                 values: new object[,]
                 {
-                    { 1L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$9izDOnmFoBHinP8TY/JJHw$4lEFsTEkKiX6KQTVIs4Opppzved6DvTtNOhZask10Ec", 1L, null, null },
-                    { 2L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$zc2p5d4CwXqY/xZhs0ydPQ$fx1cTldt5mE9Pl/0YMX4+kSQACZF6ouGbrJHhXhIvA4", 2L, null, null },
-                    { 3L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$+r7+beDqr7cdQ+Pofa+VQQ$DtD3KRWbewBe/hk2cqAUODrRfyLkDX00TQAAWX2XF68", 3L, null, null },
-                    { 4L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$H2rrHubHkFvge91HeRUP5g$5Qez+VVcDTxB6eFB47G73DyMSkZDaGbkzbAAs8bXNeU", 4L, null, null },
-                    { 5L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$Bwezjp45HKK3ijL4OEPyHg$Bz7SgRp7A1kmfxisOyMbeYFh/39cEfjMTF/CHmp2NU4", 5L, null, null }
+                    { 1L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$lHv+DlfpllvYbs+8GWuNsA$+WTNNrQanqHp8E6S+GIrCszW6uLC3Mfg2E4Ms46F6UA", 1L, null, null },
+                    { 2L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$s9Jpw9YuIHifyU3xe2cr+w$F0d46kxMb4JzagVLUEafFrnp9Mn4lfiRQmJ2hue3WZQ", 2L, null, null },
+                    { 3L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$T5pFTxioBddRwnwsyvrZaA$rc90zpKMZ/asixe7QEUsI4GWwUAunDJNZmvlIuFP1D4", 3L, null, null },
+                    { 4L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$AIMGxr8Y/MPsI3H7knXFcQ$Pqaz7xjzp8WQtS7BgGcLXkWSwnuVQ58TQd6B7JuDmKo", 4L, null, null },
+                    { 5L, null, null, null, null, false, false, null, null, "$argon2id$v=19$m=65536,t=3,p=1$+pdX6kgi7ppWc0ZiAQZR1g$ayXNZw8T/w3NlkGFzmQgXQ3kr4O8IFo0S6fUom3BVo8", 5L, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1375,6 +1382,11 @@ namespace SmartSchool.Schema.Migrations
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SchoolStudentEnrollmentRequests_AcademicYearYear",
+                table: "SchoolStudentEnrollmentRequests",
+                column: "AcademicYearYear");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SchoolStudentEnrollmentRequests_CreatedUserId",
                 table: "SchoolStudentEnrollmentRequests",
                 column: "CreatedUserId");
@@ -1758,9 +1770,6 @@ namespace SmartSchool.Schema.Migrations
                 name: "SchoolStudentEnrollments");
 
             migrationBuilder.DropTable(
-                name: "AcademicYears");
-
-            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
@@ -1783,6 +1792,9 @@ namespace SmartSchool.Schema.Migrations
 
             migrationBuilder.DropTable(
                 name: "Teachers");
+
+            migrationBuilder.DropTable(
+                name: "AcademicYears");
 
             migrationBuilder.DropTable(
                 name: "Schools");

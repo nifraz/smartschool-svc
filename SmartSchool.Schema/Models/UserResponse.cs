@@ -1,4 +1,6 @@
-﻿using SmartSchool.Schema.Enums;
+﻿using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
+using SmartSchool.Schema.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,5 +37,7 @@ namespace SmartSchool.Schema.Models
         public long? StaffId { get; set; }
         public long? TeacherId { get; set; }
         public long? PrincipalId { get; set; }
+
+        public PersonModel Person { get; set; }
     }
 }

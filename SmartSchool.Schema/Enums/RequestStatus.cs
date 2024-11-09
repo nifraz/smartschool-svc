@@ -14,5 +14,6 @@ namespace SmartSchool.Schema.Enums
         OnHold = 3,
         Approved = 4,
         Rejected = 5,
+        Cancelled = 6,
     }
 }

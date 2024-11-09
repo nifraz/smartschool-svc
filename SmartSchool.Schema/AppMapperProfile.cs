@@ -34,6 +34,8 @@ namespace SmartSchool.Schema
                 ;
             CreateMap<School, SchoolModel>()
                 ;
+            CreateMap<AcademicYear, AcademicYearModel>()
+                ;
             CreateMap<SchoolStudentEnrollment, SchoolStudentEnrollmentModel>()
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.School.Name))
                 .ForMember(dest => dest.StudentFullName, opt => opt.MapFrom(src => src.Student.Person.FullName))

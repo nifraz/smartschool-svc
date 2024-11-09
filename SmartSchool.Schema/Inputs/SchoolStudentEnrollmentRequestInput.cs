@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartSchool.Schema.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,10 @@ namespace SmartSchool.Schema.Inputs
 {
     public class SchoolStudentEnrollmentRequestInput
     {
+        public Grade Grade { get; set; }
         public long SchoolId { get; set; }
-        public long StudentId { get; set; }
         public long PersonId { get; set; }
-        public long ClassId { get; set; }
-        public int AcademicYear { get; set; }
+        //public long StudentId { get; set; }
+        public int AcademicYearYear { get; set; }
     }
 }

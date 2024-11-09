@@ -57,6 +57,7 @@ builder.Services
     .AddType<StudentModel>()
     .AddMutationType<Mutation>()
     .AddTypeExtension<StudentMutation>()
+    .AddTypeExtension<SchoolMutation>()
     .AddInMemorySubscriptions()
     .AddProjections()
     .AddFiltering()
