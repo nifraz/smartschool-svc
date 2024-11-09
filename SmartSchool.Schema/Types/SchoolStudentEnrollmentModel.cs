@@ -23,6 +23,9 @@ namespace SmartSchool.Schema.Types
         public StudentModel? Student { get; set; }
         public string? StudentFullName { get; set; }
 
+        public long? SchoolStudentEnrollmentRequestId { get; set; }
+        public SchoolStudentEnrollmentRequestModel? SchoolStudentEnrollmentRequest { get; set; }
+
         public IEnumerable<ClassStudentEnrollmentModel> ClassStudentEnrollments { get; set; } = [];
     }
 }

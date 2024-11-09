@@ -12,7 +12,7 @@ using SmartSchool.Schema;
 namespace SmartSchool.Schema.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241109012913_CreateInitialSchema")]
+    [Migration("20241109150545_CreateInitialSchema")]
     partial class CreateInitialSchema
     {
         /// <inheritdoc />
@@ -104,6 +104,9 @@ namespace SmartSchool.Schema.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Location")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Notes")
                         .HasColumnType("longtext");
 
                     b.Property<long>("SchoolId")
@@ -234,6 +237,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("RemoveReason")
                         .HasColumnType("longtext");
 
@@ -310,6 +316,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RemovedReason")
                         .HasColumnType("longtext");
@@ -1341,6 +1350,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<string>("Nickname")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("PassportNo")
                         .HasColumnType("longtext");
 
@@ -1460,6 +1472,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
 
@@ -1510,6 +1525,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<long>("ParentPersonId")
                         .HasColumnType("bigint");
 
@@ -1556,6 +1574,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
 
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
@@ -1732,6 +1753,9 @@ namespace SmartSchool.Schema.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("PhoneNo")
                         .HasColumnType("longtext");
 
@@ -1803,6 +1827,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<int>("No")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<long>("PrincipalId")
                         .HasColumnType("bigint");
 
@@ -1872,6 +1899,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<int>("No")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
 
@@ -1897,7 +1927,8 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.HasIndex("SchoolStudentEnrollmentRequestId");
+                    b.HasIndex("SchoolStudentEnrollmentRequestId")
+                        .IsUnique();
 
                     b.HasIndex("StudentId");
 
@@ -1954,8 +1985,14 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("longtext");
 
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
@@ -2008,6 +2045,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<int>("No")
                         .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("RemovedTime")
                         .HasColumnType("datetime(6)");
@@ -2075,8 +2115,14 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("longtext");
 
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
@@ -2124,6 +2170,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
 
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
@@ -2179,6 +2228,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
 
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
@@ -2252,6 +2304,9 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -2283,7 +2338,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 1L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$lHv+DlfpllvYbs+8GWuNsA$+WTNNrQanqHp8E6S+GIrCszW6uLC3Mfg2E4Ms46F6UA",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$5XmJt8r7c+AB+NhgiO5FXQ$mqz93DapH1ZACWh3mCCqgEZnvKQx1P0eedFQS00Ckag",
                             PersonId = 1L
                         },
                         new
@@ -2291,7 +2346,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 2L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$s9Jpw9YuIHifyU3xe2cr+w$F0d46kxMb4JzagVLUEafFrnp9Mn4lfiRQmJ2hue3WZQ",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$0HbcriGji0Gwm9IVo9bUzg$UIRREQQlDzF3j4x24q5jxj8gro67VrsxfvznR4raDL8",
                             PersonId = 2L
                         },
                         new
@@ -2299,7 +2354,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 3L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$T5pFTxioBddRwnwsyvrZaA$rc90zpKMZ/asixe7QEUsI4GWwUAunDJNZmvlIuFP1D4",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$k4EE7wLSXFjpV1iHTVktsA$c6btyak2P2jaBUogU34pfmuSBaP4p2G3IlYCgRqEmAI",
                             PersonId = 3L
                         },
                         new
@@ -2307,7 +2362,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 4L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$AIMGxr8Y/MPsI3H7knXFcQ$Pqaz7xjzp8WQtS7BgGcLXkWSwnuVQ58TQd6B7JuDmKo",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$sIDXFDUUF1/T631G/L9VTw$2JvBUBNoa/e/DQ+JuOA8bijOKmNPOZzjIE4X7Y7G4q8",
                             PersonId = 4L
                         },
                         new
@@ -2315,7 +2370,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 5L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$+pdX6kgi7ppWc0ZiAQZR1g$ayXNZw8T/w3NlkGFzmQgXQ3kr4O8IFo0S6fUom3BVo8",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$+cAN1eEgw8nngdKmJCOxEQ$QsZ4XhlytTjYWEX7ZgqYMRVP1acsEoW8TMbv45oKOhg",
                             PersonId = 5L
                         });
                 });
@@ -2920,8 +2975,8 @@ namespace SmartSchool.Schema.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartSchool.Schema.Entities.SchoolStudentEnrollmentRequest", "SchoolStudentEnrollmentRequest")
-                        .WithMany()
-                        .HasForeignKey("SchoolStudentEnrollmentRequestId");
+                        .WithOne("SchoolStudentEnrollment")
+                        .HasForeignKey("SmartSchool.Schema.Entities.SchoolStudentEnrollment", "SchoolStudentEnrollmentRequestId");
 
                     b.HasOne("SmartSchool.Schema.Entities.Student", "Student")
                         .WithMany("SchoolStudentEnrollments")
@@ -3238,6 +3293,11 @@ namespace SmartSchool.Schema.Migrations
             modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollment", b =>
                 {
                     b.Navigation("ClassStudentEnrollments");
+                });
+
+            modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolStudentEnrollmentRequest", b =>
+                {
+                    b.Navigation("SchoolStudentEnrollment");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.SchoolTeacherEnrollment", b =>

@@ -7,6 +7,7 @@ namespace SmartSchool.Schema.Entities
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+        public string? Notes { get; set; }
 
         public DateTime? CreatedTime { get; set; }
         public DateTime? LastModifiedTime { get; set; }

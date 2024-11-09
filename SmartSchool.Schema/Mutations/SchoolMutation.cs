@@ -51,11 +51,12 @@ namespace SmartSchool.Schema.Mutations
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
         }
 
-        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestStatusAsync(AppDbContext dbContext, long id, RequestStatus input)
+        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestStatusAsync(AppDbContext dbContext, long id, SchoolStudentEnrollmentRequestStatusUpdateInput input)
         {
             var existingRecord = await dbContext.SchoolStudentEnrollmentRequests.FindAsync(id) ?? throw new KeyNotFoundException($"No matching record found (id={id})");
 
-            existingRecord.Status = input;
+            existingRecord.Status = input.Status;
+            existingRecord.Reason = input.Reason;
             await dbContext.SaveChangesAsync();
 
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
@@ -63,11 +64,28 @@ namespace SmartSchool.Schema.Mutations
 
         public async Task<SchoolStudentEnrollmentModel> CreateSchoolStudentEnrollmentAsync(AppDbContext dbContext, SchoolStudentEnrollmentInput input)
         {
+            var schoolStudentEnrollmentRequest = null as SchoolStudentEnrollmentRequest;
+
+            if (input.SchoolStudentEnrollmentRequestId.HasValue)
+            {
+                schoolStudentEnrollmentRequest = await dbContext.SchoolStudentEnrollmentRequests
+                .FirstOrDefaultAsync(x => x.Id == input.SchoolStudentEnrollmentRequestId) ?? throw new KeyNotFoundException($"No matching School Student Enrollment Request record found (id={input.SchoolStudentEnrollmentRequestId})");
+            }
+
+            var existingSchool = await dbContext.Schools
+                .FirstOrDefaultAsync(x => x.Id == input.SchoolId) ?? throw new KeyNotFoundException($"No matching School record found (id={input.SchoolId})");
+
             var existingPerson = await dbContext.Persons
                 .Include(x => x.Student)
-                .FirstOrDefaultAsync(x => x.Id == input.PersonId) ?? throw new KeyNotFoundException($"No matching record found (id={input.PersonId})");
+                .FirstOrDefaultAsync(x => x.Id == input.PersonId) ?? throw new KeyNotFoundException($"No matching Person record found (id={input.PersonId})");
 
-            var newRecord = mapper.Map<SchoolStudentEnrollment>(input);
+            var existingClass = await dbContext.Classes
+                .FirstOrDefaultAsync(x => x.Id == input.ClassId) ?? throw new KeyNotFoundException($"No matching Class record found (id={input.ClassId})");
+
+            var existingAcademicYear = await dbContext.AcademicYears
+                .FirstOrDefaultAsync(x => x.Year == input.AcademicYearYear) ?? throw new KeyNotFoundException($"No matching Academic Year record found (year={input.AcademicYearYear})");
+
+            var newSchoolStudentEnrollment = mapper.Map<SchoolStudentEnrollment>(input);
 
             bool success = false;
             const int maxRetries = 3;
@@ -90,22 +108,43 @@ namespace SmartSchool.Schema.Mutations
 
                 try
                 {
+                    if (schoolStudentEnrollmentRequest != null)
+                    {
+                        schoolStudentEnrollmentRequest.Status = RequestStatus.Approved;
+                        await dbContext.SaveChangesAsync();
+                    }
+
                     // Get the latest AdmissionNo for the specified SchoolId within the transaction
-                    var latestSchoolRecord = await dbContext.SchoolStudentEnrollments
-                        .Where(a => a.SchoolId == newRecord.SchoolId)
+                    var latestSchoolStudentEnrollment = await dbContext.SchoolStudentEnrollments
+                        .Where(a => a.SchoolId == newSchoolStudentEnrollment.SchoolId)
                         .OrderByDescending(a => a.No)
                         .FirstOrDefaultAsync();
 
                     // Determine the new AdmissionCode
-                    int newNo = latestSchoolRecord != null ? latestSchoolRecord.No + 1 : 1;
+                    int newNo = latestSchoolStudentEnrollment != null ? latestSchoolStudentEnrollment.No + 1 : 1;
 
                     // Assign the new AdmissionCode to the Admission entity
-                    newRecord.No = newNo/*.ToString("D5")*/; // E.g., "00001", "00002", etc.
-                    newRecord.Student = student;
-                    newRecord.Status = EnrollmentStatus.Active;
+                    newSchoolStudentEnrollment.No = newNo/*.ToString("D5")*/; // E.g., "00001", "00002", etc.
+                    newSchoolStudentEnrollment.Student = student;
+                    newSchoolStudentEnrollment.School = existingSchool;
+                    newSchoolStudentEnrollment.Status = EnrollmentStatus.Active;
+                    newSchoolStudentEnrollment.Time = input.Time ?? DateTime.Now;
 
                     // Add and save the new admission asynchronously
-                    await dbContext.SchoolStudentEnrollments.AddAsync(newRecord);
+                    await dbContext.SchoolStudentEnrollments.AddAsync(newSchoolStudentEnrollment);
+                    await dbContext.SaveChangesAsync();
+
+                    var newClassStudentEnrollment = new ClassStudentEnrollment
+                    {
+                        //rollNo needs to be implemented
+                        Class = existingClass,
+                        SchoolStudentEnrollment = newSchoolStudentEnrollment,
+                        AcademicYear = existingAcademicYear,
+                        Status = EnrollmentStatus.Active,
+                        Time = input.Time ?? DateTime.Now,
+                    };
+
+                    await dbContext.ClassStudentEnrollments.AddAsync(newClassStudentEnrollment);
                     await dbContext.SaveChangesAsync();
 
                     // Commit the transaction asynchronously
@@ -135,7 +174,7 @@ namespace SmartSchool.Schema.Mutations
             {
                 throw new Exception($"Unable to create shool admission after {maxRetries} attempts.");
             }
-            return mapper.Map<SchoolStudentEnrollmentModel>(newRecord);
+            return mapper.Map<SchoolStudentEnrollmentModel>(newSchoolStudentEnrollment);
         }
 
     }

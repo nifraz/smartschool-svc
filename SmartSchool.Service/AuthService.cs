@@ -155,7 +155,7 @@ namespace SmartSchool.Service
                 .OrderByDescending(x => x.Time)
                 .FirstOrDefault();
 
-            authenticateResponse.SchoolId = latestSchool?.SchoolId;
+            authenticateResponse.CurrentSchoolId = latestSchool?.SchoolId;
 
             return authenticateResponse;
         }

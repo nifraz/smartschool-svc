@@ -8,11 +8,13 @@ namespace SmartSchool.Schema.Inputs
 {
     public class SchoolStudentEnrollmentInput
     {
-        public int No { get; set; }
+        public int? No { get; set; }
+        public long? SchoolStudentEnrollmentRequestId { get; set; }
         public long SchoolId { get; set; }
         public long PersonId { get; set; }
         public long ClassId { get; set; }
-        public int AcademicYear { get; set; }
+        public DateTime? Time { get; set; }
+        public int AcademicYearYear { get; set; }
 
     }
 }

@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Types
 {
-    public class SchoolTeacherEnrollmentRequestModel : RecordModel
+    public class SchoolTeacherEnrollmentRequestModel : RequestModel
     {
-        public RequestStatus? Status { get; set; }
         public Grade Grade { get; set; }
 
         public long? SchoolId { get; set; }

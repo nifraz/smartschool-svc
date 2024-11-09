@@ -29,6 +29,10 @@ namespace SmartSchool.Schema.Queries
             this.mapper = mapper;
         }
 
+        [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
+        [UseProjection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<AcademicYearModel> GetAcademicYears(AppDbContext dbContext)
         {
             return dbContext.AcademicYears
@@ -102,6 +106,7 @@ namespace SmartSchool.Schema.Queries
             var existingRecord = await dbContext.SchoolStudentEnrollmentRequests
                 .Include(x => x.School)
                 .Include(x => x.Person)
+                .Include(x => x.SchoolStudentEnrollment)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingRecord == null)
@@ -132,6 +137,7 @@ namespace SmartSchool.Schema.Queries
             var existingRecord = await dbContext.SchoolStudentEnrollments
                 .Include(x => x.School)
                 .Include(x => x.Student.Person)
+                .Include(x => x.SchoolStudentEnrollmentRequest)
                 .Include(x => x.ClassStudentEnrollments)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -201,5 +207,6 @@ namespace SmartSchool.Schema.Queries
 
             return response;
         }
+
     }
 }

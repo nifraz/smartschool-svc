@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.Schema.Entities
 {
-    public class SchoolTeacherEnrollmentRequest : AbstractRecord
+    public class SchoolTeacherEnrollmentRequest : AbstractRequest
     {
-        public RequestStatus Status { get; set; }
-
         //one
         [ForeignKey(nameof(School))]
         public long SchoolId { get; set; }
