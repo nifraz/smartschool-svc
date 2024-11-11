@@ -10,10 +10,14 @@ namespace SmartSchool.Schema.Entities
     public class User : AbstractRecord
     {
         public string Password { get; set; }
-        public bool IsMobileNoVerified { get; set; }
         public bool IsEmailVerified { get; set; }
-        public string? VerificationToken { get; set; }
+        public bool IsMobileNoVerified { get; set; }
+        public string? EmailVerificationOtp { get; set; }
+        public string? EmailVerificationToken { get; set; }
+        public string? MobileNoVerificationOtp { get; set; }
         public DateTime? TokenExpiration { get; set; }
+        public DateTime? EmailOtpExpiration { get; set; }
+        public DateTime? MobileNoOtpExpiration { get; set; }
 
         //one
         [ForeignKey(nameof(Person))]

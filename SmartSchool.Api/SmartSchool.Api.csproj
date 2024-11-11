@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartSchool.Graphql\SmartSchool.Graphql.csproj" />
     <ProjectReference Include="..\SmartSchool.Schema\SmartSchool.Schema.csproj" />
     <ProjectReference Include="..\SmartSchool.Service\SmartSchool.Service.csproj" />
   </ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartSchool.Schema.Models;
-using SmartSchool.Service;
+using SmartSchool.Service.Models;
+using SmartSchool.Service.Services;
 
 namespace SmartSchool.Api.Controllers
 {
@@ -18,7 +18,7 @@ namespace SmartSchool.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterRequest model)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -27,12 +27,12 @@ namespace SmartSchool.Api.Controllers
 
             if (await authService.IsEmailRegistered(model.Email))
             {
-                return BadRequest(new ErrorResponse { Message = "Email already Registered" });
+                return BadRequest(new ErrorResponse { Message = "Email already Registered." });
             }
 
             if (await authService.IsMobileNoRegistered(model.MobileNo))
             {
-                return BadRequest(new ErrorResponse { Message = "Mobile No already Registered" });
+                return BadRequest(new ErrorResponse { Message = "Mobile No already Registered." });
             }
 
             try
@@ -52,8 +52,43 @@ namespace SmartSchool.Api.Controllers
             }
         }
 
+        [HttpPut("verify-email")]
+        public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (string.IsNullOrWhiteSpace(model.Otp) && string.IsNullOrWhiteSpace(model.Token))
+            {
+                ModelState.AddModelError(string.Empty, "OTP or Token is required.");
+                return BadRequest();
+            }
+
+            try
+            {
+                var response = await authService.VerifyEmailAsync(model);
+
+                if (response == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginRequest model)
+        public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -62,7 +97,7 @@ namespace SmartSchool.Api.Controllers
 
             if (string.IsNullOrWhiteSpace(model.Email) && string.IsNullOrWhiteSpace(model.MobileNo))
             {
-                ModelState.AddModelError(string.Empty, "Email or Mobile No is required");
+                ModelState.AddModelError(string.Empty, "Email or Mobile No is required.");
                 return BadRequest();
             }
 
@@ -72,7 +107,7 @@ namespace SmartSchool.Api.Controllers
 
                 if (response == null)
                 {
-                    return Unauthorized(new ErrorResponse { Message = "Email / Mobile No or Password is incorrect" });
+                    return Unauthorized(new ErrorResponse { Message = "Email / Mobile No or Password is incorrect." });
                 }
 
                 return Ok(response);
@@ -83,29 +118,29 @@ namespace SmartSchool.Api.Controllers
             }
         }
 
-        [HttpGet("user/{id}")]
-        public async Task<IActionResult> User([FromRoute] long id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpGet("user/{id}")]
+        //public async Task<IActionResult> User([FromRoute] long id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            try
-            {
-                var response = await authService.GetUserAsync(id);
+        //    try
+        //    {
+        //        var response = await authService.GetUserAsync(id);
 
-                if (response == null)
-                {
-                    return NotFound(new ErrorResponse { Message = "User not found" });
-                }
+        //        if (response == null)
+        //        {
+        //            return NotFound(new ErrorResponse { Message = "User not found." });
+        //        }
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
     }
 }

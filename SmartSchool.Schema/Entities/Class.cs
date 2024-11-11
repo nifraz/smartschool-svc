@@ -31,5 +31,10 @@ namespace SmartSchool.Schema.Entities
 
         [InverseProperty(nameof(ClassTeacherEnrollment.Class))]
         public ICollection<ClassTeacherEnrollment> ClassTeacherEnrollments { get; set; } = [];
+
+        public override string ToString()
+        {
+            return $"{Grade.ToString()} {Section}";
+        }
     }
 }
