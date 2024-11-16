@@ -223,8 +223,8 @@ namespace SmartSchool.Schema
             );
 
             modelBuilder.Entity<School>().HasData(
-                new() { Id = 1, DivisionId = 56, CensusNo = "03270", Name = "AL-AQSA MUS.V", Address = "GUNNEPANA", Type = SchoolType.Type2 },
-                new() { Id = 2, DivisionId = 56, CensusNo = "03263", Name = "MADINA N S", Address = "MADAWALA BAZAAR", Type = SchoolType.Type1AB }
+                new() { Id = 1, DivisionId = 56, CensusNo = "03270", Name = "AL-AQSA MUS.V", Location = "GUNNEPANA", Type = SchoolType.Type2 },
+                new() { Id = 2, DivisionId = 56, CensusNo = "03263", Name = "MADINA N S", Location = "MADAWALA BAZAAR", Type = SchoolType.Type1AB }
             );
 
             modelBuilder.Entity<Class>().HasData(

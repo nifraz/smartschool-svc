@@ -21,6 +21,7 @@ namespace SmartSchool.Graphql
             CreateMap<Person, PersonModel>()
                 ;
             CreateMap<School, SchoolModel>()
+                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.Name + " (" + src.Location + ")"))
                 ;
             CreateMap<AcademicYear, AcademicYearModel>()
                 ;

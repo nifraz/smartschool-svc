@@ -2,6 +2,8 @@
 {
     public class SchoolStudentEnrollmentInput
     {
+        public long? Id { get; set; }
+
         public int? No { get; set; }
         public long? SchoolStudentEnrollmentRequestId { get; set; }
         public long SchoolId { get; set; }

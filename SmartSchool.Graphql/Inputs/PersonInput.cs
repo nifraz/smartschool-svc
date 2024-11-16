@@ -4,6 +4,8 @@ namespace SmartSchool.Graphql.Inputs
 {
     public class PersonInput
     {
+        public long? Id { get; set; }
+
         public string FullName { get; set; }
         public string ShortName { get; set; }
         public string? Nickname { get; set; }

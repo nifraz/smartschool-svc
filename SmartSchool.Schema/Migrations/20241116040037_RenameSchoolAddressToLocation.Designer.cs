@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartSchool.Schema;
 
@@ -11,9 +12,11 @@ using SmartSchool.Schema;
 namespace SmartSchool.Schema.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241116040037_RenameSchoolAddressToLocation")]
+    partial class RenameSchoolAddressToLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1714,9 +1717,6 @@ namespace SmartSchool.Schema.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("CensusNo")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -2350,7 +2350,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 1L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$BdMn4y1li+KDYxbzczV+Sg$vB9Tft640E6srr8v3b8qdkX7ZeHnf5QSQf+upDTNqs0",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$ygMGUmFsaMd/P6kSy3X6vg$2Sy2oHakEZwPujo4Kbh0h+39BwMEhM9RJ5yB1/KZn+g",
                             PersonId = 1L
                         },
                         new
@@ -2358,7 +2358,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 2L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$NE+eHnEtrxZLqlQmGjcmZg$9Aih/daFPrcvPbQHJGoEFnkiAy0BAhHbHzKN9BUTD5g",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$Z501/REMEJYVe8B93R0mOQ$1xP8Rx8YXaraTqaOByvLu7rId6VnalhGKhyoysSOAA0",
                             PersonId = 2L
                         },
                         new
@@ -2366,7 +2366,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 3L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$HZkTjTUb05wTVat+lh4tog$4vSyUYofxYKA1qWvkL7Z0oAHnERDUe9+NptQeXgf4Wk",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$pX4Kr5QbaaVcyte2C2b6cg$QIttuJ0xaWrTK/3WXnL9mHl+lijOg9XznrcJUUP8I/Y",
                             PersonId = 3L
                         },
                         new
@@ -2374,7 +2374,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 4L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$fjUj014f+AloXhHMtwPMKQ$6sg7i75zeK9mxEFxYRZfIkEFXYDuvqNfVySObnR15PY",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$H0xYsS1ZtI12+tTmpzHLdg$OFkcIkmLf+GmRRNgE9JGBV39qvc3dooLRqv13c3Hm/I",
                             PersonId = 4L
                         },
                         new
@@ -2382,7 +2382,7 @@ namespace SmartSchool.Schema.Migrations
                             Id = 5L,
                             IsEmailVerified = false,
                             IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$M0fvw6YR8wyCktdznyDW5g$UDhnCVUyI+dNwoS0pOFc94NO2GuYzHOiCt93qhQ+rXI",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$XrrGxyZezVDu1d2e1Ul7Qw$qQrIaSqlwhUKllek9ynF2lxbc8ToYH3eptCYcNt9Hug",
                             PersonId = 5L
                         });
                 });

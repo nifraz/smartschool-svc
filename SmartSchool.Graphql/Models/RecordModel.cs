@@ -6,6 +6,7 @@ namespace SmartSchool.Graphql.Models
     {
         [IsProjected(true)]
         public long? Id { get; set; }
+        public string? Label { get; set; }
         public string? Notes { get; set; }
 
         public DateTime? CreatedTime { get; set; }

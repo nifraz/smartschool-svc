@@ -47,10 +47,13 @@ builder.Services.AddControllers()
 
 builder.Services.AddAuthorization();
 
+var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
 var connectionString = builder.Configuration.GetConnectionString("MariaDbConnection");
 
 builder.Services.AddPooledDbContextFactory<AppDbContext>(options =>
-    options.UseMySql(connectionString, new MySqlServerVersion(new Version(11, 4, 0)))
+    options
+        .UseLoggerFactory(loggerFactory)
+        .UseMySql(connectionString, new MySqlServerVersion(new Version(11, 4, 0)))
 );
 
 
