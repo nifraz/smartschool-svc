@@ -8,7 +8,7 @@ namespace SmartSchool.Schema.Enums
 {
     public enum Grade : byte
     {
-        None = 0,
+        //None = 0,
         Grade1 = 1,
         Grade2 = 2,
         Grade3 = 3,

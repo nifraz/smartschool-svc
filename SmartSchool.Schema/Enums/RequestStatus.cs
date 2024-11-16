@@ -8,7 +8,7 @@ namespace SmartSchool.Schema.Enums
 {
     public enum RequestStatus : byte
     {
-        Unknown = 0,
+        //Unknown = 0,
         Pending = 1,
         Processing = 2,
         OnHold = 3,

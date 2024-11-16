@@ -8,7 +8,7 @@ namespace SmartSchool.Schema.Enums
 {
     public enum SchoolType : byte
     {
-        NotSet = 0,
+        //NotSet = 0,
         Type1AB = 1, // Schools with GCE Advanced Level (A-Level) classes
         Type1C = 2, // Schools with GCE Advanced Level (A-Level) art and commerce classes
         Type2 = 3, // Schools with classes up to year 11 (GCE O-Level)

@@ -8,7 +8,7 @@ namespace SmartSchool.Schema.Enums
 {
     public enum RecordStatus : byte
     {
-        Unknown = 0,
+        //Unknown = 0,
         Created = 1,
         Modified = 2,
         Deleted = 3,

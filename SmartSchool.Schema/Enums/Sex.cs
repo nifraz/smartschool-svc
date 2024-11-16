@@ -11,7 +11,7 @@ namespace SmartSchool.Schema.Enums
     /// </summary>
     public enum Sex : byte
     {
-        NotKnown = 0,
+        //NotKnown = 0,
         Male = 1,
         Female = 2,
         NotApplicable = 9,

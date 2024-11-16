@@ -11,7 +11,7 @@ namespace SmartSchool.Schema.Enums
     /// </summary>
     public enum HumanRelationship : byte
     {
-        NotKnown = 0,
+        //NotKnown = 0,
         Husband = 1,
         Wife = 2,
         Father = 3,

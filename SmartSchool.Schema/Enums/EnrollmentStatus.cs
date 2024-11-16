@@ -8,7 +8,7 @@ namespace SmartSchool.Schema.Enums
 {
     public enum EnrollmentStatus : byte
     {
-        Unknown = 0,
+        //Unknown = 0,
         Active = 1,         // Currently enrolled
         Left = 2,           // Has left the institution
         Rejoined = 3,       // Rejoined after leaving

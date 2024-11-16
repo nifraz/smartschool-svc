@@ -8,6 +8,7 @@ namespace SmartSchool.Schema.Enums
 {
     public enum UserRole : byte
     {
+        //Unknown = 0,
         Guest = 1,
         Guardian = 2,
         Student = 3,
