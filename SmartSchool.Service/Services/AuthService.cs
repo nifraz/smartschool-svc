@@ -40,7 +40,7 @@ namespace SmartSchool.Service.Services
             this.notificationService = notificationService;
             this.authSettings = authSettings.Value;
         }
-        public async Task<RegisterResponse?> RegisterAsync(RegisterRequest model)
+        public async Task<UserResponse?> RegisterAsync(RegisterRequest model)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
 
@@ -57,8 +57,10 @@ namespace SmartSchool.Service.Services
 
                 user.Password = PasswordHasher.HashPassword(model.Password);
                 user.IsEmailVerified = false;
-                user.EmailVerificationOtp = OtpGenerator.GenerateOtp();
-                user.EmailVerificationToken = Guid.NewGuid().ToString();
+                user.EmailOtp = OtpGenerator.GenerateOtp();
+                user.EmailToken = Guid.NewGuid().ToString();
+                user.IsMobileNoVerified = false;
+                user.MobileNoOtp = OtpGenerator.GenerateOtp();
                 user.Person = person;
 
                 await dbContext.Users.AddAsync(user);
@@ -69,7 +71,7 @@ namespace SmartSchool.Service.Services
 
                 //await notificationService.SendRegistrationCompletedSmsAsync(model);
                 await dbContext.Database.CommitTransactionAsync();
-                return mapper.Map<RegisterResponse>(user);
+                return mapper.Map<UserResponse>(user);
             }
             catch (Exception)
             {
@@ -78,24 +80,24 @@ namespace SmartSchool.Service.Services
             }
         }
 
-        public async Task<VerifyEmailResponse> VerifyEmailAsync(VerifyEmailRequest model)
+        public async Task<UserResponse> VerifyAsync(VerifyRequest model)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
             var existingUser = await dbContext.Users
                 .Include(x => x.Person)
                 .FirstOrDefaultAsync(x => x.Person.Email == model.Email) ?? throw new KeyNotFoundException($"No matching User found (email={model.Email})");
 
-            if (string.IsNullOrWhiteSpace(model.Otp) && string.IsNullOrWhiteSpace(model.Token))
+            if (string.IsNullOrWhiteSpace(model.EmailOtp) && string.IsNullOrWhiteSpace(model.EmailToken))
             {
                 throw new UnauthorizedAccessException($"OTP or Token is required.");
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Otp) && existingUser.EmailVerificationOtp != model.Otp)
+            if (!string.IsNullOrWhiteSpace(model.EmailOtp) && existingUser.EmailOtp != model.EmailOtp)
             {
                 throw new UnauthorizedAccessException($"The verification code entered is incorrect.");
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Token) && existingUser.EmailVerificationToken != model.Token)
+            if (!string.IsNullOrWhiteSpace(model.EmailToken) && existingUser.EmailToken != model.EmailToken)
             {
                 throw new UnauthorizedAccessException($"The verification token is invalid.");
             }
@@ -103,7 +105,7 @@ namespace SmartSchool.Service.Services
             existingUser.IsEmailVerified = true;
             await dbContext.SaveChangesAsync();
 
-            return mapper.Map<VerifyEmailResponse>(existingUser);
+            return mapper.Map<UserResponse>(existingUser);
         }
 
         public async Task<AuthenticateResponse?> LoginAsync(LoginRequest model)

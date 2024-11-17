@@ -2,6 +2,9 @@
 {
     public class UserModel : RecordModel
     {
+        public bool? IsEmailVerified { get; set; }
+        public bool? IsMobileNoVerified { get; set; }
+
         public long? PersonId { get; set; }
         public PersonModel? Person { get; set; }
 

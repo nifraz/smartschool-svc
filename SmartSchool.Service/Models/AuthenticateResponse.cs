@@ -8,5 +8,7 @@ namespace SmartSchool.Service.Models
         public string FullName { get; set; } = user.Person.FullName;
         public string Email { get; set; } = user.Person.Email!;
         public string MobileNo { get; set; } = user.Person.MobileNo!;
+        public bool IsEmailVerified { get; set; } = user.IsEmailVerified;
+        public bool IsMobileNoVerified { get; set; } = user.IsMobileNoVerified;
     }
 }

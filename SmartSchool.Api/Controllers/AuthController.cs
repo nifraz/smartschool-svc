@@ -52,23 +52,29 @@ namespace SmartSchool.Api.Controllers
             }
         }
 
-        [HttpPut("verify-email")]
-        public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest model)
+        [HttpPut("verify")]
+        public async Task<IActionResult> Verify([FromBody] VerifyRequest model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (string.IsNullOrWhiteSpace(model.Otp) && string.IsNullOrWhiteSpace(model.Token))
+            if (string.IsNullOrWhiteSpace(model.Email) && string.IsNullOrWhiteSpace(model.MobileNo))
+            {
+                ModelState.AddModelError(string.Empty, "Email or Mobile No is required.");
+                return BadRequest(ModelState);
+            }
+
+            if (string.IsNullOrWhiteSpace(model.EmailOtp) && string.IsNullOrWhiteSpace(model.EmailToken))
             {
                 ModelState.AddModelError(string.Empty, "OTP or Token is required.");
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             try
             {
-                var response = await authService.VerifyEmailAsync(model);
+                var response = await authService.VerifyAsync(model);
 
                 if (response == null)
                 {
@@ -79,7 +85,7 @@ namespace SmartSchool.Api.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return BadRequest(ex.Message);
+                return Unauthorized(new ErrorResponse { Message = ex.Message });
             }
             catch (Exception ex)
             {

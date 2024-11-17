@@ -73,6 +73,16 @@ namespace SmartSchool.Service.Services
             {
                 var emailBody = TemplateGenerator.BuildRegistrationCompletedEmailBody(model);
                 await SendEmailAsync(model.Person.FullName, model.Person.Email, "Welcome to SmartSchool Service!", emailBody);
+                await SendVerificationEmailAsync(model);
+            }
+        }
+
+        public async Task SendVerificationEmailAsync(User model)
+        {
+            if (!string.IsNullOrWhiteSpace(model.Person.Email))
+            {
+                var emailBody = TemplateGenerator.BuildEmailVerificationBody(model);
+                await SendEmailAsync(model.Person.FullName, model.Person.Email, "SmartSchool Login Email Verification!", emailBody);
             }
         }
 

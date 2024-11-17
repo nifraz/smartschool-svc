@@ -337,30 +337,40 @@ namespace SmartSchool.Schema
                     Id = 1,
                     PersonId = 1,
                     Password = PasswordHasher.HashPassword("1111"),
+                    IsEmailVerified = true,
+                    IsMobileNoVerified = true,
                 },
                 new User
                 {
                     Id = 2,
                     PersonId = 2,
                     Password = PasswordHasher.HashPassword("2222"),
+                    IsEmailVerified = true,
+                    IsMobileNoVerified = true,
                 },
                 new User
                 {
                     Id = 3,
                     PersonId = 3,
                     Password = PasswordHasher.HashPassword("3333"),
+                    IsEmailVerified = true,
+                    IsMobileNoVerified = true,
                 },
                 new User
                 {
                     Id = 4,
                     PersonId = 4,
                     Password = PasswordHasher.HashPassword("4444"),
+                    IsEmailVerified = true,
+                    IsMobileNoVerified = true,
                 },
                 new User
                 {
                     Id = 5,
                     PersonId = 5,
                     Password = PasswordHasher.HashPassword("5555"),
+                    IsEmailVerified = true,
+                    IsMobileNoVerified = true,
                 }
             );
         }
