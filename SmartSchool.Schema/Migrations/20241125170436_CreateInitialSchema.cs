@@ -316,9 +316,10 @@ namespace SmartSchool.Schema.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ParentPersonId = table.Column<long>(type: "bigint", nullable: false),
-                    ChildPersonId = table.Column<long>(type: "bigint", nullable: false),
-                    ParentToChildRelationship = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    Person1Id = table.Column<long>(type: "bigint", nullable: false),
+                    Person1Relationship = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    Person2Id = table.Column<long>(type: "bigint", nullable: false),
+                    Person2Relationship = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     Notes = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -385,11 +386,20 @@ namespace SmartSchool.Schema.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Password = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsMobileNoVerified = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsEmailVerified = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    VerificationToken = table.Column<string>(type: "longtext", nullable: true)
+                    EmailOtp = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TokenExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    EmailToken = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmailOtpExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    EmailTokenExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    IsMobileNoVerified = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    MobileNoOtp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MobileNoToken = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MobileNoOtpExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    MobileNoTokenExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     PersonId = table.Column<long>(type: "bigint", nullable: false),
                     Notes = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -480,7 +490,9 @@ namespace SmartSchool.Schema.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Address = table.Column<string>(type: "longtext", nullable: false)
+                    Location = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Address = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1003,14 +1015,14 @@ namespace SmartSchool.Schema.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "IsEmailVerified", "IsMobileNoVerified", "LastModifiedTime", "LastModifiedUserId", "Notes", "Password", "PersonId", "TokenExpiration", "VerificationToken" },
+                columns: new[] { "Id", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "EmailOtp", "EmailOtpExpiration", "EmailToken", "EmailTokenExpiration", "IsEmailVerified", "IsMobileNoVerified", "LastModifiedTime", "LastModifiedUserId", "MobileNoOtp", "MobileNoOtpExpiration", "MobileNoToken", "MobileNoTokenExpiration", "Notes", "Password", "PersonId" },
                 values: new object[,]
                 {
-                    { 1L, null, null, null, null, false, false, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$5XmJt8r7c+AB+NhgiO5FXQ$mqz93DapH1ZACWh3mCCqgEZnvKQx1P0eedFQS00Ckag", 1L, null, null },
-                    { 2L, null, null, null, null, false, false, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$0HbcriGji0Gwm9IVo9bUzg$UIRREQQlDzF3j4x24q5jxj8gro67VrsxfvznR4raDL8", 2L, null, null },
-                    { 3L, null, null, null, null, false, false, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$k4EE7wLSXFjpV1iHTVktsA$c6btyak2P2jaBUogU34pfmuSBaP4p2G3IlYCgRqEmAI", 3L, null, null },
-                    { 4L, null, null, null, null, false, false, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$sIDXFDUUF1/T631G/L9VTw$2JvBUBNoa/e/DQ+JuOA8bijOKmNPOZzjIE4X7Y7G4q8", 4L, null, null },
-                    { 5L, null, null, null, null, false, false, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$+cAN1eEgw8nngdKmJCOxEQ$QsZ4XhlytTjYWEX7ZgqYMRVP1acsEoW8TMbv45oKOhg", 5L, null, null }
+                    { 1L, null, null, null, null, null, null, null, null, true, true, null, null, null, null, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$Vbjoop3zv1eozPdNkc1KCg$RxO2EhD7NqRKOEKrjKMQZaTX8HjvMlbFouR6v89sGgM", 1L },
+                    { 2L, null, null, null, null, null, null, null, null, true, true, null, null, null, null, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$ucnoxkhMm3JxmhBVokf2+A$G58JgQi1upJ/3Dv4x0G3MGTeN3G8PtFyKMVsjBINBFA", 2L },
+                    { 3L, null, null, null, null, null, null, null, null, true, true, null, null, null, null, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$K+izRe249tJE8ORYFFqedA$XqBPsZ1vxCupiu9D08Ozh4+nL21OxpJB9nrh7EXDMh4", 3L },
+                    { 4L, null, null, null, null, null, null, null, null, true, true, null, null, null, null, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$AUiVdNQZaAj/2T9yRkvQ2Q$IyBlj4mzvu90hFnvEqi6fV5uxXDyVZmgNCoU60nDwzo", 4L },
+                    { 5L, null, null, null, null, null, null, null, null, true, true, null, null, null, null, null, null, null, "$argon2id$v=19$m=65536,t=3,p=1$fnbBrv0RGHd7l/3Ir3xqFQ$dgLDkOmAcwHbdXbQLqhmO+3FVq+OjsfJQOoaNuHofS0", 5L }
                 });
 
             migrationBuilder.InsertData(
@@ -1133,11 +1145,11 @@ namespace SmartSchool.Schema.Migrations
 
             migrationBuilder.InsertData(
                 table: "Schools",
-                columns: new[] { "Id", "Address", "CensusNo", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "DivisionId", "Email", "LastModifiedTime", "LastModifiedUserId", "Name", "Notes", "PhoneNo", "Type" },
+                columns: new[] { "Id", "Address", "CensusNo", "CreatedTime", "CreatedUserId", "DeletedTime", "DeletedUserId", "DivisionId", "Email", "LastModifiedTime", "LastModifiedUserId", "Location", "Name", "Notes", "PhoneNo", "Type" },
                 values: new object[,]
                 {
-                    { 1L, "GUNNEPANA", "03270", null, null, null, null, 56, null, null, null, "AL-AQSA MUS.V", null, null, (byte)3 },
-                    { 2L, "MADAWALA BAZAAR", "03263", null, null, null, null, 56, null, null, null, "MADINA N S", null, null, (byte)1 }
+                    { 1L, null, "03270", null, null, null, null, 56, null, null, null, "GUNNEPANA", "AL-AQSA MUS.V", null, null, (byte)3 },
+                    { 2L, null, "03263", null, null, null, null, 56, null, null, null, "MADAWALA BAZAAR", "MADINA N S", null, null, (byte)1 }
                 });
 
             migrationBuilder.InsertData(
@@ -1306,11 +1318,6 @@ namespace SmartSchool.Schema.Migrations
                 column: "QualificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonRelationships_ChildPersonId",
-                table: "PersonRelationships",
-                column: "ChildPersonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PersonRelationships_CreatedUserId",
                 table: "PersonRelationships",
                 column: "CreatedUserId");
@@ -1326,9 +1333,14 @@ namespace SmartSchool.Schema.Migrations
                 column: "LastModifiedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonRelationships_ParentPersonId",
+                name: "IX_PersonRelationships_Person1Id",
                 table: "PersonRelationships",
-                column: "ParentPersonId");
+                column: "Person1Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonRelationships_Person2Id",
+                table: "PersonRelationships",
+                column: "Person2Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Persons_CreatedUserId",
@@ -1588,7 +1600,8 @@ namespace SmartSchool.Schema.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Users_PersonId",
                 table: "Users",
-                column: "PersonId");
+                column: "PersonId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Zones_DistrictId",
@@ -1712,17 +1725,17 @@ namespace SmartSchool.Schema.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_PersonRelationships_Persons_ChildPersonId",
+                name: "FK_PersonRelationships_Persons_Person1Id",
                 table: "PersonRelationships",
-                column: "ChildPersonId",
+                column: "Person1Id",
                 principalTable: "Persons",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_PersonRelationships_Persons_ParentPersonId",
+                name: "FK_PersonRelationships_Persons_Person2Id",
                 table: "PersonRelationships",
-                column: "ParentPersonId",
+                column: "Person2Id",
                 principalTable: "Persons",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);

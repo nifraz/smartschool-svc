@@ -20,6 +20,8 @@ namespace SmartSchool.Graphql
                 ;
             CreateMap<Person, PersonModel>()
                 ;
+            CreateMap<PersonRelationship, PersonRelationshipModel>()
+                ;
             CreateMap<School, SchoolModel>()
                 .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.Name + " (" + src.Location + ")"))
                 ;
@@ -100,6 +102,8 @@ namespace SmartSchool.Graphql
 
             //input to entity
             CreateMap<PersonInput, Person>()
+                ;
+            CreateMap<PersonRelationshipInput, PersonRelationship>()
                 ;
             CreateMap<SchoolStudentEnrollmentInput, SchoolStudentEnrollment>()
                 ;

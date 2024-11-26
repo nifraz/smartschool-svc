@@ -29,6 +29,9 @@ namespace SmartSchool.Schema.Entities
         public string? Image { get; set; }
 
         //one
+        [InverseProperty(nameof(User.Person))]
+        public User? User { get; set; }
+
         [InverseProperty(nameof(Student.Person))]
         public Student? Student { get; set; }
 
@@ -45,10 +48,11 @@ namespace SmartSchool.Schema.Entities
         [InverseProperty(nameof(SchoolTeacherEnrollmentRequest.Person))]
         public ICollection<SchoolTeacherEnrollmentRequest> SchoolTeacherEnrollmentRequests { get; set; } = [];
 
-        [InverseProperty(nameof(PersonRelationship.ParentPerson))]
-        public ICollection<PersonRelationship> ParentRelationships { get; set; } = [];
 
-        [InverseProperty(nameof(PersonRelationship.ChildPerson))]
-        public ICollection<PersonRelationship> ChildRelationships { get; set; } = [];
+        [InverseProperty(nameof(PersonRelationship.Person1))]
+        public ICollection<PersonRelationship> Person1Relationships { get; set; } = [];
+
+        [InverseProperty(nameof(PersonRelationship.Person2))]
+        public ICollection<PersonRelationship> Person2Relationships { get; set; } = [];
     }
 }

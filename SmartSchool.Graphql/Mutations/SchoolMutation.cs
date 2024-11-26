@@ -5,12 +5,14 @@ using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using SmartSchool.Graphql.Helpers;
 using SmartSchool.Graphql.Inputs;
 using SmartSchool.Graphql.Models;
 using SmartSchool.Graphql.Subscriptions;
 using SmartSchool.Schema;
 using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Enums;
+using SmartSchool.Service.Services;
 
 namespace SmartSchool.Graphql.Mutations
 {
@@ -35,8 +37,38 @@ namespace SmartSchool.Graphql.Mutations
             }
         }
 
+        public async Task<SchoolModel> CreateSchoolAsync(AppDbContext dbContext, SchoolInput input)
+        {
+            //if (input.Email != null && await authService.IsEmailRegisteredAsync(input.Email))
+            //{
+            //    throw new InvalidDataException("Email address is already registered.");
+            //}
+
+            return await MutationHelper.CreateRecordAsync<School, SchoolInput, SchoolModel>(dbContext, input);
+        }
+
+        public async Task<SchoolModel> UpdateSchoolAsync(AppDbContext dbContext, SchoolInput input)
+        {
+            ArgumentNullException.ThrowIfNull(input.Id);
+
+            return await MutationHelper.UpdateRecordAsync<School, SchoolInput, SchoolModel>(dbContext, input);
+        }
+
         public async Task<SchoolStudentEnrollmentRequestModel> CreateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, SchoolStudentEnrollmentRequestInput input)
         {
+            var filteredStatuses = new List<RequestStatus>() { RequestStatus.Pending, RequestStatus.Processing, RequestStatus.OnHold };
+            var existingRequest = await dbContext.SchoolStudentEnrollmentRequests
+                .Include(x => x.School)
+                .Include(x => x.Person)
+                .Where(x => x.SchoolId == input.SchoolId && x.PersonId == input.PersonId && filteredStatuses.Contains(x.Status))
+                .OrderByDescending(x => x.CreatedTime)
+                .FirstOrDefaultAsync();
+
+            if (existingRequest != null)
+            {
+                throw new InvalidOperationException($"The person '{existingRequest.Person.FullName}' has already requested enrollment at the school '{existingRequest.School.Name}'.");
+            }
+
             var newRecord = mapper.Map<SchoolStudentEnrollmentRequest>(input);
             newRecord.Status = RequestStatus.Pending;
             dbContext.SchoolStudentEnrollmentRequests.Add(newRecord);
@@ -45,9 +77,11 @@ namespace SmartSchool.Graphql.Mutations
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(newRecord);
         }
 
-        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, long id, SchoolStudentEnrollmentRequestInput input)
+        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, SchoolStudentEnrollmentRequestInput input)
         {
-            var existingRecord = await dbContext.SchoolStudentEnrollmentRequests.FindAsync(id) ?? throw new KeyNotFoundException($"No matching record found (id={id})");
+            ArgumentNullException.ThrowIfNull(input.Id);
+
+            var existingRecord = await dbContext.SchoolStudentEnrollmentRequests.FindAsync(input.Id.Value) ?? throw new KeyNotFoundException($"No matching record found (id={input.Id.Value})");
 
             mapper.Map(input, existingRecord);
             await dbContext.SaveChangesAsync();
@@ -55,9 +89,11 @@ namespace SmartSchool.Graphql.Mutations
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
         }
 
-        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestStatusAsync(AppDbContext dbContext, long id, SchoolStudentEnrollmentRequestStatusUpdateInput input)
+        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestStatusAsync(AppDbContext dbContext, SchoolStudentEnrollmentRequestStatusUpdateInput input)
         {
-            var existingRecord = await dbContext.SchoolStudentEnrollmentRequests.FindAsync(id) ?? throw new KeyNotFoundException($"No matching record found (id={id})");
+            ArgumentNullException.ThrowIfNull(input.Id);
+
+            var existingRecord = await dbContext.SchoolStudentEnrollmentRequests.FindAsync(input.Id.Value) ?? throw new KeyNotFoundException($"No matching record found (id={input.Id.Value})");
 
             existingRecord.Status = input.Status;
             existingRecord.Reason = input.Reason;

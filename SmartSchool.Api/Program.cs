@@ -1,3 +1,5 @@
+using AutoMapper;
+using DataAnnotatedModelValidations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SmartSchool.Api;
 using SmartSchool.Graphql;
 using SmartSchool.Graphql.DataLoaders;
+using SmartSchool.Graphql.Helpers;
 using SmartSchool.Graphql.Models;
 using SmartSchool.Graphql.Mutations;
 using SmartSchool.Graphql.Queries;
@@ -68,15 +71,18 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddGraphQLServer()
+    .AddDataAnnotationsValidator()
     .RegisterDbContext<AppDbContext>(DbContextKind.Pooled)
     .AddQueryType<Query>()
     .AddTypeExtension<UsersQuery>()
+    .AddTypeExtension<PersonsQuery>()
     .AddTypeExtension<StudentsQuery>()
     .AddTypeExtension<TeachersQuery>()
     .AddTypeExtension<SchoolsQuery>()
-    .AddType<StudentModel>()
     .AddMutationType<Mutation>()
+    .AddTypeExtension<PersonMutation>()
     .AddTypeExtension<StudentMutation>()
+    .AddTypeExtension<TeacherMutation>()
     .AddTypeExtension<SchoolMutation>()
     .AddInMemorySubscriptions()
     .AddSubscriptionType<SchoolSubscription>()
@@ -87,6 +93,8 @@ builder.Services
 builder.Services.AddScoped<PersonBatchDataLoader>();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
+
+MutationHelper.Configure(app.Services.GetService<IMapper>());
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

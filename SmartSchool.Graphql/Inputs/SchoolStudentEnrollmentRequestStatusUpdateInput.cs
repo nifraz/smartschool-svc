@@ -1,11 +1,11 @@
 ﻿using SmartSchool.Schema.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartSchool.Graphql.Inputs
 {
-    public class SchoolStudentEnrollmentRequestStatusUpdateInput
+    public class SchoolStudentEnrollmentRequestStatusUpdateInput : AbstractRecordInput
     {
-        public long? Id { get; set; }
-
+        [Required]
         public RequestStatus Status { get; set; }
         public string? Reason { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using SmartSchool.Schema.Enums;
+﻿using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,22 +8,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartSchool.Schema.Entities
+namespace SmartSchool.Graphql.Inputs
 {
-    public class PersonRelationship : AbstractRecord
+    public class PersonRelationshipInput : AbstractRecordInput
     {
-        //one
+        [Required]
         public long Person1Id { get; set; }
-        [ForeignKey("Person1Id")]
-        public Person Person1 { get; set; }
-
         [Required]
         public HumanRelationship Person1Relationship { get; set; }
 
+        [Required]
         public long Person2Id { get; set; }
-        [ForeignKey("Person2Id")]
-        public Person Person2 { get; set; }
-
         [Required]
         public HumanRelationship Person2Relationship { get; set; }
     }

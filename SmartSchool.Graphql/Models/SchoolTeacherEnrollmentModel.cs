@@ -2,7 +2,7 @@
 
 namespace SmartSchool.Graphql.Models
 {
-    public class SchoolTeacherEnrollmentModel : RecordModel
+    public class SchoolTeacherEnrollmentModel : AbstractRecordModel
     {
         public int? No { get; set; }
         public DateTime? Time { get; set; }

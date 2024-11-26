@@ -3,7 +3,7 @@ using SmartSchool.Utility.Extensions;
 
 namespace SmartSchool.Graphql.Models
 {
-    public class PersonModel : RecordModel
+    public class PersonModel : AbstractRecordModel
     {
         public string? FullName { get; set; }
         public string? ShortName { get; set; }

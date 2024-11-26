@@ -11,12 +11,12 @@ using SmartSchool.Schema.Enums;
 namespace SmartSchool.Graphql.Mutations
 {
     [ExtendObjectType(typeof(Mutation))]
-    public class StudentMutation
+    public class TeacherMutation
     {
         //private readonly IDbContextFactory<SmartSchoolDbContext> dbContextFactory;
         private readonly IMapper mapper;
 
-        public StudentMutation(
+        public TeacherMutation(
             //IDbContextFactory<SmartSchoolDbContext> dbContextFactory,
             IMapper mapper
         )
@@ -25,28 +25,28 @@ namespace SmartSchool.Graphql.Mutations
             this.mapper = mapper;
         }
 
-        public async Task<StudentModel> CreateStudentAsync(AppDbContext dbContext, StudentInput input)
+        public async Task<TeacherModel> CreateTeacherAsync(AppDbContext dbContext, TeacherInput input)
         {
             //using var dbContext = await dbContextFactory.CreateDbContextAsync();
-            var newRecord = mapper.Map<Student>(input);
+            var newRecord = mapper.Map<Teacher>(input);
             //newRecord.DateOfBirth = DateTime.SpecifyKind(newRecord.DateOfBirth, DateTimeKind.Utc); //need fix
 
-            dbContext.Students.Add(newRecord);
+            dbContext.Teachers.Add(newRecord);
             await dbContext.SaveChangesAsync();
 
-            return mapper.Map<StudentModel>(newRecord);
+            return mapper.Map<TeacherModel>(newRecord);
         }
 
-        public async Task<StudentModel> UpdateStudentAsync(AppDbContext dbContext, StudentInput input)
+        public async Task<TeacherModel> UpdateTeacherAsync(AppDbContext dbContext, TeacherInput input)
         {
             ArgumentNullException.ThrowIfNull(input.Id);
 
-            var existingRecord = await dbContext.Students.FindAsync(input.Id.Value) ?? throw new KeyNotFoundException($"No matching record found (id={input.Id.Value})");
+            var existingRecord = await dbContext.Teachers.FindAsync(input.Id.Value) ?? throw new KeyNotFoundException($"No matching record found (id={input.Id.Value})");
             mapper.Map(input, existingRecord);
 
             await dbContext.SaveChangesAsync();
 
-            return mapper.Map<StudentModel>(existingRecord);
+            return mapper.Map<TeacherModel>(existingRecord);
         }
 
     }

@@ -1,15 +1,17 @@
 ﻿using SmartSchool.Schema.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartSchool.Graphql.Inputs
 {
-    public class SchoolStudentEnrollmentRequestInput
+    public class SchoolStudentEnrollmentRequestInput : AbstractRecordInput
     {
-        public long? Id { get; set; }
-
+        [Required]
         public Grade Grade { get; set; }
+        [Required]
         public long SchoolId { get; set; }
+        [Required]
         public long PersonId { get; set; }
-        //public long StudentId { get; set; }
+        [Required]
         public int AcademicYearYear { get; set; }
     }
 }

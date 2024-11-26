@@ -12,8 +12,8 @@ using SmartSchool.Schema;
 namespace SmartSchool.Schema.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241111075917_AddVerificationColumns")]
-    partial class AddVerificationColumns
+    [Migration("20241125170436_CreateInitialSchema")]
+    partial class CreateInitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1504,9 +1504,6 @@ namespace SmartSchool.Schema.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ChildPersonId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime(6)");
 
@@ -1528,15 +1525,19 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("ParentPersonId")
+                    b.Property<long>("Person1Id")
                         .HasColumnType("bigint");
 
-                    b.Property<byte>("ParentToChildRelationship")
+                    b.Property<byte>("Person1Relationship")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<long>("Person2Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("Person2Relationship")
                         .HasColumnType("tinyint unsigned");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChildPersonId");
 
                     b.HasIndex("CreatedUserId");
 
@@ -1544,7 +1545,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("LastModifiedUserId");
 
-                    b.HasIndex("ParentPersonId");
+                    b.HasIndex("Person1Id");
+
+                    b.HasIndex("Person2Id");
 
                     b.ToTable("PersonRelationships");
                 });
@@ -1718,7 +1721,6 @@ namespace SmartSchool.Schema.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("CensusNo")
@@ -1748,6 +1750,10 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1781,18 +1787,18 @@ namespace SmartSchool.Schema.Migrations
                         new
                         {
                             Id = 1L,
-                            Address = "GUNNEPANA",
                             CensusNo = "03270",
                             DivisionId = 56,
+                            Location = "GUNNEPANA",
                             Name = "AL-AQSA MUS.V",
                             Type = (byte)3
                         },
                         new
                         {
                             Id = 2L,
-                            Address = "MADAWALA BAZAAR",
                             CensusNo = "03263",
                             DivisionId = 56,
+                            Location = "MADAWALA BAZAAR",
                             Name = "MADINA N S",
                             Type = (byte)1
                         });
@@ -2292,14 +2298,17 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("DeletedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("EmailOtp")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("EmailOtpExpiration")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("EmailVerificationOtp")
+                    b.Property<string>("EmailToken")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("EmailVerificationToken")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime?>("EmailTokenExpiration")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("tinyint(1)");
@@ -2313,11 +2322,17 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long?>("LastModifiedUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("MobileNoOtp")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("MobileNoOtpExpiration")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("MobileNoVerificationOtp")
+                    b.Property<string>("MobileNoToken")
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("MobileNoTokenExpiration")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("longtext");
@@ -2329,9 +2344,6 @@ namespace SmartSchool.Schema.Migrations
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("TokenExpiration")
-                        .HasColumnType("datetime(6)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedUserId");
@@ -2340,7 +2352,8 @@ namespace SmartSchool.Schema.Migrations
 
                     b.HasIndex("LastModifiedUserId");
 
-                    b.HasIndex("PersonId");
+                    b.HasIndex("PersonId")
+                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -2348,41 +2361,41 @@ namespace SmartSchool.Schema.Migrations
                         new
                         {
                             Id = 1L,
-                            IsEmailVerified = false,
-                            IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$YUZxdRLjzR89fJVJ9Clq1g$KOuRwAyRuoL79jF9roL7v0aY/8cDQK+pqCuf6WyyOC0",
+                            IsEmailVerified = true,
+                            IsMobileNoVerified = true,
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$Vbjoop3zv1eozPdNkc1KCg$RxO2EhD7NqRKOEKrjKMQZaTX8HjvMlbFouR6v89sGgM",
                             PersonId = 1L
                         },
                         new
                         {
                             Id = 2L,
-                            IsEmailVerified = false,
-                            IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$4CWmqtW6JsAohs2csG+o8A$pyaHDcgZ/T/vhn/gdYSkQDQugeebPFWdvCCyekOUYwY",
+                            IsEmailVerified = true,
+                            IsMobileNoVerified = true,
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$ucnoxkhMm3JxmhBVokf2+A$G58JgQi1upJ/3Dv4x0G3MGTeN3G8PtFyKMVsjBINBFA",
                             PersonId = 2L
                         },
                         new
                         {
                             Id = 3L,
-                            IsEmailVerified = false,
-                            IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$35lgVAvbVdxeWXprj/2Tlg$7hUM/Clbp2eFxyBm6/KO+iollGcbMQ6CkHsrK+UJiv0",
+                            IsEmailVerified = true,
+                            IsMobileNoVerified = true,
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$K+izRe249tJE8ORYFFqedA$XqBPsZ1vxCupiu9D08Ozh4+nL21OxpJB9nrh7EXDMh4",
                             PersonId = 3L
                         },
                         new
                         {
                             Id = 4L,
-                            IsEmailVerified = false,
-                            IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$WtZKooLTWX6Ju8J/q+dMBw$/X6kr6Qmo/WGL4GRtl9FRFr7dD5TgfEzH4RGi3lplQ4",
+                            IsEmailVerified = true,
+                            IsMobileNoVerified = true,
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$AUiVdNQZaAj/2T9yRkvQ2Q$IyBlj4mzvu90hFnvEqi6fV5uxXDyVZmgNCoU60nDwzo",
                             PersonId = 4L
                         },
                         new
                         {
                             Id = 5L,
-                            IsEmailVerified = false,
-                            IsMobileNoVerified = false,
-                            Password = "$argon2id$v=19$m=65536,t=3,p=1$En5snC2JqAfe2dlFfCLqbg$Dv0TiU+k5JgvqwyJZeWu/oyhH2KcOPuEc3NF+zuAt9s",
+                            IsEmailVerified = true,
+                            IsMobileNoVerified = true,
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$fnbBrv0RGHd7l/3Ir3xqFQ$dgLDkOmAcwHbdXbQLqhmO+3FVq+OjsfJQOoaNuHofS0",
                             PersonId = 5L
                         });
                 });
@@ -2836,12 +2849,6 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.PersonRelationship", b =>
                 {
-                    b.HasOne("SmartSchool.Schema.Entities.Person", "ChildPerson")
-                        .WithMany("ChildRelationships")
-                        .HasForeignKey("ChildPersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SmartSchool.Schema.Entities.User", "CreatedUser")
                         .WithMany("CreatedPersonRelationships")
                         .HasForeignKey("CreatedUserId");
@@ -2854,13 +2861,17 @@ namespace SmartSchool.Schema.Migrations
                         .WithMany("LastModifiedPersonRelationships")
                         .HasForeignKey("LastModifiedUserId");
 
-                    b.HasOne("SmartSchool.Schema.Entities.Person", "ParentPerson")
-                        .WithMany("ParentRelationships")
-                        .HasForeignKey("ParentPersonId")
+                    b.HasOne("SmartSchool.Schema.Entities.Person", "Person1")
+                        .WithMany("Person1Relationships")
+                        .HasForeignKey("Person1Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ChildPerson");
+                    b.HasOne("SmartSchool.Schema.Entities.Person", "Person2")
+                        .WithMany("Person2Relationships")
+                        .HasForeignKey("Person2Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CreatedUser");
 
@@ -2868,7 +2879,9 @@ namespace SmartSchool.Schema.Migrations
 
                     b.Navigation("LastModifiedUser");
 
-                    b.Navigation("ParentPerson");
+                    b.Navigation("Person1");
+
+                    b.Navigation("Person2");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Principal", b =>
@@ -3201,8 +3214,8 @@ namespace SmartSchool.Schema.Migrations
                         .HasForeignKey("LastModifiedUserId");
 
                     b.HasOne("SmartSchool.Schema.Entities.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
+                        .WithOne("User")
+                        .HasForeignKey("SmartSchool.Schema.Entities.User", "PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -3257,9 +3270,9 @@ namespace SmartSchool.Schema.Migrations
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Person", b =>
                 {
-                    b.Navigation("ChildRelationships");
+                    b.Navigation("Person1Relationships");
 
-                    b.Navigation("ParentRelationships");
+                    b.Navigation("Person2Relationships");
 
                     b.Navigation("Principal");
 
@@ -3270,6 +3283,8 @@ namespace SmartSchool.Schema.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("Teacher");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartSchool.Schema.Entities.Principal", b =>

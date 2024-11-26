@@ -1,6 +1,6 @@
 ﻿namespace SmartSchool.Graphql.Models
 {
-    public class UserModel : RecordModel
+    public class UserModel : AbstractRecordModel
     {
         public bool? IsEmailVerified { get; set; }
         public bool? IsMobileNoVerified { get; set; }

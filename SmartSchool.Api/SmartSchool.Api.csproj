@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="DataAnnotatedModelValidations" Version="5.2.0" />
 	<PackageReference Include="HotChocolate.AspNetCore" Version="13.9.7" />
 	<PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.7" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />

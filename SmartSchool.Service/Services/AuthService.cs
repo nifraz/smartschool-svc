@@ -133,41 +133,38 @@ namespace SmartSchool.Service.Services
             return new AuthenticateResponse(user, jwtData);
         }
 
-        public async Task<bool> IsEmailRegistered(string email)
+        public async Task<bool> IsEmailRegisteredAsync(string email)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
-            var existingRecord = await dbContext.Users
-                .Include(x => x.Person)
-                .Select(x => x.Person.Email)
+            var existingRecord = await dbContext.Persons
+                .Select(x => x.Email)
                 .FirstOrDefaultAsync(x => email.Equals(x));
 
             return existingRecord != null;
         }
 
-        public async Task<bool> IsEmailRegistered(int id, string email)
+        public async Task<bool> IsEmailRegisteredAsync(string email, long personId)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
-            return await dbContext.Users
-                .Include(x => x.Person)
-                .AnyAsync(x => x.Id != id && x.Person.Email == email);
+            return await dbContext.Persons
+                .AnyAsync(x => x.Id != personId && x.Email == email);
         }
 
-        public async Task<bool> IsMobileNoRegistered(string mobileNo)
+        public async Task<bool> IsMobileNoRegisteredAsync(string mobileNo)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
-            var existingRecord = await dbContext.Users
-                .Include(x => x.Person)
-                .Select(x => x.Person.MobileNo)
+            var existingRecord = await dbContext.Persons
+                .Select(x => x.MobileNo)
                 .FirstOrDefaultAsync(x => mobileNo.Equals(x));
 
             return existingRecord != null;
         }
 
-        public async Task<bool> IsMobileNoRegistered(int id, string mobileNo)
+        public async Task<bool> IsMobileNoRegisteredAsync(string mobileNo, long personId)
         {
             using var dbContext = dbContextFactory.CreateDbContext();
-            return await dbContext.Users
-                .AnyAsync(x => x.Id != id && x.Person.MobileNo == mobileNo);
+            return await dbContext.Persons
+                .AnyAsync(x => x.Id != personId && x.MobileNo == mobileNo);
         }
 
         private async Task<JwtData> GenerateJwtToken(User user)

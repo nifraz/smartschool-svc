@@ -2,7 +2,7 @@
 
 namespace SmartSchool.Graphql.Models
 {
-    public class SchoolModel : RecordModel
+    public class SchoolModel : AbstractRecordModel
     {
         public string? CensusNo { get; set; }
         public string? Name { get; set; }

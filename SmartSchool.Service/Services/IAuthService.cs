@@ -1,4 +1,5 @@
-﻿using SmartSchool.Service.Models;
+﻿using SmartSchool.Schema.Entities;
+using SmartSchool.Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace SmartSchool.Service.Services
 
         Task<AuthenticateResponse?> LoginAsync(LoginRequest model);
 
-        Task<bool> IsEmailRegistered(string email);
-        Task<bool> IsEmailRegistered(int id, string email);
-        Task<bool> IsMobileNoRegistered(string mobileNo);
-        Task<bool> IsMobileNoRegistered(int id, string mobileNo);
+        Task<bool> IsEmailRegisteredAsync(string email);
+        Task<bool> IsEmailRegisteredAsync(string email, long personId);
+        Task<bool> IsMobileNoRegisteredAsync(string mobileNo);
+        Task<bool> IsMobileNoRegisteredAsync(string mobileNo, long personId);
     }
 }

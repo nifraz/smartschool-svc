@@ -25,12 +25,12 @@ namespace SmartSchool.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (await authService.IsEmailRegistered(model.Email))
+            if (await authService.IsEmailRegisteredAsync(model.Email))
             {
                 return BadRequest(new ErrorResponse { Message = "Email already Registered." });
             }
 
-            if (await authService.IsMobileNoRegistered(model.MobileNo))
+            if (await authService.IsMobileNoRegisteredAsync(model.MobileNo))
             {
                 return BadRequest(new ErrorResponse { Message = "Mobile No already Registered." });
             }

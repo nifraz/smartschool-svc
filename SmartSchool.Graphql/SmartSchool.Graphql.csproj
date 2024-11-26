@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartSchool.Schema\SmartSchool.Schema.csproj" />
+    <ProjectReference Include="..\SmartSchool.Service\SmartSchool.Service.csproj" />
   </ItemGroup>
 
 </Project>

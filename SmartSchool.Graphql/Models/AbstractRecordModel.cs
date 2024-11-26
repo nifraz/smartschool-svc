@@ -2,7 +2,7 @@
 
 namespace SmartSchool.Graphql.Models
 {
-    public class RecordModel
+    public class AbstractRecordModel
     {
         [IsProjected(true)]
         public long? Id { get; set; }
