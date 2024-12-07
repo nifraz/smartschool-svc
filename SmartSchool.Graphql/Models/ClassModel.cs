@@ -12,10 +12,10 @@ namespace SmartSchool.Graphql.Models
         public SchoolModel? School { get; set; }
 
         public string? LanguageCode { get; set; }
-        public string? LanguageName { get; set; }
+        public LanguageModel? Language { get; set; }
 
-        public IEnumerable<ClassStudentEnrollmentModel> ClassStudentEnrollments { get; set; } = [];
+        public IEnumerable<ClassStudentEnrollmentModel> RecentClassStudentEnrollments { get; set; } = [];
+        public IEnumerable<ClassTeacherEnrollmentModel> RecentClassTeacherEnrollments { get; set; } = [];
 
-        public IEnumerable<ClassTeacherEnrollmentModel> ClassTeacherEnrollments { get; set; } = [];
     }
 }

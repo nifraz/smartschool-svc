@@ -36,8 +36,6 @@ namespace SmartSchool.Graphql.Queries
         {
             var existingRecord = await dbContext.Teachers
                 .Include(x => x.Person)
-                .Include(x => x.SchoolTeacherEnrollments)
-                .ThenInclude(x => x.School)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingRecord == null)
@@ -47,7 +45,13 @@ namespace SmartSchool.Graphql.Queries
 
             var response = mapper.Map<TeacherModel>(existingRecord);
 
-            response.SchoolTeacherEnrollments = mapper.Map<IEnumerable<SchoolTeacherEnrollmentModel>>(existingRecord.SchoolTeacherEnrollments);
+            var recentSchoolTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .Where(x => x.TeacherId == existingRecord.Id)
+                .Include(x => x.School)
+                .OrderByDescending(x => x.CreatedTime)
+                .Take(10)
+                .ToListAsync();
+            response.RecentSchoolTeacherEnrollments = mapper.Map<IEnumerable<SchoolTeacherEnrollmentModel>>(recentSchoolTeacherEnrollments);
 
             return response;
         }

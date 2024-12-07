@@ -10,15 +10,14 @@ namespace SmartSchool.Graphql.Models
 
         public long? SchoolId { get; set; }
         public SchoolModel? School { get; set; }
-        public string? SchoolName { get; set; }
 
         public long? StudentId { get; set; }
         public StudentModel? Student { get; set; }
-        public string? StudentFullName { get; set; }
 
         public long? SchoolStudentEnrollmentRequestId { get; set; }
         public SchoolStudentEnrollmentRequestModel? SchoolStudentEnrollmentRequest { get; set; }
 
-        public IEnumerable<ClassStudentEnrollmentModel> ClassStudentEnrollments { get; set; } = [];
+        public IEnumerable<ClassStudentEnrollmentModel> RecentClassStudentEnrollments { get; set; } = [];
+
     }
 }

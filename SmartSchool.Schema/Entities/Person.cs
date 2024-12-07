@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartSchool.Schema.Classes;
 using SmartSchool.Schema.Enums;
+using SmartSchool.Utility.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -54,5 +56,28 @@ namespace SmartSchool.Schema.Entities
 
         [InverseProperty(nameof(PersonRelationship.Person2))]
         public ICollection<PersonRelationship> Person2Relationships { get; set; } = [];
+
+        [NotMapped]
+        public Age Age
+        {
+            get
+            {
+                return DateOfBirth != null
+                    ? CalculateExactAge(DateOfBirth.Value)
+                    : new Age { Years = 0, Months = 0, Days = 0 };
+            }
+        }
+
+        private static Age CalculateExactAge(DateOnly dateOfBirth)
+        {
+            var (years, months, days) = dateOfBirth.GetAge(DateTime.Today);
+
+            return new Age
+            {
+                Years = years,
+                Months = months,
+                Days = days,
+            };
+        }
     }
 }

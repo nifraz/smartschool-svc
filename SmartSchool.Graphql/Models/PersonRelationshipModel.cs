@@ -19,5 +19,6 @@ namespace SmartSchool.Graphql.Models
         public long? Person2Id { get; set; }
         public PersonModel? Person2 { get; set; }
         public HumanRelationship? Person2Relationship { get; set; }
+
     }
 }

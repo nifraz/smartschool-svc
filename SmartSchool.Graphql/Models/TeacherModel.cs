@@ -2,7 +2,7 @@
 {
     public class TeacherModel : PersonModel
     {
-        public IEnumerable<SchoolTeacherEnrollmentModel> SchoolTeacherEnrollments { get; set; } = [];
+        public IEnumerable<SchoolTeacherEnrollmentModel> RecentSchoolTeacherEnrollments { get; set; } = [];
 
     }
 }

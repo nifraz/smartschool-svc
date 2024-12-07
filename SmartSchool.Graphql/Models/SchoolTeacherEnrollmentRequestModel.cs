@@ -7,10 +7,13 @@ namespace SmartSchool.Graphql.Models
         public Grade Grade { get; set; }
 
         public long? SchoolId { get; set; }
+        public SchoolModel? School { get; set; }
 
         public long? PersonId { get; set; }
-        //public string? PersonFullName { get; set; }
-        //public DateOnly? PersonDateOfBirth { get; set; }
-        //public string? PersonNicNo { get; set; }
+        public PersonModel? Person { get; set; }
+
+        public long? TeacherId { get; set; }
+        public TeacherModel? Teacher { get; set; }
+
     }
 }

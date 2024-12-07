@@ -1,4 +1,6 @@
-﻿namespace SmartSchool.Graphql.Models
+﻿using SmartSchool.Schema.Entities;
+
+namespace SmartSchool.Graphql.Models
 {
     public class UserModel : AbstractRecordModel
     {
@@ -16,8 +18,8 @@
         public long? TeacherId { get; set; }
         public long? PrincipalId { get; set; }
 
-        public IEnumerable<SchoolStudentEnrollmentRequestModel> CreatedSchoolStudentEnrollmentRequests { get; set; } = [];
-        public IEnumerable<SchoolStudentEnrollmentRequestModel> LastModifiedSchoolStudentEnrollmentRequests { get; set; } = [];
-        public IEnumerable<SchoolStudentEnrollmentRequestModel> DeletedSchoolStudentEnrollmentRequests { get; set; } = [];
+        public IEnumerable<SchoolStudentEnrollmentRequestModel> RecentCreatedSchoolStudentEnrollmentRequests { get; set; } = [];
+        public IEnumerable<PersonModel> RecentCreatedPersons { get; set; } = [];
+
     }
 }

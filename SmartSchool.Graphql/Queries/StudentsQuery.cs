@@ -36,8 +36,6 @@ namespace SmartSchool.Graphql.Queries
         {
             var existingRecord = await dbContext.Students
                 .Include(x => x.Person)
-                .Include(x => x.SchoolStudentEnrollments)
-                .ThenInclude(x => x.School)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingRecord == null)
@@ -47,27 +45,15 @@ namespace SmartSchool.Graphql.Queries
 
             var response = mapper.Map<StudentModel>(existingRecord);
 
-            response.SchoolStudentEnrollments = mapper.Map<IEnumerable<SchoolStudentEnrollmentModel>>(existingRecord.SchoolStudentEnrollments);
+            var recentSchoolStudentEnrollments = await dbContext.SchoolStudentEnrollments
+                .Where(x => x.StudentId == existingRecord.Id)
+                .Include(x => x.School)
+                .OrderByDescending(x => x.CreatedTime)
+                .Take(10)
+                .ToListAsync();
+            response.RecentSchoolStudentEnrollments = mapper.Map<IEnumerable<SchoolStudentEnrollmentModel>>(recentSchoolStudentEnrollments);
 
             return response;
         }
-
-        //[UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10)]
-        //[UseProjection]
-        //[UseFiltering(typeof(CourseFilterType))]
-        //[UseSorting(typeof(CourseSortType))]
-        //public IQueryable<CourseType> GetCourses([Service(ServiceKind.Resolver)] SchoolDbContext context) //ServiceKind.Resolver needs thorough testing with multiple resolvers in parallel
-        //{
-        //    return context.Courses
-        //        .Select(x => new CourseType
-        //        {
-        //            Id = x.Id,
-        //            Name = x.Name,
-        //            Subject = x.Subject,
-        //            InstructorId = x.InstructorId,
-        //            CreatorId = x.CreatorId
-        //        }
-        //    );
-        //}
     }
 }

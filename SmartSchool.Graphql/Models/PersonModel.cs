@@ -1,5 +1,7 @@
-﻿using SmartSchool.Schema.Enums;
+﻿using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
 using SmartSchool.Utility.Extensions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartSchool.Graphql.Models
 {
@@ -18,28 +20,13 @@ namespace SmartSchool.Graphql.Models
         public string? Address { get; set; }
         public string? Image { get; set; }
 
-        public AgeModel? Age
-        {
-            get
-            {
-                return DateOfBirth != null
-                    ? CalculateExactAge(DateOfBirth.Value)
-                    : null;
-            }
-        }
-        //public ICollection<Relationship> Relationships { get; set; } = [];
+        public AgeModel? Age  { get; set; }
 
-        private static AgeModel CalculateExactAge(DateOnly dateOfBirth)
-        {
-            var (years, months, days) = dateOfBirth.GetAge(DateTime.Today);
+        public IEnumerable<SchoolStudentEnrollmentRequestModel> RecentSchoolStudentEnrollmentRequests { get; set; } = [];
+        public IEnumerable<SchoolTeacherEnrollmentRequestModel> RecentSchoolTeacherEnrollmentRequests { get; set; } = [];
+        public IEnumerable<PersonRelationshipModel> RecentPerson1Relationships { get; set; } = [];
+        public IEnumerable<PersonRelationshipModel> RecentPerson2Relationships { get; set; } = [];
 
-            return new AgeModel
-            {
-                Years = years,
-                Months = months,
-                Days = days,
-            };
-        }
 
     }
 }

@@ -2,6 +2,6 @@
 {
     public class PrincipalModel : PersonModel
     {
-        public IEnumerable<SchoolPrincipalEnrollmentModel> SchoolPrincipalEnrollments { get; set; } = [];
+        public IEnumerable<SchoolPrincipalEnrollmentModel> RecentSchoolPrincipalEnrollments { get; set; } = [];
     }
 }

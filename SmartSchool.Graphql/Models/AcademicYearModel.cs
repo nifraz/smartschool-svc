@@ -2,12 +2,11 @@
 {
     public class AcademicYearModel
     {
-        public int? Year { get; set; } // Example: 2024 for the 2023-2024 academic year
-        public DateOnly? StartDate { get; set; } // When the academic year starts
-        public DateOnly? EndDate { get; set; } // When the academic year ends
+        public int? Year { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
-        public IEnumerable<ClassStudentEnrollmentModel> ClassStudentEnrollments { get; set; } = [];
-
-        public IEnumerable<ClassTeacherEnrollmentModel> ClassTeacherEnrollments { get; set; } = [];
+        public IEnumerable<ClassStudentEnrollmentModel> RecentClassStudentEnrollments { get; set; } = [];
+        public IEnumerable<ClassTeacherEnrollmentModel> RecentClassTeacherEnrollments { get; set; } = [];
     }
 }

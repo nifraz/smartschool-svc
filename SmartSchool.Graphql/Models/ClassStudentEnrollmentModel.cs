@@ -1,4 +1,5 @@
-﻿using SmartSchool.Schema.Enums;
+﻿using SmartSchool.Schema.Entities;
+using SmartSchool.Schema.Enums;
 
 namespace SmartSchool.Graphql.Models
 {
@@ -11,11 +12,16 @@ namespace SmartSchool.Graphql.Models
         public EnrollmentStatus? Status { get; set; }
 
         public long? ClassId { get; set; }
+        public ClassModel? Class { get; set; }
 
         public long? SchoolStudentEnrollmentId { get; set; }
-        public long? StudentId { get; set; }
-        public string? StudentFullName { get; set; }
+        public SchoolStudentEnrollmentModel? SchoolStudentEnrollment { get; set; }
 
-        public int? AcademicYear { get; set; }
+        public long? StudentId { get; set; }
+        public StudentModel? Student { get; set; }
+
+        public int? AcademicYearYear { get; set; }
+        public AcademicYear? AcademicYear { get; set; }
+
     }
 }

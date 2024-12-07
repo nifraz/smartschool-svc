@@ -29,9 +29,6 @@ namespace SmartSchool.Graphql.Queries
         {
             return dbContext.Users
                 .Include(x => x.Person)
-                //.Include(x => x.CreatedSchoolStudentEnrollmentRequests)
-                //.Include(x => x.LastModifiedSchoolStudentEnrollmentRequests)
-                //.Include(x => x.DeletedSchoolStudentEnrollmentRequests)
                 .ProjectTo<UserModel>(mapper.ConfigurationProvider)
                 ;
         }
@@ -42,25 +39,30 @@ namespace SmartSchool.Graphql.Queries
                 .Include(x => x.Person.Student)
                 .Include(x => x.Person.Teacher)
                 .Include(x => x.Person.Principal)
-                .Include(x => x.CreatedSchoolStudentEnrollmentRequests)
-                    .ThenInclude(x => x.School)
-                .Include(x => x.CreatedSchoolStudentEnrollmentRequests)
-                    .ThenInclude(x => x.Person)
-                .Include(x => x.LastModifiedSchoolStudentEnrollmentRequests)
-                    .ThenInclude(x => x.School)
-                .Include(x => x.LastModifiedSchoolStudentEnrollmentRequests)
-                    .ThenInclude(x => x.Person)
-                .Include(x => x.DeletedSchoolStudentEnrollmentRequests)
-                    .ThenInclude(x => x.School)
-                .Include(x => x.DeletedSchoolStudentEnrollmentRequests)
-                    .ThenInclude(x => x.Person)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingRecord == null)
             {
                 return null;
             }
+
             var response = mapper.Map<UserModel>(existingRecord);
+
+            var recentCreatedSchoolStudentEnrollmentRequests = await dbContext.SchoolStudentEnrollmentRequests
+                .Where(x => x.CreatedUserId == existingRecord.Id)
+                .Include(x => x.School)
+                .Include(x => x.Person)
+                .OrderByDescending(x => x.CreatedTime)
+                .Take(10)
+                .ToListAsync();
+            response.RecentCreatedSchoolStudentEnrollmentRequests = mapper.Map<IEnumerable<SchoolStudentEnrollmentRequestModel>>(recentCreatedSchoolStudentEnrollmentRequests);
+
+            var recentCreatedPersons = await dbContext.Persons
+                .Where(x => x.CreatedUserId == existingRecord.Id)
+                .OrderByDescending(x => x.CreatedTime)
+                .Take(10)
+                .ToListAsync();
+            response.RecentCreatedPersons = mapper.Map<IEnumerable<PersonModel>>(recentCreatedPersons);
 
             response.StudentId = existingRecord.Person?.Student?.Id;
             response.TeacherId = existingRecord.Person?.Teacher?.Id;
@@ -98,10 +100,6 @@ namespace SmartSchool.Graphql.Queries
             .FirstOrDefault();
 
             response.CurrentSchoolId = latestSchool?.SchoolId;
-
-            response.CreatedSchoolStudentEnrollmentRequests = mapper.Map<IEnumerable<SchoolStudentEnrollmentRequestModel>>(existingRecord.CreatedSchoolStudentEnrollmentRequests);
-            response.LastModifiedSchoolStudentEnrollmentRequests = mapper.Map<IEnumerable<SchoolStudentEnrollmentRequestModel>>(existingRecord.CreatedSchoolStudentEnrollmentRequests);
-            response.DeletedSchoolStudentEnrollmentRequests = mapper.Map<IEnumerable<SchoolStudentEnrollmentRequestModel>>(existingRecord.CreatedSchoolStudentEnrollmentRequests);
 
             return response;
         }
