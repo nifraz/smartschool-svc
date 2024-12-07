@@ -23,7 +23,7 @@ namespace SmartSchool.Graphql
             CreateMap<User, UserModel>()
                 ;
             CreateMap<Person, PersonModel>()
-                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.ShortName + " (" + src.Sex.ToString() + " " + src.Age.ShortString + ")"))
+                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.FullName + " (" + src.Sex.ToString() + " | " + src.Age.ShortString + " old)"))
                 ;
             CreateMap<Age, AgeModel>()
                 ;
