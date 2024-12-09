@@ -54,7 +54,7 @@ namespace SmartSchool.Graphql.Mutations
             return await MutationHelper.UpdateRecordAsync<School, SchoolInput, SchoolModel>(dbContext, input);
         }
 
-        public async Task<SchoolStudentEnrollmentRequestModel> CreateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, SchoolStudentEnrollmentRequestInput input)
+        public async Task<SchoolStudentEnrollmentRequestModel> CreateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, [Service] ITopicEventSender sender, SchoolStudentEnrollmentRequestInput input)
         {
             var filteredStatuses = new List<RequestStatus>() { RequestStatus.Pending, RequestStatus.Processing, RequestStatus.OnHold };
             var existingRequest = await dbContext.SchoolStudentEnrollmentRequests
@@ -73,11 +73,12 @@ namespace SmartSchool.Graphql.Mutations
             newRecord.Status = RequestStatus.Pending;
             dbContext.SchoolStudentEnrollmentRequests.Add(newRecord);
             await dbContext.SaveChangesAsync();
+            await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentRequestProcessed), mapper.Map<SchoolStudentEnrollmentRequestModel>(newRecord));
 
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(newRecord);
         }
 
-        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, SchoolStudentEnrollmentRequestInput input)
+        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, [Service] ITopicEventSender sender, SchoolStudentEnrollmentRequestInput input)
         {
             ArgumentNullException.ThrowIfNull(input.Id);
 
@@ -85,11 +86,12 @@ namespace SmartSchool.Graphql.Mutations
 
             mapper.Map(input, existingRecord);
             await dbContext.SaveChangesAsync();
+            await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentRequestProcessed), mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord));
 
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
         }
 
-        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestStatusAsync(AppDbContext dbContext, SchoolStudentEnrollmentRequestStatusUpdateInput input)
+        public async Task<SchoolStudentEnrollmentRequestModel> UpdateSchoolStudentEnrollmentRequestStatusAsync(AppDbContext dbContext, [Service] ITopicEventSender sender, SchoolStudentEnrollmentRequestStatusUpdateInput input)
         {
             ArgumentNullException.ThrowIfNull(input.Id);
 
@@ -98,6 +100,7 @@ namespace SmartSchool.Graphql.Mutations
             existingRecord.Status = input.Status;
             existingRecord.Reason = input.Reason;
             await dbContext.SaveChangesAsync();
+            await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentRequestProcessed), mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord));
 
             return mapper.Map<SchoolStudentEnrollmentRequestModel>(existingRecord);
         }
@@ -191,7 +194,12 @@ namespace SmartSchool.Graphql.Mutations
                     await transaction.CommitAsync();
                     success = true;
 
-                    await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentCreated), mapper.Map<SchoolStudentEnrollmentModel>(newSchoolStudentEnrollment));
+                    if (schoolStudentEnrollmentRequest != null)
+                    {
+                        await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentRequestProcessed), mapper.Map<SchoolStudentEnrollmentRequestModel>(schoolStudentEnrollmentRequest));
+                    }
+                    await sender.SendAsync(nameof(SchoolSubscription.SchoolStudentEnrollmentProcessed), mapper.Map<SchoolStudentEnrollmentModel>(newSchoolStudentEnrollment));
+                    await sender.SendAsync(nameof(SchoolSubscription.ClassStudentEnrollmentProcessed), mapper.Map<ClassStudentEnrollment>(newClassStudentEnrollment));
 
                 }
                 catch (Exception ex)
@@ -215,7 +223,7 @@ namespace SmartSchool.Graphql.Mutations
 
             if (!success)
             {
-                throw new Exception($"Unable to create shool admission after {maxRetries} attempts.");
+                throw new OperationCanceledException($"Unable to create shool student admission after {maxRetries} attempts.");
             }
             return mapper.Map<SchoolStudentEnrollmentModel>(newSchoolStudentEnrollment);
         }
