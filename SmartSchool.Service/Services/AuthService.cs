@@ -128,6 +128,12 @@ namespace SmartSchool.Service.Services
                 return null;
             }
 
+            if (!user.IsEmailVerified)
+            {
+                //_ = Task.Run(() => notificationService.SendVerificationEmailAsync(user));
+                await notificationService.SendVerificationEmailAsync(user);
+            }
+
             // authentication successful so generate jwt token
             var jwtData = await GenerateJwtToken(user);
             return new AuthenticateResponse(user, jwtData);
