@@ -85,16 +85,16 @@ namespace SmartSchool.Schema
                             break;
                         case EntityState.Deleted:
                             record.DeletedUserId = userId; // Set the user ID who deleted the record
-                            record.DeletedTime = DateTime.Now; // Set the deletion time
+                            record.DeletedTime = DateTime.UtcNow; // Set the deletion time
                             entityEntry.State = EntityState.Modified; // Change state to Modified to perform a soft delete
                             break;
                         case EntityState.Modified:
                             record.LastModifiedUserId = userId; // Set the user ID who modified the record
-                            record.LastModifiedTime = DateTime.Now; // Set the modification time
+                            record.LastModifiedTime = DateTime.UtcNow; // Set the modification time
                             break;
                         case EntityState.Added:
                             record.CreatedUserId = userId; // Set the user ID who created the record
-                            record.CreatedTime = DateTime.Now; // Set the creation time
+                            record.CreatedTime = DateTime.UtcNow; // Set the creation time
                             break;
                         default:
                             break;

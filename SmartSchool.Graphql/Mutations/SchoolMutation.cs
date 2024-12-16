@@ -196,7 +196,7 @@ namespace SmartSchool.Graphql.Mutations
                     newSchoolStudentEnrollment.Student = student;
                     newSchoolStudentEnrollment.School = existingSchool;
                     newSchoolStudentEnrollment.Status = EnrollmentStatus.Active;
-                    newSchoolStudentEnrollment.Time = input.Time ?? DateTime.Now;
+                    newSchoolStudentEnrollment.Time = input.Time ?? DateTime.UtcNow;
 
                     // Add and save the new admission asynchronously
                     await dbContext.SchoolStudentEnrollments.AddAsync(newSchoolStudentEnrollment);
@@ -209,7 +209,7 @@ namespace SmartSchool.Graphql.Mutations
                         SchoolStudentEnrollment = newSchoolStudentEnrollment,
                         AcademicYear = existingAcademicYear,
                         Status = EnrollmentStatus.Active,
-                        Time = input.Time ?? DateTime.Now,
+                        Time = input.Time ?? DateTime.UtcNow,
                     };
 
                     await dbContext.ClassStudentEnrollments.AddAsync(newClassStudentEnrollment);

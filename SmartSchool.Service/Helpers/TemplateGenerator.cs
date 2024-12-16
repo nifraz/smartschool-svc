@@ -8,7 +8,7 @@ namespace SmartSchool.Utility.Helpers
     {
         public static string FromEmail { get; set; }
         public static string FromPhoneNumber { get; set; }
-        public static int Year { get; set; } = DateTime.Now.Year;
+        public static int Year { get; set; } = DateTime.UtcNow.Year;
 
         public static CultureInfo cultureInfo = new("si-LK")
         {

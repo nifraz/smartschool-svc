@@ -14,7 +14,7 @@ namespace SmartSchool.Graphql.Models
         public SchoolType? Type { get; set; }
 
         public int? DivisionId { get; set; }
-        public Division? Division { get; set; }
+        public DivisionModel? Division { get; set; }
 
         public IEnumerable<SchoolStudentEnrollmentRequestModel> RecentSchoolStudentEnrollmentRequests { get; set; } = [];
         public IEnumerable<SchoolStudentEnrollmentModel> RecentSchoolStudentEnrollments { get; set; } = [];

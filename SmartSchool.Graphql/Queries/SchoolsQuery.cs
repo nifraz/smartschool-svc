@@ -2,10 +2,14 @@
 using AutoMapper.QueryableExtensions;
 using HotChocolate.Data;
 using HotChocolate.Types;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
+using SmartSchool.Graphql.Inputs;
 using SmartSchool.Graphql.Models;
 using SmartSchool.Schema;
+using SmartSchool.Schema.Entities;
 using SmartSchool.Schema.Enums;
+using System.Linq.Expressions;
 
 namespace SmartSchool.Graphql.Queries
 {
@@ -118,6 +122,112 @@ namespace SmartSchool.Graphql.Queries
             response.AllClasses = mapper.Map<IEnumerable<ClassModel>>(allClasses);
 
             return response;
+        }
+
+        public async Task<SchoolReportModel> GetSchoolReportAsync(AppDbContext dbContext, SchoolReportInput input)
+        {
+            ArgumentNullException.ThrowIfNull(input);
+
+            var existingRecord = await dbContext.Schools
+                .Include(x => x.Division.Zone.District.Province)
+                .FirstOrDefaultAsync(x => x.Id == input.Id);
+
+            if (existingRecord == null)
+            {
+                return null;
+            }
+
+            var report = new SchoolReportModel
+            {
+                CurrentDate = DateTime.UtcNow,
+                School = mapper.Map<SchoolModel>(existingRecord),
+            };
+
+            var principalEnrollment = await dbContext.SchoolPrincipalEnrollments
+                .Include(x => x.Principal.Person)
+                .Where(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Active)
+                .OrderByDescending(x => x.CreatedTime)
+                .FirstOrDefaultAsync();
+
+            if (principalEnrollment != null && principalEnrollment.Principal != null)
+            {
+                report.Principal = mapper.Map<PrincipalModel>(principalEnrollment.Principal);
+            }
+
+            report.NoOfStudentEnrollmentRequests = await dbContext.SchoolStudentEnrollmentRequests
+                .CountAsync(x => x.SchoolId == input.Id &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfApprovedStudentEnrollmentRequests = await dbContext.SchoolStudentEnrollmentRequests
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == RequestStatus.Approved &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfRejectedStudentEnrollmentRequests = await dbContext.SchoolStudentEnrollmentRequests
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == RequestStatus.Rejected &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfCancelledStudentEnrollmentRequests = await dbContext.SchoolStudentEnrollmentRequests
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == RequestStatus.Cancelled &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+
+            report.NoOfStudentEnrollments = await dbContext.SchoolStudentEnrollments
+                .CountAsync(x => x.SchoolId == input.Id &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfActiveStudentEnrollments = await dbContext.SchoolStudentEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Active &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfLeftStudentEnrollments = await dbContext.SchoolStudentEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Left &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfCompletedStudentEnrollments = await dbContext.SchoolStudentEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Completed &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfCancelledStudentEnrollments = await dbContext.SchoolStudentEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Cancelled &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+
+            report.NoOfTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .CountAsync(x => x.SchoolId == input.Id &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfActiveTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Active &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfRetiredTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Retired &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfResignedTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Resigned &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+            report.NoOfCancelledTeacherEnrollments = await dbContext.SchoolTeacherEnrollments
+                .CountAsync(x => x.SchoolId == input.Id && x.Status == EnrollmentStatus.Cancelled &&
+                    (!input.StartTime.HasValue || x.CreatedTime >= input.StartTime.Value) &&
+                    (!input.EndTime.HasValue || x.CreatedTime <= input.EndTime.Value)
+                );
+
+            return report;
         }
 
         [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
