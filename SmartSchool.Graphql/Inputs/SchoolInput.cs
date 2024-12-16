@@ -14,7 +14,7 @@ namespace SmartSchool.Graphql.Inputs
         [Required]
         public string Location { get; set; }
         public string? Address { get; set; }
-        [EmailAddress]
+        //[EmailAddress]
         public string? Email { get; set; }
         public string? PhoneNo { get; set; }
         [Required]

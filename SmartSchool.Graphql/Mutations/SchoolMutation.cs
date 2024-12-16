@@ -37,36 +37,61 @@ namespace SmartSchool.Graphql.Mutations
             }
         }
 
-        public async Task<SchoolModel> CreateSchoolAsync(AppDbContext dbContext, SchoolInput input)
+        public async Task<SchoolModel> CreateSchoolAsync(AppDbContext dbContext, [Service] ITopicEventSender sender, SchoolInput input)
         {
-            //if (input.Email != null && await authService.IsEmailRegisteredAsync(input.Email))
-            //{
-            //    throw new InvalidDataException("Email address is already registered.");
-            //}
+            var existingRecord = await dbContext.Schools
+                .FirstOrDefaultAsync(x => x.CensusNo == input.CensusNo);
+            if (existingRecord != null)
+            {
+                throw new InvalidOperationException($"The {nameof(School.CensusNo)} '{input.CensusNo}' has been already registered for the school '{existingRecord.Name}'.");
+            }
 
-            return await MutationHelper.CreateRecordAsync<School, SchoolInput, SchoolModel>(dbContext, input);
+            var newRecord = await MutationHelper.CreateRecordAsync<School, SchoolInput, SchoolModel>(dbContext, input);
+            await sender.SendAsync(nameof(SchoolSubscription.SchoolProcessed), newRecord);
+            return newRecord;
         }
 
         public async Task<SchoolModel> UpdateSchoolAsync(AppDbContext dbContext, SchoolInput input)
         {
             ArgumentNullException.ThrowIfNull(input.Id);
 
+            var existingRecord = await dbContext.Schools
+                .FirstOrDefaultAsync(x => x.Id != input.Id && x.CensusNo == input.CensusNo);
+
+            if (existingRecord != null)
+            {
+                throw new InvalidOperationException($"The {nameof(School.CensusNo)} '{input.CensusNo}' has been already registered for the school '{existingRecord.Name}'.");
+            }
+
             return await MutationHelper.UpdateRecordAsync<School, SchoolInput, SchoolModel>(dbContext, input);
         }
 
         public async Task<SchoolStudentEnrollmentRequestModel> CreateSchoolStudentEnrollmentRequestAsync(AppDbContext dbContext, [Service] ITopicEventSender sender, SchoolStudentEnrollmentRequestInput input)
         {
-            var filteredStatuses = new List<RequestStatus>() { RequestStatus.Pending, RequestStatus.Processing, RequestStatus.OnHold };
+            var filteredRequestStatuses = new List<RequestStatus>() { RequestStatus.Pending, RequestStatus.Processing, RequestStatus.OnHold };
             var existingRequest = await dbContext.SchoolStudentEnrollmentRequests
                 .Include(x => x.School)
                 .Include(x => x.Person)
-                .Where(x => x.SchoolId == input.SchoolId && x.PersonId == input.PersonId && filteredStatuses.Contains(x.Status))
+                .Where(x => x.SchoolId == input.SchoolId && x.PersonId == input.PersonId && filteredRequestStatuses.Contains(x.Status))
                 .OrderByDescending(x => x.CreatedTime)
                 .FirstOrDefaultAsync();
 
             if (existingRequest != null)
             {
                 throw new InvalidOperationException($"The person '{existingRequest.Person.FullName}' has already requested enrollment at the school '{existingRequest.School.Name}'.");
+            }
+
+            var filteredEnrollmentStatuses = new List<EnrollmentStatus>() { EnrollmentStatus.Active, EnrollmentStatus.Rejoined };
+            var existingEnrollment = await dbContext.SchoolStudentEnrollments
+                .Include(x => x.School)
+                .Include(x => x.Student.Person)
+                .Where(x => x.Student.Person.Id == input.PersonId && filteredEnrollmentStatuses.Contains(x.Status))
+                .OrderByDescending(x => x.CreatedTime)
+                .FirstOrDefaultAsync();
+
+            if (existingEnrollment != null)
+            {
+                throw new InvalidOperationException($"The person '{existingEnrollment.Student.Person.FullName}' has already has an active enrollment at the school '{existingEnrollment.School.Name}'.");
             }
 
             var newRecord = mapper.Map<SchoolStudentEnrollmentRequest>(input);

@@ -25,6 +25,18 @@ namespace SmartSchool.Graphql.Queries
         [UseProjection]
         [UseFiltering]
         [UseSorting]
+        public IQueryable<DivisionModel> GetDivisions(AppDbContext dbContext)
+        {
+            return dbContext.Divisions
+                .Include(x => x.Zone.District.Province)
+                .ProjectTo<DivisionModel>(mapper.ConfigurationProvider)
+                ;
+        }
+
+        [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
+        [UseProjection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<AcademicYearModel> GetAcademicYears(AppDbContext dbContext)
         {
             return dbContext.AcademicYears

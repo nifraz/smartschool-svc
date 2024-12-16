@@ -50,6 +50,32 @@ namespace SmartSchool.Graphql.Queries
         [UseProjection]
         [UseFiltering]
         [UseSorting]
+        public IQueryable<PrincipalModel> GetPrincipals(AppDbContext dbContext)
+        {
+            return dbContext.Principals
+                .ProjectTo<PrincipalModel>(mapper.ConfigurationProvider)
+                ;
+        }
+
+        public async Task<PrincipalModel?> GetPrincipalAsync(AppDbContext dbContext, long id)
+        {
+            var existingRecord = await dbContext.Principals
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingRecord == null)
+            {
+                return null;
+            }
+
+            var response = mapper.Map<PrincipalModel>(existingRecord);
+
+            return response;
+        }
+
+        [UseOffsetPaging(IncludeTotalCount = true, DefaultPageSize = 10, MaxPageSize = 100)]
+        [UseProjection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<PersonRelationshipModel> GetPersonRelationships(AppDbContext dbContext)
         {
             return dbContext.PersonRelationships

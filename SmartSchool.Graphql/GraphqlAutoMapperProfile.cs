@@ -16,6 +16,9 @@ namespace SmartSchool.Graphql
         public GraphqlAutoMapperProfile()
         {
             //entity to model
+            CreateMap<Division, DivisionModel>()
+                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.Name + " (" + src.Zone.Name + " - " + src.Zone.District.Name + " - " + src.Zone.District.Province.Name + ")"))
+                ;
             CreateMap<Language, LanguageModel>()
                 .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.Name + " (" + src.Code + ")"))
                 ;
@@ -103,7 +106,13 @@ namespace SmartSchool.Graphql
             //input to entity
             CreateMap<PersonInput, Person>()
                 ;
+            CreateMap<PrincipalInput, Person>()
+                ;
+            CreateMap<PrincipalInput, Principal>()
+                ;
             CreateMap<PersonRelationshipInput, PersonRelationship>()
+                ;
+            CreateMap<SchoolInput, School>()
                 ;
             CreateMap<SchoolStudentEnrollmentInput, SchoolStudentEnrollment>()
                 ;

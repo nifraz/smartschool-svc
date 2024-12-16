@@ -7,6 +7,9 @@ namespace SmartSchool.Graphql.Subscriptions
     public class SchoolSubscription
     {
         [Subscribe]
+        public SchoolModel SchoolProcessed([EventMessage] SchoolModel model) => model;
+
+        [Subscribe]
         public SchoolStudentEnrollmentRequestModel SchoolStudentEnrollmentRequestProcessed([EventMessage] SchoolStudentEnrollmentRequestModel model) => model;
 
         [Subscribe]
@@ -14,5 +17,8 @@ namespace SmartSchool.Graphql.Subscriptions
 
         [Subscribe]
         public ClassStudentEnrollmentModel ClassStudentEnrollmentProcessed([EventMessage] ClassStudentEnrollmentModel model) => model;
+
+        [Subscribe]
+        public PrincipalModel PrincipalProcessed([EventMessage] PrincipalModel model) => model;
     }
 }
